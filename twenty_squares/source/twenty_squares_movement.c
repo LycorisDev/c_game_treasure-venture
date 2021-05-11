@@ -594,6 +594,7 @@ int move_stone(const int level, int number_of_cells_forward, Stone* chosen_stone
 		(*chosen_stone).coordinate = 1;
 		--(current_player->number_of_playable_stones);
 		--(current_player->number_of_stones_on_board);
+		++(current_player->points);
 	}
 	else
 	{
@@ -606,6 +607,8 @@ int move_stone(const int level, int number_of_cells_forward, Stone* chosen_stone
 				(*(*target_cell))->stone_in_cell->coordinate = -1;
 				--(other_player->number_of_playable_stones);
 				--(other_player->number_of_stones_on_board);
+				--(other_player->points);
+				++(current_player->points);
 			}
 		}
 

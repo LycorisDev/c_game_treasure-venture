@@ -98,10 +98,7 @@ void game_loop(char* input, const int level, Player* players, Cell* all_cells)
 				number_of_cells_forward = level > 2 ? select_number_of_cells_forward(current_player, chosen_stone) : dice;
 				has_stone_moved = move_stone(level, number_of_cells_forward, chosen_stone, &target_cell, current_player, other_player);
 				if (has_stone_moved)
-				{
 					chosen_stone->protected_by_earth = 0;
-					count_points(players);
-				}
 				press_enter_to_continue();
 				if (has_stone_moved)
 				{
@@ -139,7 +136,6 @@ void game_loop(char* input, const int level, Player* players, Cell* all_cells)
 									print_board(number_of_turns, level, current_player->id, players, all_cells);
 									ability == ABILITY_FIRE ? execute_ability_fire(level, players, current_player, all_cells) 
 											 : execute_ability_water(dice, level, players, current_player, all_cells);
-									count_points(players);
 									press_enter_to_continue();
 
 									print_board(number_of_turns, level, current_player->id, players, all_cells);
@@ -156,55 +152,6 @@ void game_loop(char* input, const int level, Player* players, Cell* all_cells)
 			++number_of_turns;
 	}
 	press_enter_to_continue();
-	return;
-}
-
-void count_points(Player* players)
-{
-	/*
-	Recounting the points every turn is vital in order to have the right values.
-	Note that the minimum value is 0, not negative.
-
-	If a stone dies but another one is saved, it's 1 - 1 points, so 0.
-	If, instead of recounting, we say -1 right when dead, and +1 right when saved, 
-	depending on the order of events, we may end up with 1 point instead of 0: 
-	we start at 0 point, then dead so -1, but 0 is minimum, so 0, and then saved 
-	so +1, for a total of 1 point for now. The player who killed our stone started 
-	at 0 too, and earned a point. We both have 1 point, while the other player 
-	should clearly have more points than us.
-	*/
-
-	int i;
-	PLAYER_ONE->points = 0;
-	PLAYER_TWO->points = 0;
-
-	for (i = 0; i < 7; ++i)
-	{
-		if (PLAYER_ONE->stoneset[i].coordinate == 1)
-		{
-			++(PLAYER_ONE->points);
-		}
-		else if (PLAYER_ONE->stoneset[i].coordinate == -1)
-		{
-			--(PLAYER_ONE->points);
-			++(PLAYER_TWO->points);
-		}
-
-		if (PLAYER_TWO->stoneset[i].coordinate == 1)
-		{
-			++(PLAYER_TWO->points);
-		}
-		else if (PLAYER_TWO->stoneset[i].coordinate == -1)
-		{
-			--(PLAYER_TWO->points);
-			++(PLAYER_ONE->points);
-		}
-	}
-
-	if (PLAYER_ONE->points < 0)
-		PLAYER_ONE->points = 0;
-	if (PLAYER_TWO->points < 0)
-		PLAYER_TWO->points = 0;
 	return;
 }
 

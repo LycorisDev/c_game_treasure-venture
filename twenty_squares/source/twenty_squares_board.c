@@ -64,7 +64,9 @@ void print_column0(const int line, const int level, const int current_player_id,
 	}
 	else if (line == 5)
 	{
-		if (PLAYER_ONE->points < 10)
+		if (PLAYER_ONE->points < 0)
+			printf("        00     ");
+		else if (PLAYER_ONE->points < 10)
 			printf("        0%d     ", PLAYER_ONE->points);
 		else
 			printf("        %d     ", PLAYER_ONE->points);
@@ -202,10 +204,12 @@ void print_column4(const int line, const int level, const int current_player_id,
 	}
 	else if (line == 5)
 	{
-		if (PLAYER_ONE->points < 10)
+		if (PLAYER_TWO->points < 0)
+			printf("     00      ");
+		else if (PLAYER_TWO->points < 10)
 			printf("     0%d      ", PLAYER_TWO->points);
 		else
-			printf("     %d      ",PLAYER_TWO->points);
+			printf("     %d      ", PLAYER_TWO->points);
 	}
 	else if (line == 7)
 	{
