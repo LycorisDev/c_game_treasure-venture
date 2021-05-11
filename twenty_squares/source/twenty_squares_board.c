@@ -1,5 +1,5 @@
-#include "headers/twenty_squares_board.h"
-#include "../headers/input.h"
+#include "../headers/twenty_squares_board.h"
+#include "../../headers/input.h"
 
 void print_board(const int number_of_turns, const int level, const int current_player_id, Player* players, Cell* all_cells)
 {

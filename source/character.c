@@ -1,4 +1,4 @@
-#include "headers/character.h"
+#include "../headers/character.h"
 
 void execute_character(void)
 {

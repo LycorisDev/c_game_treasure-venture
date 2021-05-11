@@ -1,7 +1,7 @@
-#include "headers/twenty_squares_ability.h"
-#include "headers/twenty_squares_selection.h"
-#include "../headers/input.h"
-#include "../headers/rng.h"
+#include "../headers/twenty_squares_ability.h"
+#include "../headers/twenty_squares_selection.h"
+#include "../../headers/input.h"
+#include "../../headers/rng.h"
 
 int set_ability(const int level, Cell*** target_cell, const Player* players, const Player* current_player)
 {

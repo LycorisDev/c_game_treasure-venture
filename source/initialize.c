@@ -1,8 +1,8 @@
-#include "headers/initialize.h"
-#include "headers/lexicon.h"
-#include "headers/locations.h"
-#include "headers/items.h"
-#include "headers/characters.h"
+#include "../headers/initialize.h"
+#include "../headers/lexicon.h"
+#include "../headers/locations.h"
+#include "../headers/items.h"
+#include "../headers/characters.h"
 
 void exit_file_corrupted(FILE* save_file)
 {

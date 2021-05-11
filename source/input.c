@@ -1,4 +1,4 @@
-#include "headers/input.h"
+#include "../headers/input.h"
 
 void get_string_input(char* input, const char context[], const char question[], const char choices[])
 {

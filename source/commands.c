@@ -1,14 +1,14 @@
-#include "headers/commands.h"
+#include "../headers/commands.h"
 
-#include "headers/play.h"
-#include "headers/inventory.h"
-#include "headers/character.h"
-#include "headers/go.h"
-#include "headers/look.h"
-#include "headers/take.h"
-#include "headers/drop.h"
-#include "headers/use.h"
-#include "headers/hold.h"
+#include "../headers/play.h"
+#include "../headers/inventory.h"
+#include "../headers/character.h"
+#include "../headers/go.h"
+#include "../headers/look.h"
+#include "../headers/take.h"
+#include "../headers/drop.h"
+#include "../headers/use.h"
+#include "../headers/hold.h"
 
 void display_commands(void)
 {

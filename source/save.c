@@ -1,4 +1,4 @@
-#include "headers/save.h"
+#include "../headers/save.h"
 
 void save_game(FILE* save_file)
 {

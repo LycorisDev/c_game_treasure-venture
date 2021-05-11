@@ -1,6 +1,6 @@
-#include "headers/drop.h"
-#include "headers/commands.h"
-#include "headers/items.h"
+#include "../headers/drop.h"
+#include "../headers/commands.h"
+#include "../headers/items.h"
 
 void execute_drop(void)
 {

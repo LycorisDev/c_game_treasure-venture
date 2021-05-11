@@ -1,6 +1,6 @@
-#include "headers/take.h"
-#include "headers/commands.h"
-#include "headers/items.h"
+#include "../headers/take.h"
+#include "../headers/commands.h"
+#include "../headers/items.h"
 
 void execute_take(void)
 {

@@ -1,6 +1,6 @@
-#include "headers/twenty_squares_selection.h"
-#include "../headers/input.h"
-#include "../headers/rng.h"
+#include "../headers/twenty_squares_selection.h"
+#include "../../headers/input.h"
+#include "../../headers/rng.h"
 
 Stone* select_stone(char* input, Player* current_player)
 {

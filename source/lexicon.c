@@ -1,4 +1,4 @@
-#include "headers/lexicon.h"
+#include "../headers/lexicon.h"
 
 void populate_list_lexicon(void)
 {

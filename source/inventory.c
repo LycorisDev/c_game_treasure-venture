@@ -1,6 +1,6 @@
-#include "headers/inventory.h"
-#include "headers/commands.h"
-#include "headers/characters.h"
+#include "../headers/inventory.h"
+#include "../headers/commands.h"
+#include "../headers/characters.h"
 
 void execute_inventory(void)
 {

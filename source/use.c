@@ -1,7 +1,7 @@
-#include "headers/use.h"
-#include "headers/commands.h"
-#include "headers/items.h"
-#include "headers/characters.h"
+#include "../headers/use.h"
+#include "../headers/commands.h"
+#include "../headers/items.h"
+#include "../headers/characters.h"
 
 void execute_use(void)
 {

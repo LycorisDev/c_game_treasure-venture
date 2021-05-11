@@ -1,7 +1,7 @@
-#include "headers/look.h"
-#include "headers/commands.h"
-#include "headers/items.h"
-#include "headers/characters.h"
+#include "../headers/look.h"
+#include "../headers/commands.h"
+#include "../headers/items.h"
+#include "../headers/characters.h"
 
 void execute_look(void)
 {

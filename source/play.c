@@ -1,5 +1,5 @@
-#include "headers/play.h"
-#include "twenty_squares/headers/twenty_squares_main.h"
+#include "../headers/play.h"
+#include "../twenty_squares/headers/twenty_squares_main.h"
 
 void execute_play(void)
 {

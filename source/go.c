@@ -1,8 +1,8 @@
-#include "headers/game.h"
-#include "headers/events.h"
-#include "headers/go.h"
-#include "headers/commands.h"
-#include "headers/locations.h"
+#include "../headers/game.h"
+#include "../headers/events.h"
+#include "../headers/go.h"
+#include "../headers/commands.h"
+#include "../headers/locations.h"
 
 void execute_go(void)
 {

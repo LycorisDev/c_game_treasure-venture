@@ -1,4 +1,4 @@
-#include "headers/rng.h"
+#include "../headers/rng.h"
 
 int get_random_number_minmax(const int min, const int max)
 {

@@ -1,12 +1,12 @@
-#include "headers/twenty_squares_turn.h"
-#include "headers/twenty_squares_cells.h"
-#include "headers/twenty_squares_players.h"
-#include "headers/twenty_squares_movement.h"
-#include "headers/twenty_squares_board.h"
-#include "headers/twenty_squares_selection.h"
-#include "headers/twenty_squares_ability.h"
-#include "../headers/input.h"
-#include "../headers/rng.h"
+#include "../headers/twenty_squares_turn.h"
+#include "../headers/twenty_squares_cells.h"
+#include "../headers/twenty_squares_players.h"
+#include "../headers/twenty_squares_movement.h"
+#include "../headers/twenty_squares_board.h"
+#include "../headers/twenty_squares_selection.h"
+#include "../headers/twenty_squares_ability.h"
+#include "../../headers/input.h"
+#include "../../headers/rng.h"
 
 void start_game(char* input)
 {

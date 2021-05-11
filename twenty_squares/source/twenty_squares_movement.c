@@ -1,5 +1,5 @@
-#include "headers/twenty_squares_movement.h"
-#include "../headers/rng.h"
+#include "../headers/twenty_squares_movement.h"
+#include "../../headers/rng.h"
 
 int set_number_of_moveable_stones_and_every_can_stone_move(Player* current_player, const int level, const int dice)
 {

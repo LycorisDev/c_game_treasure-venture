@@ -1,8 +1,8 @@
-#include "headers/main.h"
-#include "headers/input.h"
-#include "headers/commands.h"
-#include "headers/initialize.h"
-#include "headers/save.h"
+#include "../headers/main.h"
+#include "../headers/input.h"
+#include "../headers/commands.h"
+#include "../headers/initialize.h"
+#include "../headers/save.h"
 
 int main (void)
 {

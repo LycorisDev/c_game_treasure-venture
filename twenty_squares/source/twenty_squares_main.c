@@ -1,6 +1,6 @@
-#include "headers/twenty_squares_main.h"
-#include "headers/twenty_squares_turn.h"
-#include "../headers/input.h"
+#include "../headers/twenty_squares_main.h"
+#include "../headers/twenty_squares_turn.h"
+#include "../../headers/input.h"
 
 int execute_twenty_squares(void)
 {

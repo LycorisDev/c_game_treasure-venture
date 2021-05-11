@@ -1,4 +1,4 @@
-#include "headers/twenty_squares_cells.h"
+#include "../headers/twenty_squares_cells.h"
 
 void initialize_all_cells(Cell* all_cells)
 {
