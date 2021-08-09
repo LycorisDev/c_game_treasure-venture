@@ -2,7 +2,7 @@
 
 void execute_hold(void)
 {
-	printf("\n\t[DEBUG - Hold command]\n\n");
-	return;
+    printf("\n\t[DEBUG - Hold command]\n\n");
+    return;
 }
 

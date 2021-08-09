@@ -26,7 +26,7 @@ void only_one_greaterthan_sign_is_printed(void);
 void press_enter_to_continue(void);
 void clear_terminal(void);
 
-#define INPUT_SIZE 40
+#define INPUT_SIZE    40
 
 #endif
 

@@ -39,9 +39,9 @@ int execute_submenu_loadgame(const int has_game_begun);
 int execute_submenu_save(const int has_game_begun);
 void execute_submenu_about(const int is_game_ongoing);
 
-#define MAX_NBR_WORDS 		100
-#define MAX_SIZE 		(MAX_NBR_WORDS * 24)
-#define DELIMETERS 		"\n\t\"\\ .,/:?!^"
+#define MAX_NBR_WORDS    100
+#define MAX_SIZE         (MAX_NBR_WORDS * 24)
+#define DELIMETERS       "\n\t\"\\ .,/:?!^"
 
 char *parser[MAX_NBR_WORDS];
 int nbr_words_in_parser;
