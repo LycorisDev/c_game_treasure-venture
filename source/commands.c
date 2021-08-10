@@ -10,6 +10,9 @@
 #include "../headers/use.h"
 #include "../headers/hold.h"
 
+/* Declared as extern in ../headers/commands.h */
+Command command;
+
 void display_commands(void)
 {
     printf("\n");

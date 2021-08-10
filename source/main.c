@@ -4,6 +4,10 @@
 #include "../headers/initialize.h"
 #include "../headers/save.h"
 
+/* Declared as extern in ../headers/main.h */
+char *parser[MAX_NBR_WORDS];
+int nbr_words_in_parser;
+
 int main (void)
 {
     access_main_menu(0);

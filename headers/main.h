@@ -43,8 +43,8 @@ void execute_submenu_about(const int is_game_ongoing);
 #define MAX_SIZE         (MAX_NBR_WORDS * 24)
 #define DELIMETERS       "\n\t\"\\ .,/:?!^"
 
-char *parser[MAX_NBR_WORDS];
-int nbr_words_in_parser;
+extern char *parser[MAX_NBR_WORDS];
+extern int nbr_words_in_parser;
 
 #endif
 

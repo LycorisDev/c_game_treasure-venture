@@ -1,5 +1,8 @@
 #include "../headers/locations.h"
 
+/* Declared as extern in ../headers/game.h, included in ../headers/locations.h */
+Location list_locations[NBR_LOCATIONS];
+
 void populate_list_locations(void)
 {
     Exit exit_objects[NBR_LOCATIONS];

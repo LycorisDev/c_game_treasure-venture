@@ -22,14 +22,15 @@ void parse_game_command(void);
 
 #define BIG_LENGTH_WORD    (LENGTH_WORD * 3 + 2)
 
-typedef struct command Command;
-struct command
+typedef struct command
 {
     char verb[LENGTH_WORD];
     char object[BIG_LENGTH_WORD];
     char preposition[LENGTH_WORD];
     char target[BIG_LENGTH_WORD];
-} command;
+} Command;
+
+extern Command command;
 
 #endif
 

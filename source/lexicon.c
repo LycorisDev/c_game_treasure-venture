@@ -1,5 +1,8 @@
 #include "../headers/lexicon.h"
 
+/* Declared as extern in ../headers/lexicon.h */
+char list_lexicon[NBR_WORDS][LENGTH_WORD];
+
 void populate_list_lexicon(void)
 {
     memcpy(LEXICON_1, "1", LENGTH_WORD);

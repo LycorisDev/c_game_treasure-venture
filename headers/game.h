@@ -25,7 +25,7 @@ struct location
     Exit exits[NBR_LOCATIONS];
     int list_of_items_by_id[NBR_ITEMS];
     int list_of_characters_by_id[NBR_CHARACTERS];
-} list_locations[NBR_LOCATIONS];
+};
 
 struct item
 {
@@ -35,7 +35,7 @@ struct item
     int can_be_taken;
     char name[LENGTH_NAME];
     char description[LENGTH_DESCRIPTION];
-} list_items[NBR_ITEMS];
+};
 
 struct character
 {
@@ -43,7 +43,11 @@ struct character
     char description[LENGTH_DESCRIPTION];
     Location* current_location;
     int list_of_items_by_id[NBR_ITEMS];
-} list_characters[NBR_CHARACTERS];
+};
+
+extern Location list_locations[NBR_LOCATIONS];
+extern Item list_items[NBR_ITEMS];
+extern Character list_characters[NBR_CHARACTERS];
 
 /* -------------------------------------------------------------------------------- */
 #define ACCESS_NONE                  0

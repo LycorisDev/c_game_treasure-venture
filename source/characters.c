@@ -1,5 +1,8 @@
 #include "../headers/characters.h"
 
+/* Declared as extern in ../headers/game.h, included in ../headers/characters.h */
+Character list_characters[NBR_CHARACTERS];
+
 void populate_list_characters(void)
 {
     CHARACTER_NONE->character_id = ID_CHARACTER_NONE;

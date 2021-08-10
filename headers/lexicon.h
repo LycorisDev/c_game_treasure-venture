@@ -11,7 +11,7 @@ void populate_list_lexicon(void);
 #define NBR_WORDS 		100
 #define LENGTH_WORD 		20
 
-char list_lexicon[NBR_WORDS][LENGTH_WORD];
+extern char list_lexicon[NBR_WORDS][LENGTH_WORD];
 
 #define LEXICON_1              list_lexicon[0]
 #define LEXICON_2              list_lexicon[1]

@@ -5,7 +5,7 @@
 #define FLAG_ON 	0
 #define FLAG_OFF 	1
 
-int list_events[NBR_EVENTS];
+extern int list_events[NBR_EVENTS];
 
 /* Used in go.c and use.c --------------------------------------------------------- */
 
