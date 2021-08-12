@@ -9,7 +9,7 @@ I wonder why anyone would want to work on the project at this time, but if you'r
 **ANNOUNCEMENT**  
 The bootcamp ended but I still have a ton of things to do regarding it, so the project is still in hiatus.
 
-**DEVELOPMENT IS 56 DAYS LONG SO FAR**  
+**DEVELOPMENT IS 57 DAYS LONG SO FAR**  
 - From 03/17/21 to 04/05/21 (29 days).
 - From 04/07/21 to 04/26/21 (23 days).
 - On 05/06/21 (1 day).
@@ -19,3 +19,4 @@ The bootcamp ended but I still have a ton of things to do regarding it, so the p
 
 - On 08/08/21 (1 day).
 - On 08/10/21 (1 day).
+- On 08/12/21 (1 day).

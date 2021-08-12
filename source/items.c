@@ -2,8 +2,6 @@
 
 /* Declared as extern in ../headers/game.h, included in ../headers/items.h */
 Item list_items[NBR_ITEMS];
-/* Declared as extern in ../headers/events.h, included in ../headers/items.h */
-int list_events[NBR_EVENTS];
 
 void populate_list_items(void)
 {

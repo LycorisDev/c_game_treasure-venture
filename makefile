@@ -3,6 +3,7 @@ source/character.c \
 source/characters.c \
 source/commands.c \
 source/drop.c \
+source/events.c \
 source/go.c \
 source/hold.c \
 source/initialize.c \

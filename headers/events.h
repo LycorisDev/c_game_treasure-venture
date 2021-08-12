@@ -1,6 +1,13 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#ifndef STANDARD_LIBRARY_STRING
+#define STANDARD_LIBRARY_STRING
+#include <string.h>
+#endif
+
+void populate_list_events(void);
+
 #define NBR_EVENTS 	100
 #define FLAG_ON 	0
 #define FLAG_OFF 	1

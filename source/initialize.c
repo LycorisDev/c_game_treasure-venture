@@ -3,6 +3,7 @@
 #include "../headers/locations.h"
 #include "../headers/items.h"
 #include "../headers/characters.h"
+#include "../headers/events.h"
 
 void exit_file_corrupted(FILE* save_file)
 {
@@ -23,6 +24,7 @@ void initialize_game(FILE* save_file)
     populate_list_locations();
     populate_list_items();
     populate_list_characters();
+    populate_list_events();
 	
     if (save_file != NULL)
     {
