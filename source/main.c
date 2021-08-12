@@ -187,10 +187,6 @@ int execute_submenu_save(const int has_game_begun)
 void execute_submenu_about(const int is_game_ongoing)
 {
     printf("\n\t[\"Prototype RPG\" is part of a VRMMORPG project named Persistence.]\n\t[This MMO is not done in one go, but one small game after another, Prototype being the first of them.]\n\t[The goal is to develop most of the gameplay, and possibly the lore as well, in a non-graphic manner.]\n\t[Once no more improvement can be made in this format, the work on the audiovisual aspect of the game will begin.]\n\n");
-    printf("\t[So far, these are the features available:]\n");
-    printf("\t\t[- Look around.]\n");
-    printf("\t\t[- Go from place to place.]\n");
-    printf("\n");
     printf("\t[For more information, visit my channel:]\n\thttps://www.youtube.com/channel/UCowO_RtloSQ3qnKmvymsBRA/\n");
 
     if (is_game_ongoing)
