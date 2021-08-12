@@ -1,24 +1,24 @@
 SOURCE_FILES=\
-source/character.c \
-source/characters.c \
-source/commands.c \
-source/drop.c \
-source/events.c \
-source/go.c \
-source/hold.c \
-source/initialize.c \
-source/input.c \
-source/inventory.c \
-source/items.c \
-source/lexicon.c \
-source/locations.c \
-source/look.c \
-source/main.c \
-source/play.c \
-source/rng.c \
-source/save.c \
-source/take.c \
-source/use.c
+sources/character.c \
+sources/characters.c \
+sources/commands.c \
+sources/drop.c \
+sources/events.c \
+sources/go.c \
+sources/hold.c \
+sources/initialize.c \
+sources/input.c \
+sources/inventory.c \
+sources/items.c \
+sources/lexicon.c \
+sources/locations.c \
+sources/look.c \
+sources/main.c \
+sources/play.c \
+sources/rng.c \
+sources/save.c \
+sources/take.c \
+sources/use.c
 
 HEADER_FILES=\
 headers/character.h \
@@ -44,14 +44,14 @@ headers/take.h \
 headers/use.h
 
 TWENTY_SQUARES_SOURCE_FILES=\
-twenty_squares/source/twenty_squares_ability.c \
-twenty_squares/source/twenty_squares_board.c \
-twenty_squares/source/twenty_squares_cells.c \
-twenty_squares/source/twenty_squares_main.c \
-twenty_squares/source/twenty_squares_movement.c \
-twenty_squares/source/twenty_squares_players.c \
-twenty_squares/source/twenty_squares_selection.c \
-twenty_squares/source/twenty_squares_turn.c
+twenty_squares/sources/twenty_squares_ability.c \
+twenty_squares/sources/twenty_squares_board.c \
+twenty_squares/sources/twenty_squares_cells.c \
+twenty_squares/sources/twenty_squares_main.c \
+twenty_squares/sources/twenty_squares_movement.c \
+twenty_squares/sources/twenty_squares_players.c \
+twenty_squares/sources/twenty_squares_selection.c \
+twenty_squares/sources/twenty_squares_turn.c
 
 TWENTY_SQUARES_HEADER_FILES=\
 twenty_squares/headers/twenty_squares.h \
