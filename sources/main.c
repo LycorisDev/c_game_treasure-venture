@@ -8,7 +8,7 @@
 char *parser[MAX_NBR_WORDS];
 int nbr_words_in_parser;
 
-int main (void)
+int main(void)
 {
     access_main_menu(0);
     while (1)

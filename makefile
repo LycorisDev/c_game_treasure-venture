@@ -67,3 +67,7 @@ twenty_squares/headers/twenty_squares_turn.h
 rpg: $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
 	@gcc -ansi -pedantic -Wall -Wextra -o rpg $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
 
+# Package: mingw-w64
+# 32-bit Windows executable: i686-w64-mingw32-gcc -o persistence.exe $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
+# 64-bit Windows executable: x86_64-w64-mingw32-gcc -o persistence.exe $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
+

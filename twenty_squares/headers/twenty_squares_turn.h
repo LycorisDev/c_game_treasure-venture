@@ -3,7 +3,7 @@
 
 #ifndef SLEEP_FUNCTION
 #define SLEEP_FUNCTION
-#ifdef _WIN32
+#ifdef __WINDOWS__
 #include <Windows.h>
 #else
 #include <unistd.h>
