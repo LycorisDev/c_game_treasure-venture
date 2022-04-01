@@ -3,7 +3,7 @@
 
 #include "twenty_squares.h"
 
-int execute_twenty_squares(void);
+int execute_twenty_squares(const char* character);
 
 #endif
 
