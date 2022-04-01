@@ -16,7 +16,7 @@ void execute_inventory(void)
             {
                 if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
                     break;
-                printf("- %s.\n", list_items[PLAYER->list_of_items_by_id[i]].name);
+                printf("- [%s] / %s\n", list_items[PLAYER->list_of_items_by_id[i]].name, list_items[PLAYER->list_of_items_by_id[i]].description);
             }
             printf("\n");
         }
