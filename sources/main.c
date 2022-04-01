@@ -25,19 +25,19 @@ int main(void)
             {
                 access_main_menu(1);
             }
-            else if (strcmp(parser[1], "new") == 0 && parser[2] != NULL && strcmp(parser[2], "game") == 0 && parser[3] == NULL)
+            else if (strcmp(parser[1], "new") == 0)
             {
                 execute_submenu_newgame();
             }
-            else if (strcmp(parser[1], "load") == 0 && parser[2] != NULL && strcmp(parser[2], "game") == 0 && parser[3] == NULL)
+            else if (strcmp(parser[1], "load") == 0)
             {
                 execute_submenu_loadgame(1);
             }
-            else if (strcmp(parser[1], "save") == 0 && parser[2] == NULL)
+            else if (strcmp(parser[1], "save") == 0)
             {
                 execute_submenu_save(1);
             }
-            else if (strcmp(parser[1], "about") == 0 && parser[2] == NULL)
+            else if (strcmp(parser[1], "about") == 0)
             {
                 execute_submenu_about(1);
             }
@@ -94,19 +94,19 @@ void access_main_menu(const int has_game_begun)
 
         if (parser[0] != NULL)
         {
-            if (strcmp(parser[0], "new") == 0 && parser[1] != NULL && strcmp(parser[1], "game") == 0 && parser[2] == NULL)
+            if (strcmp(parser[0], "new") == 0)
             {
                 can_exit_main_menu = execute_submenu_newgame();
             }
-            else if (strcmp(parser[0], "load") == 0 && parser[1] != NULL && strcmp(parser[1], "game") == 0 && parser[2] == NULL)
+            else if (strcmp(parser[0], "load") == 0)
             {
                 can_exit_main_menu = execute_submenu_loadgame(has_game_begun);
             }
-            else if (strcmp(parser[0], "save") == 0 && parser[1] == NULL)
+            else if (strcmp(parser[0], "save") == 0)
             {
                 can_exit_main_menu = execute_submenu_save(has_game_begun);
             }
-            else if (strcmp(parser[0], "about") == 0 && parser[1] == NULL)
+            else if (strcmp(parser[0], "about") == 0)
             {
                 execute_submenu_about(0);
             }
