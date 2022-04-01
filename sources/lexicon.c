@@ -33,6 +33,7 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_MYSELF, "myself", LENGTH_WORD);
     memcpy(LEXICON_OLD, "old", LENGTH_WORD);
     memcpy(LEXICON_ON, "on", LENGTH_WORD);
+    memcpy(LEXICON_OUT, "out", LENGTH_WORD);
     memcpy(LEXICON_OUTSIDE, "outside", LENGTH_WORD);
     memcpy(LEXICON_PLAY, "play", LENGTH_WORD);
     memcpy(LEXICON_PLAYER, "player", LENGTH_WORD);
