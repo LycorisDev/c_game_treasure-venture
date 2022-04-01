@@ -29,6 +29,8 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_LIBRARY, "library", LENGTH_WORD);
     memcpy(LEXICON_LOOK, "look", LENGTH_WORD);
     memcpy(LEXICON_MAIN, "main", LENGTH_WORD);
+    memcpy(LEXICON_ME, "me", LENGTH_WORD);
+    memcpy(LEXICON_MYSELF, "myself", LENGTH_WORD);
     memcpy(LEXICON_OLD, "old", LENGTH_WORD);
     memcpy(LEXICON_ON, "on", LENGTH_WORD);
     memcpy(LEXICON_OUTSIDE, "outside", LENGTH_WORD);

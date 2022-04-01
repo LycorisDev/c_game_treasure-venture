@@ -9,7 +9,7 @@
 void populate_list_lexicon(void);
 
 #define NBR_WORDS 		100
-#define LENGTH_WORD 		20
+#define LENGTH_WORD 	20
 
 extern char list_lexicon[NBR_WORDS][LENGTH_WORD];
 
@@ -37,19 +37,21 @@ extern char list_lexicon[NBR_WORDS][LENGTH_WORD];
 #define LEXICON_LIBRARY        list_lexicon[21]
 #define LEXICON_LOOK           list_lexicon[22]
 #define LEXICON_MAIN           list_lexicon[23]
-#define LEXICON_OLD            list_lexicon[24]
-#define LEXICON_ON             list_lexicon[25]
-#define LEXICON_OUTSIDE        list_lexicon[26]
-#define LEXICON_PLAY           list_lexicon[27]
-#define LEXICON_PLAYER         list_lexicon[28]
-#define LEXICON_ROOM           list_lexicon[29]
-#define LEXICON_SECOND         list_lexicon[30]
-#define LEXICON_SIGN           list_lexicon[31]
-#define LEXICON_SHINY          list_lexicon[32]
-#define LEXICON_TAKE           list_lexicon[33]
-#define LEXICON_THING          list_lexicon[34]
-#define LEXICON_THIRD          list_lexicon[35]
-#define LEXICON_USE            list_lexicon[36]
+#define LEXICON_ME             list_lexicon[24]
+#define LEXICON_MYSELF         list_lexicon[25]
+#define LEXICON_OLD            list_lexicon[26]
+#define LEXICON_ON             list_lexicon[27]
+#define LEXICON_OUTSIDE        list_lexicon[28]
+#define LEXICON_PLAY           list_lexicon[29]
+#define LEXICON_PLAYER         list_lexicon[30]
+#define LEXICON_ROOM           list_lexicon[31]
+#define LEXICON_SECOND         list_lexicon[32]
+#define LEXICON_SIGN           list_lexicon[33]
+#define LEXICON_SHINY          list_lexicon[34]
+#define LEXICON_TAKE           list_lexicon[35]
+#define LEXICON_THING          list_lexicon[36]
+#define LEXICON_THIRD          list_lexicon[37]
+#define LEXICON_USE            list_lexicon[38]
 
 #endif
 

@@ -11,7 +11,7 @@ void populate_list_characters(void)
     CHARACTER_NONE->list_of_items_by_id[0] = ID_ITEM_NONE;
 
     PLAYER->character_id = ID_CHARACTER_PLAYER;
-    memcpy(PLAYER->description, "NO_DESCRIPTION", LENGTH_DESCRIPTION);
+    memcpy(PLAYER->description, "Use your imagination.", LENGTH_DESCRIPTION);
     PLAYER->current_location = LOCATION_OUTSIDE;
     PLAYER->list_of_items_by_id[0] = ID_ITEM_NONE;
 
@@ -37,7 +37,7 @@ char* retrieve_default_character_tag_by_id(const int character_id)
 
 int retrieve_character_id_by_parser(const char* parser)
 {
-    if (strcmp(parser, "player") == 0)
+    if (strcmp(parser, "player") == 0 || strcmp(parser, "me") == 0 || strcmp(parser, "myself") == 0)
         return ID_CHARACTER_PLAYER;
     else if (strcmp(parser, "librarian") == 0)
         return ID_CHARACTER_LIBRARIAN;
@@ -50,7 +50,7 @@ int bool_parser_and_character_id_do_match(const char* parser, const int characte
     switch(character_id)
     {
         case ID_CHARACTER_PLAYER:
-            return strcmp(parser, "player") == 0 ? 1 : 0;
+            return strcmp(parser, "player") == 0 || strcmp(parser, "me") == 0 || strcmp(parser, "myself") == 0 ? 1 : 0;
         case ID_CHARACTER_LIBRARIAN:
             return strcmp(parser, "librarian") == 0 ? 1 : 0;
         default:

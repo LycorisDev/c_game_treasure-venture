@@ -88,6 +88,8 @@ void use_entry_doors_key(const int used_item_id)
 {
     int i;
     int target_id;
+    int is_target_me_or_myself;
+
     if (strcmp(command.preposition, "on") != 0 || strcmp(command.target, "") == 0)
     {
         printf("\n\t[The %s %s a target. Try specifying on who or what you want to use %s.]\n\n", 
@@ -95,14 +97,18 @@ void use_entry_doors_key(const int used_item_id)
     }
     else if (strcmp(command.target, "") != 0)
     {
+        is_target_me_or_myself = strcmp(command.target, "me") == 0 || strcmp(command.target, "myself") == 0;
         target_id = retrieve_item_id_by_parser(command.target);
+
         if (target_id == ID_ITEM_NONE)
         {
             target_id = retrieve_character_id_by_parser(command.target);
             if (target_id == ID_CHARACTER_NONE)
                 printf("\n\t[Use the %s on what?]\n\n", command.object);
             else
-                printf("\nThe %s %s nothing to the %s.\n\n", command.object, list_items[used_item_id].is_singular ? "does" : "do", command.target);
+                printf("\nThe %s %s nothing to %s%s.\n\n", 
+                    command.object, list_items[used_item_id].is_singular ? "does" : "do", 
+                    is_target_me_or_myself ? "you" : "the ", is_target_me_or_myself ? "" : command.target);
         }
         else if (target_id == ID_ITEM_ENTRY_DOORS)
         {
