@@ -7,16 +7,19 @@ void populate_list_characters(void)
 {
     CHARACTER_NONE->character_id = ID_CHARACTER_NONE;
     memcpy(CHARACTER_NONE->description, "NO_DESCRIPTION", LENGTH_DESCRIPTION);
+    CHARACTER_NONE->previous_location = LOCATION_NONE;
     CHARACTER_NONE->current_location = LOCATION_NONE;
     CHARACTER_NONE->list_of_items_by_id[0] = ID_ITEM_NONE;
 
     PLAYER->character_id = ID_CHARACTER_PLAYER;
     memcpy(PLAYER->description, "Use your imagination.", LENGTH_DESCRIPTION);
+    PLAYER->previous_location = LOCATION_NONE;
     PLAYER->current_location = LOCATION_OUTSIDE;
     PLAYER->list_of_items_by_id[0] = ID_ITEM_NONE;
 
     CHARACTER_LIBRARIAN->character_id = ID_CHARACTER_LIBRARIAN;
     memcpy(CHARACTER_LIBRARIAN->description, "The librarian seems friendly.", LENGTH_DESCRIPTION);
+    CHARACTER_LIBRARIAN->previous_location = LOCATION_NONE;
     CHARACTER_LIBRARIAN->current_location = LOCATION_OLD_LIBRARY;
     CHARACTER_LIBRARIAN->list_of_items_by_id[0] = ID_ITEM_NONE;
     return;

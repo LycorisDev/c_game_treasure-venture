@@ -4,6 +4,9 @@ void save_game(FILE* save_file)
 {
     int i;
 
+    fprintf(save_file, "previous_location\n");
+    fprintf(save_file, "%d\n", PLAYER->previous_location->location_id);
+
     fprintf(save_file, "current_location\n");
     fprintf(save_file, "%d\n", PLAYER->current_location->location_id);
 

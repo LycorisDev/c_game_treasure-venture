@@ -9,6 +9,7 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_2, "2", LENGTH_WORD);
     memcpy(LEXICON_3, "3", LENGTH_WORD);
     memcpy(LEXICON_AROUND, "around", LENGTH_WORD);
+    memcpy(LEXICON_BACK, "back", LENGTH_WORD);
     memcpy(LEXICON_BOOK, "book", LENGTH_WORD);
     memcpy(LEXICON_BOOKS, "books", LENGTH_WORD);
     memcpy(LEXICON_CHARACTER, "character", LENGTH_WORD);
