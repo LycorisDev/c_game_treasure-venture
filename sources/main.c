@@ -86,7 +86,15 @@ void access_main_menu(const int has_game_begun)
 {
     int can_exit_main_menu = 0;
     clear_terminal();
+
+    /* ASCII title: Prototype RPG */
+    printf("\t ___         _       _                    ___ ___  ___ \n");
+    printf("\t| _ \\_ _ ___| |_ ___| |_ _  _ _ __  ___  | _ \\ _ \\/ __|\n");
+    printf("\t|  _/ '_/ _ \\  _/ _ \\  _| || | '_ \\/ -_) |   /  _/ (_ |\n");
+    printf("\t|_| |_| \\___/\\__\\___/\\__|\\_, | .__/\\___| |_|_\\_|  \\___|\n");
+    printf("\t                          |__/|_|                      \n");
     printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
+
     while (!can_exit_main_menu)
     {
         printf("\n\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
