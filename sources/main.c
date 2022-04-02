@@ -66,21 +66,7 @@ void set_parser_with_input(void)
             return;
         for (i = 0; i < MAX_SIZE; ++i)
         {
-            /* If arrow key: '\033' + '[' + 'A|B|C|D' */
-            if (input[i] == '\033')
-            {
-                if (input[i + 2] == 'A')
-                    printf("UP");
-                else if (input[i + 2] == 'B')
-                    printf("DOWN");
-                else if (input[i + 2] == 'C')
-                    printf("RIGHT");
-                else if (input[i + 2] == 'D')
-                    printf("LEFT");
-                else
-                    printf("debug");
-            }
-            else if (input[i] == '\0')
+            if (input[i] == '\0')
                 break;
             input[i] = tolower(input[i]);
         }
