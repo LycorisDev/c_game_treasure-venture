@@ -15,6 +15,7 @@
 #endif
 
 #include "game.h"
+#include "events.h"
 
 void save_game(FILE* save_file);
 

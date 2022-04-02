@@ -5,14 +5,14 @@
 #include "../headers/characters.h"
 #include "../headers/events.h"
 
-#define NBR_LINES 105
-    /* 105 because:
-        "previous_location"
-        id of previous_location
-        "current_location"
-        id of current_location
-        "inventory"
-        100 potential inventory items
+#define NBR_LINES (6 + NBR_EVENTS + NBR_ITEMS)
+    /* Because:
+        1. "previous_location"
+        2. id of previous_location
+        3. "current_location"
+        4. id of current_location
+        5. "events"
+        6. "inventory"
     */
 #define NBR_CHARACTERS_IN_LINE 56
 
@@ -46,8 +46,8 @@ void initialize_game(FILE* save_file)
             {
                 save_buffer[i][j] = fgetc(save_file);
 
-                /* end of the current line */
-                if (save_buffer[i][j] == '\n')
+                /* end of the current line (name:value,other_value\n) */
+                if (save_buffer[i][j] == ':' || save_buffer[i][j] == ',' || save_buffer[i][j] == '\n')
                 {
                     save_buffer[i][j] = '\0';
                     break;
@@ -92,7 +92,23 @@ void initialize_game(FILE* save_file)
                 PLAYER->current_location = list_locations + id;
         }
 
-        if (save_buffer[4] == NULL || strcmp(save_buffer[4], "inventory"))
+        if (save_buffer[4] == NULL || strcmp(save_buffer[4], "events"))
+        {
+            exit_file_corrupted(save_file);
+        }
+        else
+        {
+            for (i = 0; i < NBR_EVENTS; ++i)
+            {
+                id = strtol(save_buffer[5 + i], &end_ptr, 10);
+                if (id != 0 && id != 1)
+                    exit_file_corrupted(save_file);
+                else
+                    list_events[i] = id;
+            }
+        }
+
+        if (save_buffer[5 + NBR_EVENTS] == NULL || strcmp(save_buffer[5 + NBR_EVENTS], "inventory"))
         {
             exit_file_corrupted(save_file);
         }
@@ -100,8 +116,8 @@ void initialize_game(FILE* save_file)
         {
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                id = strtol(save_buffer[5 + i], &end_ptr, 10);
-                if (save_buffer[5 + i] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_ITEMS - 1)))
+                id = strtol(save_buffer[6 + NBR_EVENTS + i], &end_ptr, 10);
+                if (save_buffer[6 + NBR_EVENTS + i] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_ITEMS - 1)))
                     break;
                 else
                     PLAYER->list_of_items_by_id[i] = id;

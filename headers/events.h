@@ -8,7 +8,7 @@
 
 void populate_list_events(void);
 
-#define NBR_EVENTS 	100
+#define NBR_EVENTS 	10
 #define FLAG_ON 	0
 #define FLAG_OFF 	1
 

@@ -56,7 +56,7 @@ void execute_go(void)
                                 PLAYER->previous_location = PLAYER->current_location;
                                 PLAYER->current_location = PLAYER->current_location->exits[i].to;
                                 EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                                    printf("\n%s\n\n", PLAYER->current_location->description);
+                                printf("\n%s\n\n", PLAYER->current_location->description);
                             }
                             break;
                         }
@@ -97,7 +97,7 @@ void execute_go(void)
                     PLAYER->previous_location = PLAYER->current_location;
                     PLAYER->current_location = PLAYER->current_location->exits[accessible_exits[0]].to;
                     EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                        printf("\n%s\n\n", PLAYER->current_location->description);
+                    printf("\n%s\n\n", PLAYER->current_location->description);
                 }
                 /* Almost success: There is only one exit but it is locked */
                 else if (!j && k == 1)
@@ -145,7 +145,7 @@ void execute_go(void)
                             PLAYER->previous_location = PLAYER->current_location;
                             PLAYER->current_location = PLAYER->current_location->exits[i].to;
                             EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                                printf("\n%s\n\n", PLAYER->current_location->description);
+                            printf("\n%s\n\n", PLAYER->current_location->description);
                         }
                         break;
                     }
