@@ -3,6 +3,7 @@
 
 #define LENGTH_NAME           100
 #define LENGTH_DESCRIPTION    512
+#define NBR_TAGS              6
 #define NBR_LOCATIONS         16
 #define NBR_ITEMS             100
 #define NBR_CHARACTERS        5
@@ -10,6 +11,12 @@
 typedef struct location Location;
 typedef struct item Item;
 typedef struct character Character;
+
+typedef struct same_tag
+{
+    int index;
+    int id;
+} SameTag;
 
 typedef struct exit
 {
@@ -20,26 +27,36 @@ typedef struct exit
 
 struct location
 {
-    int location_id;
+    int id;
+    int type;
+    Location* inside_of;
+    char name[LENGTH_NAME];
+    char tags[NBR_TAGS][LENGTH_NAME];
     char description[LENGTH_DESCRIPTION];
     Exit exits[NBR_LOCATIONS];
+    int list_of_locations_by_id[NBR_LOCATIONS];
     int list_of_items_by_id[NBR_ITEMS];
     int list_of_characters_by_id[NBR_CHARACTERS];
 };
 
 struct item
 {
-    int item_id;
+    int id;
     int is_singular;
     int access;
     int can_be_taken;
     char name[LENGTH_NAME];
-    char description[LENGTH_DESCRIPTION];
+    char tags[NBR_TAGS][LENGTH_NAME];
+    char description_brief[LENGTH_DESCRIPTION];
+    char description_obvious[LENGTH_DESCRIPTION];
+    char description_detailed[LENGTH_DESCRIPTION];
 };
 
 struct character
 {
-    int character_id;
+    int id;
+    char tags[NBR_TAGS][LENGTH_NAME];
+    char name[LENGTH_NAME];
     char description[LENGTH_DESCRIPTION];
     Location* previous_location;
     Location* current_location;
@@ -56,16 +73,23 @@ extern Character list_characters[NBR_CHARACTERS];
 #define ACCESS_OPEN                  2
 #define ACCESS_CLOSED                3
 /* -------------------------------------------------------------------------------- */
+#define LOCATION_TYPE_NONE           0
+#define LOCATION_TYPE_OUTSIDE        1
+#define LOCATION_TYPE_BUILDING       2
+#define LOCATION_TYPE_ROOM           3
+
 #define ID_LOCATION_NONE             0
 #define ID_LOCATION_OUTSIDE          1
-#define ID_LOCATION_MAIN_HALLWAY     2
-#define ID_LOCATION_OLD_LIBRARY      3
-#define ID_LOCATION_ROOM_1           4
-#define ID_LOCATION_ROOM_2           5
-#define ID_LOCATION_ROOM_3           6
+#define ID_LOCATION_MANSION          2
+#define ID_LOCATION_MAIN_HALLWAY     3
+#define ID_LOCATION_OLD_LIBRARY      4
+#define ID_LOCATION_ROOM_1           5
+#define ID_LOCATION_ROOM_2           6
+#define ID_LOCATION_ROOM_3           7
 
 #define LOCATION_NONE                (list_locations + ID_LOCATION_NONE)
 #define LOCATION_OUTSIDE             (list_locations + ID_LOCATION_OUTSIDE)
+#define LOCATION_MANSION             (list_locations + ID_LOCATION_MANSION)
 #define LOCATION_MAIN_HALLWAY        (list_locations + ID_LOCATION_MAIN_HALLWAY)
 #define LOCATION_OLD_LIBRARY         (list_locations + ID_LOCATION_OLD_LIBRARY)
 #define LOCATION_ROOM_1              (list_locations + ID_LOCATION_ROOM_1)

@@ -4,8 +4,8 @@ void save_game(FILE* save_file)
 {
     int i;
 
-    fprintf(save_file, "previous_location:%d\n", PLAYER->previous_location->location_id);
-    fprintf(save_file, "current_location:%d\n", PLAYER->current_location->location_id);
+    fprintf(save_file, "previous_location:%d\n", PLAYER->previous_location->id);
+    fprintf(save_file, "current_location:%d\n", PLAYER->current_location->id);
 
     fprintf(save_file, "events:");
     for (i = 0; i < NBR_EVENTS; ++i)

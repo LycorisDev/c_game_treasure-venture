@@ -5,118 +5,161 @@
 
 void execute_use(void)
 {
-    int i, j;
-    int used_item_id;
-    int available_items_by_id[NBR_ITEMS] = {0};
+    int i, used_item_id = ID_ITEM_NONE;
+    SameTag* items_with_same_tag_in_inventory = NULL;
+    SameTag* items_with_same_tag_in_current_location = NULL;
 
-    for (i = 0, j = 0; i < NBR_ITEMS; ++i)
+    if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE && PLAYER->current_location->list_of_items_by_id[0] == ID_ITEM_NONE)
     {
-        if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
-            break;
-        available_items_by_id[j++] = PLAYER->list_of_items_by_id[i];
-    }
-    for (i = 0; i < NBR_ITEMS; ++i)
-    {
-        if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
-            break;
-        available_items_by_id[j++] = PLAYER->current_location->list_of_items_by_id[i];
-    }
-
-    if (available_items_by_id[0] == ID_ITEM_NONE)
-    {
-        printf("\nThere is nothing you can use.\n\n");
+        printf("\nThere is nothing for you to use.\n\n");
     }
     else
     {
         if (strcmp(command.object, "") != 0)
         {
-            used_item_id = retrieve_item_id_by_parser(command.object);
-            for (i = 0; i < NBR_ITEMS; ++i)
-            {
-                if (used_item_id == ID_ITEM_NONE || available_items_by_id[i] == ID_ITEM_NONE)
-                {
-                    memcpy(command.object, "", BIG_LENGTH_WORD);
-                    break;
-                }
-				
-                if (available_items_by_id[i] == used_item_id)
-                    break;
-            }
+            items_with_same_tag_in_inventory = retrieve_item_id_by_parser_from_inventory(command.object);
+            items_with_same_tag_in_current_location = retrieve_item_id_by_parser_from_current_location(command.object);
 
-            if (strcmp(command.object, "") != 0)
+            if (items_with_same_tag_in_inventory[0].id == ID_ITEM_NONE && items_with_same_tag_in_current_location[0].id == ID_ITEM_NONE)
+                memcpy(command.object, "", BIG_LENGTH_WORD);
+            else if (items_with_same_tag_in_inventory[0].id != ID_ITEM_NONE && items_with_same_tag_in_current_location[0].id == ID_ITEM_NONE)
             {
-                    if (used_item_id == ID_ITEM_ENTRY_DOORS_KEY)
-                    {
-                        use_entry_doors_key(used_item_id);
-                    }
-                    else if (used_item_id == ID_ITEM_ENTRY_DOORS || used_item_id == ID_ITEM_LIBRARY_DOOR 
-                        || used_item_id == ID_ITEM_DOOR_ROOM_1 || used_item_id == ID_ITEM_DOOR_ROOM_2 || used_item_id == ID_ITEM_DOOR_ROOM_3)
-                    {
-                        use_door(used_item_id);
-                    }
-                    else
-                    {
-                        printf("\n%s ", list_items[used_item_id].description);
-                        printf("The %s %s seem to be of much use.\n\n", command.object, list_items[used_item_id].is_singular ? "doesn't" : "don't");
-                    }
+                if (items_with_same_tag_in_inventory[1].id == ID_ITEM_NONE)
+                {
+                    used_item_id = items_with_same_tag_in_inventory[0].id;
+                }
+                else
+                {
+                    /* TODO */
+                    printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
+                }
             }
-        }
-	
-        if (strcmp(command.object, "") == 0)
-        {
-            if (available_items_by_id[1] == ID_ITEM_NONE)
+            else if (items_with_same_tag_in_inventory[0].id == ID_ITEM_NONE && items_with_same_tag_in_current_location[0].id != ID_ITEM_NONE)
             {
-                printf("\n\t[Use what? Try 'use %s'.]\n\n", retrieve_default_item_tag_by_id(available_items_by_id[0]));
+                if (items_with_same_tag_in_current_location[1].id == ID_ITEM_NONE)
+                {
+                    used_item_id = items_with_same_tag_in_current_location[0].id;
+                }
+                else
+                {
+                    /* TODO */
+                    printf("\nThere is more than one item in your vicinity for which this tag works.\n\n");
+                }
             }
             else
             {
-                printf("\n\t[Use what? Try:]\n");
-                for (i = 0; i < NBR_LOCATIONS; ++i)
+                /* TODO: items both in the inventory and the current location (at least one of each) */
+                printf("\nYour inventory and vicinity both included, there is more than one item for which this tag works.\n\n");
+            }
+
+            if (!used_item_id)
+                memcpy(command.object, "", BIG_LENGTH_WORD);
+            else
+            {
+                if (used_item_id == ID_ITEM_ENTRY_DOORS_KEY)
                 {
-                    if (available_items_by_id[i] == ID_ITEM_NONE)
-                        break;
-                    printf("\t\t['Use %s'.]\n", retrieve_default_item_tag_by_id(available_items_by_id[i]));
+                    use_entry_doors_key(used_item_id);
                 }
-                printf("\n");
+                else if (used_item_id == ID_ITEM_ENTRY_DOORS || used_item_id == ID_ITEM_LIBRARY_DOOR 
+                        || used_item_id == ID_ITEM_DOOR_ROOM_1 || used_item_id == ID_ITEM_DOOR_ROOM_2 || used_item_id == ID_ITEM_DOOR_ROOM_3)
+                {
+                    use_door(used_item_id);
+                }
+                else
+                {
+                    printf("\n%s ", list_items[used_item_id].description_brief);
+                    printf("The %s %s seem to be of much use.\n\n", command.object, list_items[used_item_id].is_singular ? "doesn't" : "don't");
+                }
             }
         }
+
+        if (strcmp(command.object, "") == 0)
+        {
+            printf("\n\t[Use what? Try:]\n");
+            for (i = 0; i < NBR_ITEMS; ++i)
+            {
+                if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                    break;
+                printf("\t\t['Use %s'.]\n", list_items[PLAYER->list_of_items_by_id[i]].tags[0]);
+            }
+            for (i = 0; i < NBR_ITEMS; ++i)
+            {
+                if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
+                    break;
+                printf("\t\t['Use %s'.]\n", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[0]);
+            }
+            printf("\n");
+        }
     }
+
+    free(items_with_same_tag_in_inventory);
+    free(items_with_same_tag_in_current_location);
     return;
 }
 
 void use_entry_doors_key(const int used_item_id)
 {
-    int i;
-    int target_id;
-    int is_target_me_or_myself;
+    int i, target_id, is_target_a_character;
+    SameTag* items_with_same_tag_in_current_location = NULL;
+    SameTag* characters_with_same_tag_in_current_location = NULL;
 
     if (strcmp(command.preposition, "on") != 0 || strcmp(command.target, "") == 0)
     {
         printf("\n\t[The %s %s a target. Try specifying on who or what you want to use %s.]\n\n", 
-            command.object, list_items[used_item_id].is_singular ? "requires" : "require", list_items[used_item_id].is_singular ? "it" : "them");
+                command.object, list_items[used_item_id].is_singular ? "requires" : "require", list_items[used_item_id].is_singular ? "it" : "them");
     }
     else if (strcmp(command.target, "") != 0)
     {
-        is_target_me_or_myself = strcmp(command.target, "me") == 0 || strcmp(command.target, "myself") == 0;
-        target_id = retrieve_item_id_by_parser(command.target);
+        items_with_same_tag_in_current_location = retrieve_item_id_by_parser_from_current_location(command.target);
+        characters_with_same_tag_in_current_location = retrieve_character_id_by_parser_from_current_location(command.target);
 
-        if (target_id == ID_ITEM_NONE)
+        if (items_with_same_tag_in_current_location[0].id == ID_ITEM_NONE && characters_with_same_tag_in_current_location[0].id == ID_CHARACTER_NONE)
+            memcpy(command.target, "", BIG_LENGTH_WORD);
+        else if (items_with_same_tag_in_current_location[0].id != ID_ITEM_NONE && characters_with_same_tag_in_current_location[0].id == ID_CHARACTER_NONE)
         {
-            target_id = retrieve_character_id_by_parser(command.target);
-            if (target_id == ID_CHARACTER_NONE)
-                printf("\n\t[Use the %s on what?]\n\n", command.object);
+            if (items_with_same_tag_in_current_location[1].id == ID_ITEM_NONE)
+            {
+                target_id = items_with_same_tag_in_current_location[0].id;
+                is_target_a_character = 0;
+            }
             else
-                printf("\nThe %s %s nothing to %s%s.\n\n", 
-                    command.object, list_items[used_item_id].is_singular ? "does" : "do", 
-                    is_target_me_or_myself ? "you" : "the ", is_target_me_or_myself ? "" : command.target);
+            {
+                /* TODO */
+                printf("\nThere is more than one item in your vicinity for which this tag works.\n\n");
+            }
         }
-        else if (target_id == ID_ITEM_ENTRY_DOORS)
+        else if (items_with_same_tag_in_current_location[0].id == ID_ITEM_NONE && characters_with_same_tag_in_current_location[0].id != ID_CHARACTER_NONE)
+        {
+            if (characters_with_same_tag_in_current_location[1].id == ID_ITEM_NONE)
+            {
+                target_id = characters_with_same_tag_in_current_location[0].id;
+                is_target_a_character = 1;
+            }
+            else
+            {
+                /* TODO */
+                printf("\nThere is more than one character in your vicinity for which this tag works.\n\n");
+            }
+        }
+        else
+        {
+            /* TODO: items and characters both in current location (at least one of each) */
+            printf("\nThere is more than target in your vicinity for which this tag works.\n\n");
+        }
+
+        if (!used_item_id)
+            memcpy(command.target, "", BIG_LENGTH_WORD);
+        else if (is_target_a_character && target_id == ID_CHARACTER_PLAYER)
+        {
+            printf("\nThe %s %s nothing to you.\n\n", command.object, list_items[used_item_id].is_singular ? "does" : "do");
+        }
+        else if (!is_target_a_character && target_id == ID_ITEM_ENTRY_DOORS)
         {
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
                 {
-                    printf("\n\t[Use the %s on what?]\n\n", command.object);
+                    memcpy(command.target, "", BIG_LENGTH_WORD);
                     break;
                 }
 
@@ -138,24 +181,15 @@ void use_entry_doors_key(const int used_item_id)
                 }
             }
         }
-        else
-        {
-            for (i = 0; i < NBR_ITEMS; ++i)
-            {
-                if (target_id == used_item_id || PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
-                {
-                    printf("\n\t[Use the %s on what?]\n\n", command.object);
-                    break;
-                }
 
-                if (PLAYER->current_location->list_of_items_by_id[i] == target_id)
-                {
-                    printf("\nThe %s %s nothing to the %s.\n\n", command.object, list_items[used_item_id].is_singular ? "does" : "do", command.target);
-                    break;
-                }
-            }
+        if (strcmp(command.target, "") == 0)
+        {
+            printf("\n\t[Use the %s on what?]\n\n", command.object);
         }
     }
+
+    free(items_with_same_tag_in_current_location);
+    free(characters_with_same_tag_in_current_location);
     return;
 }
 
@@ -169,20 +203,20 @@ void use_door(const int used_item_id)
         else if (PLAYER->current_location->exits[i].passage == (list_items + used_item_id))
         {
             EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-            if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
-            {
-                printf("\nThe %s %s locked.\n\n", list_items[used_item_id].is_singular ? "door" : "doors", list_items[used_item_id].is_singular ? "is" : "are");
-            }
-            else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
-            {
-                PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
-                printf("\nYou close the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
-            }
-            else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
-            {
-                PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
-                printf("\nYou open the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
-            }
+                if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
+                {
+                    printf("\nThe %s %s locked.\n\n", list_items[used_item_id].is_singular ? "door" : "doors", list_items[used_item_id].is_singular ? "is" : "are");
+                }
+                else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
+                {
+                    PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
+                    printf("\nYou close the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
+                }
+                else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
+                {
+                    PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
+                    printf("\nYou open the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
+                }
             break;
         }
     }

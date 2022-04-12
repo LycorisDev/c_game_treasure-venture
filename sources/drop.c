@@ -4,62 +4,69 @@
 
 void execute_drop(void)
 {
-    int i, j;
-    int item_id = 0;
+    int i;
+    SameTag* items_with_same_tag = NULL;
 
     if (PLAYER->current_location->list_of_items_by_id[NBR_ITEMS - 1] != ID_ITEM_NONE)
     {
         printf("\nThis place cannot hold any more item.\n\n");
         return;
     }
-
-    if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE)
+    else if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE)
     {
         printf("\nYou have no item on you.\n\n");
         return;
     }
-
-    if (strcmp(command.object, "") != 0)
+    else if (strcmp(command.object, "") != 0)
     {
-        if ((item_id = retrieve_item_id_by_parser(command.object)) == ID_ITEM_NONE)
+        items_with_same_tag = retrieve_item_id_by_parser_from_inventory(command.object);
+
+        if (!items_with_same_tag || items_with_same_tag[0].id == ID_ITEM_NONE)
+        {
             memcpy(command.object, "", BIG_LENGTH_WORD);
+        }
+        else if (items_with_same_tag[1].id != ID_ITEM_NONE)
+        {
+            /* TODO: The second tag is picked, but it may still be identical, so the retrieval function needs to provide the index of the proper tag (index, id, tag) */
+            printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
+            printf("\n\t[Drop what? There is more than one item in your inventory for which this tag works. Try:]\n");
+            for (i = 0; i < NBR_ITEMS; ++i)
+            {
+                if (items_with_same_tag[i].id == ID_ITEM_NONE)
+                    break;
+                printf("\t\t['Drop %s'.]\n", list_items[items_with_same_tag[i].id].tags[1]);
+            }
+            printf("\n");
+        }
+        else if (PLAYER->current_location->list_of_items_by_id[NBR_ITEMS - 1] != ID_ITEM_NONE)
+        {
+            printf("\nThe current location is full. No more items can be added.\n\n");
+        }
         else
         {
-            for (i = 0; i <= NBR_ITEMS; ++i)
+            for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (i == NBR_ITEMS || PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
                 {
-                    memcpy(command.object, "", BIG_LENGTH_WORD);
-                    break;
-                }
-                else if (PLAYER->list_of_items_by_id[i] == item_id)
-                {
-                    for (j = 0; j < NBR_ITEMS; ++j)
-                    {
-                        if (PLAYER->current_location->list_of_items_by_id[j] == ID_ITEM_NONE)
-                        {
-                            PLAYER->current_location->list_of_items_by_id[j] = item_id;
-                            PLAYER->list_of_items_by_id[i] = ID_ITEM_NONE;
+                    PLAYER->current_location->list_of_items_by_id[i] = items_with_same_tag[0].id;
+                    PLAYER->list_of_items_by_id[items_with_same_tag[0].index] = ID_ITEM_NONE;
 
-                            for (j = NBR_ITEMS - 1; j >= 0; --j)
+                    for (i = NBR_ITEMS - 1; i >= 0; --i)
+                    {
+                        if (PLAYER->list_of_items_by_id[i] != ID_ITEM_NONE)
+                        {
+                            if (i != items_with_same_tag[0].index)
                             {
-                                if (PLAYER->list_of_items_by_id[j] != ID_ITEM_NONE)
-                                {
-                                    if (i < j)
-                                    {
-                                        PLAYER->list_of_items_by_id[i] = PLAYER->list_of_items_by_id[j];
-                                        PLAYER->list_of_items_by_id[j] = ID_ITEM_NONE;
-                                    }
-                                    break;
-                                }
+                                PLAYER->list_of_items_by_id[items_with_same_tag[0].index] = PLAYER->list_of_items_by_id[i];
+                                PLAYER->list_of_items_by_id[i] = ID_ITEM_NONE;
                             }
                             break;
                         }
                     }
-                    printf("\n'%s' dropped.\n\n", list_items[item_id].name);
                     break;
                 }
             }
+            printf("\n'%s' dropped.\n\n", list_items[items_with_same_tag[0].id].name);
         }
     }
 
@@ -67,7 +74,7 @@ void execute_drop(void)
     {
         if (PLAYER->list_of_items_by_id[1] == ID_ITEM_NONE)
         {
-            printf("\n\t[Drop what? Try 'drop %s'.]\n\n", retrieve_default_item_tag_by_id(PLAYER->list_of_items_by_id[0]));
+            printf("\n\t[Drop what? Try 'drop %s'.]\n\n", list_items[PLAYER->list_of_items_by_id[0]].tags[0]);
         }
         else
         {
@@ -76,11 +83,13 @@ void execute_drop(void)
             {
                 if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
                     break;
-                printf("\t\t['Drop %s'.]\n", retrieve_default_item_tag_by_id(PLAYER->list_of_items_by_id[i]));
+                printf("\t\t['Drop %s'.]\n", list_items[PLAYER->list_of_items_by_id[i]].tags[0]);
             }
             printf("\n");
         }
     }
+
+    free(items_with_same_tag);
     return;
 }
 

@@ -3,6 +3,19 @@
 #include "../headers/commands.h"
 #include "../headers/initialize.h"
 #include "../headers/save.h"
+#include "../headers/locations.h"
+
+#define ASCII_TITLE     /* Prototype RPG */\
+                        printf("\t ___         _       _                    ___ ___  ___ \n");\
+                        printf("\t| _ \\_ _ ___| |_ ___| |_ _  _ _ __  ___  | _ \\ _ \\/ __|\n");\
+                        printf("\t|  _/ '_/ _ \\  _/ _ \\  _| || | '_ \\/ -_) |   /  _/ (_ |\n");\
+                        printf("\t|_| |_| \\___/\\__\\___/\\__|\\_, | .__/\\___| |_|_\\_|  \\___|\n");\
+                        printf("\t                          |__/|_|                      \n");
+
+#define LOCATION_NAME   if (PLAYER->current_location->inside_of->id == ID_LOCATION_NONE)\
+                            printf("You are outside. ");\
+                        else\
+                            printf("You are in the %s. ", PLAYER->current_location->name);
 
 /* Declared as extern in ../headers/main.h */
 char *parser[MAX_NBR_WORDS];
@@ -46,6 +59,10 @@ int main(void)
                 clear_terminal();
                 return EXIT_SUCCESS;
             }
+            else
+            {
+                access_main_menu(1);
+            }
         }
     }
     /* This return statement shouldn't be accessible. */
@@ -85,14 +102,9 @@ void set_parser_with_input(void)
 void access_main_menu(const int has_game_begun)
 {
     int can_exit_main_menu = 0;
-    clear_terminal();
 
-    /* ASCII title: Prototype RPG */
-    printf("\t ___         _       _                    ___ ___  ___ \n");
-    printf("\t| _ \\_ _ ___| |_ ___| |_ _  _ _ __  ___  | _ \\ _ \\/ __|\n");
-    printf("\t|  _/ '_/ _ \\  _/ _ \\  _| || | '_ \\/ -_) |   /  _/ (_ |\n");
-    printf("\t|_| |_| \\___/\\__\\___/\\__|\\_, | .__/\\___| |_|_\\_|  \\___|\n");
-    printf("\t                          |__/|_|                      \n");
+    clear_terminal();
+    ASCII_TITLE
     printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
 
     while (!can_exit_main_menu)
@@ -123,6 +135,18 @@ void access_main_menu(const int has_game_begun)
                 clear_terminal();
                 exit(EXIT_SUCCESS);
             }
+            else
+            {
+                clear_terminal();
+                ASCII_TITLE
+                printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
+            }
+        }
+        else
+        {
+            clear_terminal();
+            ASCII_TITLE
+            printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
         }
     }
     return;
@@ -144,7 +168,9 @@ int execute_submenu_newgame(void)
 
     sleep(1);
     clear_terminal();
-    printf("%s\n\n", PLAYER->current_location->description);
+    LOCATION_NAME
+    describe_location(PLAYER->current_location);
+    printf("\n\n");
     return can_exit_main_menu;
 }
 
@@ -169,7 +195,9 @@ int execute_submenu_loadgame(const int has_game_begun)
 
     sleep(1);
     clear_terminal();
-    printf("%s\n\n", PLAYER->current_location->description);
+    LOCATION_NAME
+    describe_location(PLAYER->current_location);
+    printf("\n\n");
     return can_exit_main_menu;
 }
 
@@ -187,7 +215,9 @@ int execute_submenu_save(const int has_game_begun)
         save_game(save_file);
         fclose(save_file);
         printf("\n\t[Game saved!]\n\n");
-        printf("%s\n\n", PLAYER->current_location->description);
+        LOCATION_NAME
+        describe_location(PLAYER->current_location);
+        printf("\n\n");
     }
     return can_exit_main_menu;
 }
@@ -198,7 +228,11 @@ void execute_submenu_about(const int is_game_ongoing)
     printf("\t[For more information, visit my channel:]\n\thttps://www.youtube.com/channel/UCowO_RtloSQ3qnKmvymsBRA/\n");
 
     if (is_game_ongoing)
-        printf("\n%s\n\n", PLAYER->current_location->description);
+    {
+        LOCATION_NAME
+        describe_location(PLAYER->current_location);
+        printf("\n\n");
+    }
     return;
 }
 

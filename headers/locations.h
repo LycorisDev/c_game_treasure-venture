@@ -17,9 +17,8 @@
 #include "game.h"
 
 void populate_list_locations(void);
-char* retrieve_default_location_tag_by_id(const int location_id);
-int retrieve_location_id_by_parser(const char* parser);
-int bool_parser_and_location_id_do_match(const char* parser, const int location_id);
+void describe_location(const Location* location);
+SameTag* retrieve_location_id_by_parser_from_current_location(const char* parser);
 
 #endif
 

@@ -2,15 +2,23 @@
 #include "../headers/commands.h"
 #include "../headers/items.h"
 #include "../headers/characters.h"
+#include "../headers/locations.h"
+#include "../headers/events.h"
+#include "../headers/character.h"
 
 void execute_look(void)
 {
-    int i, item_id, character_id;
+    int i;
+    SameTag* items_with_same_tag = NULL;
+    SameTag* characters_with_same_tag = NULL;
+
     if (strcmp(command.object, "around") == 0)
     {
-        printf("\n%s\n\n", PLAYER->current_location->description);
+        printf("\nYou are in %s. ", PLAYER->current_location->name);
+        describe_location(PLAYER->current_location);
+        printf("\n\n");
     }
-    else if (NO_ITEM_AT_CURRENT_LOCATION && (NO_CHARACTER_AT_CURRENT_LOCATION || PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION))
+    else if (NO_ITEM_AT_CURRENT_LOCATION && PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
     {
         printf("\n\t[Look what? Try 'look around'.]\n\n");
     }
@@ -18,47 +26,42 @@ void execute_look(void)
     {
         if (strcmp(command.object, "") != 0)
         {
-            item_id = retrieve_item_id_by_parser(command.object);
-            character_id = retrieve_character_id_by_parser(command.object);
+            items_with_same_tag = retrieve_item_id_by_parser_from_current_location(command.object);
 
-            if (item_id != ID_ITEM_NONE)
+            if (!items_with_same_tag || items_with_same_tag[0].id == ID_ITEM_NONE)
             {
-                for (i = 0; i <= NBR_ITEMS; ++i)
-                {					
-                    if (PLAYER->current_location->list_of_items_by_id[i] == item_id)
+                characters_with_same_tag = retrieve_character_id_by_parser_from_current_location(command.object);
+                if (!characters_with_same_tag || characters_with_same_tag[0].id == ID_CHARACTER_NONE)
+                    memcpy(command.object, "", BIG_LENGTH_WORD);
+                else if (characters_with_same_tag[1].id == ID_CHARACTER_NONE)
+                {
+                    if (characters_with_same_tag[0].id == ID_CHARACTER_PLAYER)
                     {
-                        printf("\n%s\n\n", list_items[item_id].description);
-                        if (item_id == ID_ITEM_ENTRY_DOORS_KEY)
-                            list_events[1] = FLAG_OFF;
-                        break;
+                        /* 'look player/me/myself' is the same as the 'character' command */
+                        execute_character();
                     }
-
-                    if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
+                    else
                     {
-                        memcpy(command.object, "", BIG_LENGTH_WORD);
-                        break;
-                    }
-                }		
-            }
-            else if (character_id != ID_CHARACTER_NONE)
-            {
-                for (i = 0; i <= NBR_CHARACTERS; ++i)
-                {					
-                    if (PLAYER->current_location->list_of_characters_by_id[i] == character_id)
-                    {
-                        printf("\n%s\n\n", list_characters[character_id].description);
-                        break;
-                    }
-
-                    if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
-                    {
-                        memcpy(command.object, "", BIG_LENGTH_WORD);
-                        break;
+                        printf("\n%s\n\n", list_characters[characters_with_same_tag[0].id].description);
                     }
                 }
+                else
+                {
+                    /* TODO */
+                    printf("\nThere is more than one character in your vicinity for which this tag works.\n\n");
+                }
+            }
+            else if (items_with_same_tag[1].id == ID_ITEM_NONE)
+            {
+                printf("\n%s\n\n", list_items[items_with_same_tag[0].id].description_detailed);
+                EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY(items_with_same_tag[0].id)
             }
             else
-                memcpy(command.object, "", BIG_LENGTH_WORD);
+            {
+                /* TODO */
+                printf("\nThere is more than one item in your vicinity for which this tag works.\n\n");
+                /* TODO: Also add the case where characters match the tag as well, like even maybe 1 character and several items, or the opposite */
+            }
         }
 
         if (strcmp(command.object, "") == 0)
@@ -69,7 +72,7 @@ void execute_look(void)
             {
                 if (PLAYER->current_location->list_of_items_by_id[i] == 0)
                     break;
-                printf("\t\t['Look %s'.]\n", retrieve_default_item_tag_by_id(PLAYER->current_location->list_of_items_by_id[i]));
+                printf("\t\t['Look %s'.]\n", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[0]);
             }
             for (i = 0; i < NBR_CHARACTERS; ++i)
             {
@@ -77,11 +80,14 @@ void execute_look(void)
                     break;
                 if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
                     continue;
-                printf("\t\t['Look %s'.]\n", retrieve_default_character_tag_by_id(PLAYER->current_location->list_of_characters_by_id[i]));
+                printf("\t\t['Look %s'.]\n", list_characters[PLAYER->current_location->list_of_characters_by_id[i]].tags[0]);
             }
             printf("\n");
         }
     }
+
+    free(items_with_same_tag);
+    free(characters_with_same_tag);
     return;
 }
 

@@ -5,8 +5,8 @@
 void execute_take(void)
 {
     int i, j;
-    int item_id = 0;
     int id_of_takeable_items[NBR_ITEMS] = {0};
+    SameTag* takeable_items_with_same_tag = NULL;
 
     if (PLAYER->list_of_items_by_id[NBR_ITEMS - 1] != ID_ITEM_NONE)
     {
@@ -28,53 +28,46 @@ void execute_take(void)
         return;
     }
 
-    if ((item_id = retrieve_item_id_by_parser(command.object)) == ID_ITEM_NONE)
-        memcpy(command.object, "", BIG_LENGTH_WORD);
-    else if (strcmp(command.object, "") != 0)
+    if (strcmp(command.object, "") != 0)
     {
-        for (i = 0; i <= NBR_ITEMS; ++i)
-        {
-            if (i == NBR_ITEMS || id_of_takeable_items[i] == ID_ITEM_NONE)
-            {
-                memcpy(command.object, "", BIG_LENGTH_WORD);
-                break;
-            }
-            else if (id_of_takeable_items[i] == item_id)
-            {
-                for (j = 0; j < NBR_ITEMS; ++j)
-                {
-                    if (PLAYER->list_of_items_by_id[j] == ID_ITEM_NONE)
-                    {
-                        PLAYER->list_of_items_by_id[j] = item_id;
-                        for (i = 0; i < NBR_ITEMS; ++i)
-                        {
-                            if (PLAYER->current_location->list_of_items_by_id[i] == item_id)
-                            {
-                                PLAYER->current_location->list_of_items_by_id[i] = ID_ITEM_NONE;
-                                for (j = NBR_ITEMS - 1; j >= 0; --j)
-                                {
-                                    if (PLAYER->current_location->list_of_items_by_id[j] != ID_ITEM_NONE)
-                                    {
-                                        if (i < j)
-                                        {
-                                            PLAYER->current_location->list_of_items_by_id[i] = PLAYER->current_location->list_of_items_by_id[j];
-                                            PLAYER->current_location->list_of_items_by_id[j] = ID_ITEM_NONE;
-                                        }
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
+        takeable_items_with_same_tag = retrieve_takeable_item_id_by_parser_from_current_location(command.object);
 
-                if (item_id == ID_ITEM_ENTRY_DOORS_KEY)
-                    list_events[1] = FLAG_OFF;
-                printf("\n'%s' added to your inventory.\n\n", list_items[item_id].name);
-                break;
+        if (!takeable_items_with_same_tag || takeable_items_with_same_tag[0].id == ID_ITEM_NONE)
+        {
+            memcpy(command.object, "", BIG_LENGTH_WORD);
+        }
+        else if (takeable_items_with_same_tag[1].id == ID_ITEM_NONE)
+        {
+            for (i = 0; i < NBR_ITEMS; ++i)
+            {
+                if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                {
+                    PLAYER->list_of_items_by_id[i] = takeable_items_with_same_tag[0].id;
+                    PLAYER->current_location->list_of_items_by_id[takeable_items_with_same_tag[0].index] = ID_ITEM_NONE;
+
+                    for (j = NBR_ITEMS - 1; j >= 0; --j)
+                    {
+                        if (PLAYER->current_location->list_of_items_by_id[j] != ID_ITEM_NONE)
+                        {
+                            if (j != takeable_items_with_same_tag[0].index)
+                            {
+                                PLAYER->current_location->list_of_items_by_id[takeable_items_with_same_tag[0].index] = PLAYER->current_location->list_of_items_by_id[j];
+                                PLAYER->current_location->list_of_items_by_id[j] = ID_ITEM_NONE;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
             }
+
+            EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY(takeable_items_with_same_tag[0].id)
+            printf("\n'%s' added to your inventory.\n\n", list_items[takeable_items_with_same_tag[0].id].name);
+        }
+        else
+        {
+            /* TODO */
+            printf("\nThere is more than one takeable item in your vicinity for which this tag works.\n\n");
         }
     }
 
@@ -82,7 +75,7 @@ void execute_take(void)
     {
         if (id_of_takeable_items[1] == ID_ITEM_NONE)
         {
-            printf("\n\t[Take what? Try 'take %s'.]\n\n", retrieve_default_item_tag_by_id(id_of_takeable_items[0]));
+            printf("\n\t[Take what? Try 'take %s'.]\n\n", list_items[id_of_takeable_items[0]].tags[0]);
         }
         else
         {
@@ -91,11 +84,13 @@ void execute_take(void)
             {
                 if (id_of_takeable_items[i] == ID_ITEM_NONE)
                     break;
-                printf("\t\t['Take %s'.]\n", retrieve_default_item_tag_by_id(id_of_takeable_items[i]));
+                printf("\t\t['Take %s'.]\n", list_items[id_of_takeable_items[i]].tags[0]);
             }
             printf("\n");
         }
     }
+
+    free(takeable_items_with_same_tag);
     return;
 }
 

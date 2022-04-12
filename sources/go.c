@@ -4,6 +4,89 @@
 #include "../headers/commands.h"
 #include "../headers/locations.h"
 
+#define IF_ACCESS_NONE(i)           if (PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)\
+                                    {\
+                                        /* The player should never see this message */\
+                                        printf("You cannot access this place. ");\
+                                    }
+
+#define PRINT_ACCESS_LOCKED(i)      printf("The %s %s locked. ",\
+                                        PLAYER->current_location->exits[i].passage->is_singular ? "door" : "doors",\
+                                        PLAYER->current_location->exits[i].passage->is_singular ? "is" : "are");
+
+#define IF_ACCESS_LOCKED(i)         if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)\
+                                    {\
+                                        PRINT_ACCESS_LOCKED(i)\
+                                    }
+
+#define IF_LOCATION_FULL(i)         if (PLAYER->current_location->exits[i].to->list_of_characters_by_id[NBR_CHARACTERS - 1] != ID_CHARACTER_NONE)\
+                                    {\
+                                        printf("The destination is full. No more characters can access this place. ");\
+                                    }
+
+void cross_passage(const int index)
+{
+    int i, j;
+
+    if (PLAYER->current_location->exits[index].passage->access == ACCESS_CLOSED)
+    {
+        PLAYER->current_location->exits[index].passage->access = ACCESS_OPEN;
+        printf("You open the %s and ", PLAYER->current_location->exits[index].passage->is_singular ? "door" : "doors");
+    }
+    else
+    {
+        printf("You ");
+    }
+
+    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->exits[index].to->type == LOCATION_TYPE_ROOM)
+        printf("cross the %s's threshold to find yourself in the %s. ", PLAYER->current_location->exits[index].to->inside_of->name, PLAYER->current_location->exits[index].to->name);
+    else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && PLAYER->current_location->exits[index].to->type == LOCATION_TYPE_OUTSIDE)
+        printf("leave the %s. ", PLAYER->current_location->inside_of->name);
+    else
+        printf("enter the %s. ", PLAYER->current_location->exits[index].to->name);
+
+    /* Update the player's previous and current locations */
+    PLAYER->previous_location = PLAYER->current_location;
+    PLAYER->current_location = PLAYER->current_location->exits[index].to;
+
+    /* Remove the player from their previous location */
+    for (i = 0; i <= NBR_CHARACTERS; ++i)
+    {
+        if (i == NBR_CHARACTERS || PLAYER->previous_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+            break;
+
+        if (PLAYER->previous_location->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
+        {
+            for (j = NBR_CHARACTERS - 1; j >= 0; --j)
+            {
+                if (PLAYER->previous_location->list_of_characters_by_id[j] != ID_CHARACTER_NONE)
+                {
+                    PLAYER->previous_location->list_of_characters_by_id[i] = PLAYER->previous_location->list_of_characters_by_id[j];
+                    PLAYER->previous_location->list_of_characters_by_id[j] = ID_CHARACTER_NONE;
+
+                    i = NBR_CHARACTERS;
+                    break;
+                }
+            }
+        }
+    }
+
+    /* Add the player to their current location */
+    for (i = 0; i <= NBR_CHARACTERS; ++i)
+    {
+        /* Put the player in the first available spot */
+        if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+        {
+            PLAYER->current_location->list_of_characters_by_id[i] = ID_CHARACTER_PLAYER;
+            break;
+        }
+    }
+
+    EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
+    describe_location(PLAYER->current_location);
+    return;
+}
+
 void execute_go(void)
 {
     int i, j, k;
@@ -18,8 +101,54 @@ void execute_go(void)
     {
         if (strcmp(command.object, "") != 0)
         {
+            /* "go inside" if outside of any building */
+            if (strcmp(command.object, "inside") == 0)
+            {
+                if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+                {
+                    printf("\n");
+                    if (PLAYER->current_location->exits[0].to == NULL)
+                        printf("There is nowhere to go.\n\n");
+                    else IF_ACCESS_NONE(0)
+                    else IF_ACCESS_LOCKED(0)
+                    else IF_LOCATION_FULL(0)
+                    else
+                        cross_passage(0);
+                    printf("\n\n");
+                }
+                else
+                    memcpy(command.object, "", BIG_LENGTH_WORD);
+            }
+            /* "go outside" to leave the building */
+            else if (strcmp(command.object, "outside") == 0)
+            {
+                if (PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+                {
+                    for (i = 0; i <= NBR_LOCATIONS; ++i)
+                    {
+                        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
+                        {
+                            memcpy(command.object, "", BIG_LENGTH_WORD);
+                            break;
+                        }
+                        else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_OUTSIDE)
+                        {
+                            printf("\n");
+                            IF_ACCESS_NONE(i)
+                            else IF_ACCESS_LOCKED(i)
+                            else IF_LOCATION_FULL(i)
+                            else
+                                cross_passage(i);
+                            printf("\n\n");
+                            break;
+                        }
+                    }
+                }
+                else
+                    memcpy(command.object, "", BIG_LENGTH_WORD);
+            }
             /* "go back" = go to your previous location if possible */
-            if (strcmp(command.object, "back") == 0)
+            else if (strcmp(command.object, "back") == 0)
             {
                 if (PLAYER->previous_location == LOCATION_NONE)
                     memcpy(command.object, "", BIG_LENGTH_WORD);
@@ -32,32 +161,15 @@ void execute_go(void)
                             memcpy(command.object, "", BIG_LENGTH_WORD);
                             break;
                         }
-                        else if (PLAYER->current_location->exits[i].to->location_id == PLAYER->previous_location->location_id)
+                        else if (PLAYER->current_location->exits[i].to->id == PLAYER->previous_location->id)
                         {
-                            if (PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)
-                            {
-                                /* The player should never see this message */
-                                printf("\nYou cannot access this place.\n\n");
-                            }
-                            else if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
-                            {
-                                printf("\nThe %s %s locked.\n\n", 
-                                    PLAYER->current_location->exits[i].passage->is_singular ? "door" : "doors", 
-                                    PLAYER->current_location->exits[i].passage->is_singular ? "is" : "are");
-                            }
+                            printf("\n");
+                            IF_ACCESS_NONE(i)
+                            else IF_ACCESS_LOCKED(i)
+                            else IF_LOCATION_FULL(i)
                             else
-                            {
-                                if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
-                                {
-                                    PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
-                                    printf("\nYou open the %s.", PLAYER->current_location->exits[i].passage->is_singular ? "door" : "doors");
-                                }
-
-                                PLAYER->previous_location = PLAYER->current_location;
-                                PLAYER->current_location = PLAYER->current_location->exits[i].to;
-                                EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                                printf("\n%s\n\n", PLAYER->current_location->description);
-                            }
+                                cross_passage(i);
+                            printf("\n\n");
                             break;
                         }
                     }
@@ -88,23 +200,16 @@ void execute_go(void)
                 /* Success: There is only one accessible exit */
                 else if (j == 1)
                 {
-                    if (PLAYER->current_location->exits[accessible_exits[0]].passage->access == ACCESS_CLOSED)
-                    {
-                        PLAYER->current_location->exits[accessible_exits[0]].passage->access = ACCESS_OPEN;
-                        printf("\nYou open the %s.", PLAYER->current_location->exits[accessible_exits[0]].passage->is_singular ? "door" : "doors");
-                    }
-
-                    PLAYER->previous_location = PLAYER->current_location;
-                    PLAYER->current_location = PLAYER->current_location->exits[accessible_exits[0]].to;
-                    EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                    printf("\n%s\n\n", PLAYER->current_location->description);
+                    printf("\n");
+                    cross_passage(accessible_exits[0]);
+                    printf("\n\n");
                 }
                 /* Almost success: There is only one exit but it is locked */
                 else if (!j && k == 1)
                 {
-                    printf("\nThe %s %s locked.\n\n", 
-                        PLAYER->current_location->exits[locked_exits[0]].passage->is_singular ? "door" : "doors", 
-                        PLAYER->current_location->exits[locked_exits[0]].passage->is_singular ? "is" : "are");
+                    printf("\n");
+                    PRINT_ACCESS_LOCKED(locked_exits[0])
+                    printf("\n\n");
                 }
                 /* Several accessible and/or locked exits. Which one does the player want? */
                 else
@@ -121,33 +226,25 @@ void execute_go(void)
                         memcpy(command.object, "", BIG_LENGTH_WORD);
                         break;
                     }
-                    else if (bool_parser_and_location_id_do_match(command.object, PLAYER->current_location->exits[i].to->location_id))
+                    else
                     {
-                        if (PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)
+                        for (j = 0; j <= NBR_TAGS; ++j)
                         {
-                            /* The player should never see this message */
-                            printf("\nYou cannot access this place.\n\n");
-                        }
-                        else if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
-                        {
-                            printf("\nThe %s %s locked.\n\n", 
-                                PLAYER->current_location->exits[i].passage->is_singular ? "door" : "doors", 
-                                PLAYER->current_location->exits[i].passage->is_singular ? "is" : "are");
-                        }
-                        else
-                        {
-                            if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
+                            if (j == NBR_TAGS || PLAYER->current_location->exits[i].to->tags[j] == NULL)
+                                break;
+                            if (strcmp(command.object, PLAYER->current_location->exits[i].to->tags[j]) == 0)
                             {
-                                PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
-                                printf("\nYou open the %s.", PLAYER->current_location->exits[i].passage->is_singular ? "door" : "doors");
+                                printf("\n");
+                                IF_ACCESS_NONE(i)
+                                else IF_ACCESS_LOCKED(i)
+                                else IF_LOCATION_FULL(i)
+                                else
+                                    cross_passage(i);
+                                printf("\n\n");
+                                i = NBR_LOCATIONS;
+                                break;
                             }
-
-                            PLAYER->previous_location = PLAYER->current_location;
-                            PLAYER->current_location = PLAYER->current_location->exits[i].to;
-                            EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                            printf("\n%s\n\n", PLAYER->current_location->description);
                         }
-                        break;
                     }
                 }
             }
@@ -155,9 +252,16 @@ void execute_go(void)
 
         if (strcmp(command.object, "") == 0)
         {
-            if (PLAYER->current_location->exits[1].to == NULL)
+            if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_ROOM)
             {
-                printf("\n\t[Go where? From here, try 'go %s'.]\n\n", retrieve_default_location_tag_by_id(PLAYER->current_location->exits[0].to->location_id));
+                printf("\n\t[Go where? From here, try 'go inside'.]\n\n");
+            }
+            else if (PLAYER->current_location->exits[1].to == NULL)
+            {
+                if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+                    printf("\n\t[Go where? From here, try 'go outside'.]\n\n");
+                else
+                    printf("\n\t[Go where? From here, try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
             }
             else
             {
@@ -166,7 +270,11 @@ void execute_go(void)
                 {
                     if (PLAYER->current_location->exits[i].to == NULL)
                         break;
-                    printf("\t\t['Go %s'.]\n", retrieve_default_location_tag_by_id(PLAYER->current_location->exits[i].to->location_id));
+
+                    if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+                        printf("\t\t['Go outside'.]\n");
+                    else
+                        printf("\t\t['Go %s'.]\n", PLAYER->current_location->exits[i].to->tags[0]);
                 }
                 printf("\n");
             }

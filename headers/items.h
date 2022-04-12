@@ -18,9 +18,9 @@
 #include "events.h"
 
 void populate_list_items(void);
-char* retrieve_default_item_tag_by_id(const int item_id);
-int retrieve_item_id_by_parser(const char* parser);
-int bool_parser_and_item_id_do_match(const char* parser, const int item_id);
+SameTag* retrieve_item_id_by_parser_from_current_location(const char* parser);
+SameTag* retrieve_item_id_by_parser_from_inventory(const char* parser);
+SameTag* retrieve_takeable_item_id_by_parser_from_current_location(const char* parser);
 
 #endif
 

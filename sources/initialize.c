@@ -89,7 +89,49 @@ void initialize_game(FILE* save_file)
             if (save_buffer[3] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_LOCATIONS - 1)))
                 exit_file_corrupted(save_file);
             else
+            {
+                /* The current location is full */
+                if (PLAYER->current_location->list_of_characters_by_id[NBR_CHARACTERS - 1] != ID_CHARACTER_NONE)
+                    exit_file_corrupted(save_file);
+
+                /* Update the player's current location */
                 PLAYER->current_location = list_locations + id;
+
+                if (PLAYER->current_location != LOCATION_OUTSIDE)
+                {
+                    /* Remove the player from the player's starter location (LOCATION_OUTSIDE) */
+                    for (i = 0; i <= NBR_CHARACTERS; ++i)
+                    {
+                        if (i == NBR_CHARACTERS || LOCATION_OUTSIDE->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+                            break;
+
+                        if (LOCATION_OUTSIDE->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
+                        {
+                            for (j = NBR_CHARACTERS - 1; j >= 0; --j)
+                            {
+                                if (LOCATION_OUTSIDE->list_of_characters_by_id[j] != ID_CHARACTER_NONE)
+                                {
+                                    LOCATION_OUTSIDE->list_of_characters_by_id[i] = LOCATION_OUTSIDE->list_of_characters_by_id[j];
+                                    LOCATION_OUTSIDE->list_of_characters_by_id[j] = ID_CHARACTER_NONE;
+
+                                    i = NBR_CHARACTERS;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    /* Add the player to the current location */
+                    for (i = 0; i < NBR_CHARACTERS; ++i)
+                    {
+                        if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+                        {
+                            PLAYER->current_location->list_of_characters_by_id[i] = ID_CHARACTER_PLAYER;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         if (save_buffer[4] == NULL || strcmp(save_buffer[4], "events"))

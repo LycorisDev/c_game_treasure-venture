@@ -54,9 +54,9 @@ void parse_game_command(void)
 
             if (parser_matches_with_lexicon == 0)
             {
-                    printf("\n\t['%s' was not recognized.]\n", parser[i]);
-                    index_stop_matching = i;
-                    break;
+                printf("\n\t['%s' was not recognized.]\n", parser[i]);
+                index_stop_matching = i;
+                break;
             }
         }
 

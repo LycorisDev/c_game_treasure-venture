@@ -13,7 +13,7 @@ void execute_play(void)
     }
     else
     {
-        exit_twenty_squares = execute_twenty_squares(retrieve_default_character_tag_by_id(id_character));
+        exit_twenty_squares = execute_twenty_squares(list_characters[id_character].tags[0]);
         if (exit_twenty_squares == EXIT_FAILURE)
             printf("\n\t[Error: Something went wrong with the mini-game 'Twenty Squares'.]\n\n");
         printf("%s\n\n", PLAYER->current_location->description);

@@ -1,67 +1,46 @@
 #include "../headers/inventory.h"
 #include "../headers/commands.h"
 #include "../headers/characters.h"
+#include "../headers/items.h"
 
 void execute_inventory(void)
 {
     int i;
-    if (strcmp(command.object, "") == 0 || strcmp(command.object, "player") == 0)
+    SameTag* items_with_same_tag = NULL;
+
+    if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE)
     {
-        if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE)
-            printf("\nYou have no item on you.\n\n");
-        else
+        printf("\nYou have no item on you.\n\n");
+    }
+    else if (strcmp(command.object, "") == 0)
+    {
+        printf("\n--------------------\n");
+        printf("INVENTORY\n\n");
+        printf("\t['Inventory [item]' to see the detailed description of an item.]\n\n");
+        for (i = 0; i < NBR_ITEMS; ++i)
         {
-            printf("\nPLAYER INVENTORY\n");
-            for (i = 0; i < NBR_ITEMS; ++i)
-            {
-                if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
-                    break;
-                printf("- [%s] / %s\n", list_items[PLAYER->list_of_items_by_id[i]].name, list_items[PLAYER->list_of_items_by_id[i]].description);
-            }
-            printf("\n");
+            if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                break;
+            printf("- [%s] / %s\n", list_items[PLAYER->list_of_items_by_id[i]].tags[0], list_items[PLAYER->list_of_items_by_id[i]].description_brief);
         }
-        return;
+        printf("--------------------\n\n");
     }
     else
     {
-        for (i = 0; i < NBR_CHARACTERS; ++i)
+        items_with_same_tag = retrieve_item_id_by_parser_from_inventory(command.object);
+
+        if (!items_with_same_tag || items_with_same_tag[0].id == ID_ITEM_NONE)
+            printf("\nYou have no such item on you. Type 'inventory' to see your items.\n\n");
+        else if (items_with_same_tag[1].id == ID_ITEM_NONE)
+            printf("\n%s\n\n", list_items[items_with_same_tag[0].id].description_detailed);
+        else
         {
-            if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
-                break;
-            if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
-                continue;
-
-            if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_LIBRARIAN && strcmp(command.object, "librarian") == 0)
-            {
-                if (CHARACTER_LIBRARIAN->list_of_items_by_id[0] == ID_ITEM_NONE)
-                    printf("\nThey have no item on them.\n\n");
-                else
-                {
-                    printf("\nLIBRARIAN INVENTORY\n");
-                    for (i = 0; i < NBR_ITEMS; ++i)
-                    {
-                        if (CHARACTER_LIBRARIAN->list_of_items_by_id[i] == ID_ITEM_NONE)
-                            break;
-                        printf("- %s.\n", list_items[CHARACTER_LIBRARIAN->list_of_items_by_id[i]].name);
-                    }
-                    printf("\n");
-                }
-                return;
-            }
-        }	
+            /* TODO */
+            printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
+        }
     }
 
-    printf("\n\t[I do not recognize this character. Try:]\n");
-    printf("\t\t[- 'Inventory' or 'Inventory player'.]\n");
-    for (i = 0; i < NBR_CHARACTERS; ++i)
-    {
-        if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
-            break;
-        if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
-            continue;
-        printf("\t\t[- 'Inventory %s'.]\n", retrieve_default_character_tag_by_id(PLAYER->current_location->list_of_characters_by_id[i]));
-    }
-    printf("\n");
+    free(items_with_same_tag);
     return;
 }
 
