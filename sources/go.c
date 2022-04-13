@@ -3,8 +3,9 @@
 #include "../headers/go.h"
 #include "../headers/commands.h"
 #include "../headers/locations.h"
+#include "../headers/items.h"
 
-#define IF_ACCESS_NONE(i)           if (PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)\
+#define IF_ACCESS_NONE(i)           if (PLAYER->current_location->exits[i].to == LOCATION_NONE || PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)\
                                     {\
                                         /* The player should never see this message */\
                                         printf("You cannot access this place. ");\
@@ -93,8 +94,9 @@ void execute_go(void)
     int accessible_exits[NBR_LOCATIONS] = {0};
     int locked_exits[NBR_LOCATIONS] = {0};
     SameTag* locations_with_same_tag_from_current_location = NULL;
+    SameTag* passage_items_with_same_tag_from_current_location = NULL;
 
-    if (PLAYER->current_location->exits[0].to == NULL)
+    if (PLAYER->current_location->exits[0].to == LOCATION_NONE)
     {
         printf("\nThere is nowhere to go.\n\n");
     }
@@ -108,7 +110,7 @@ void execute_go(void)
                 if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
                 {
                     printf("\n");
-                    if (PLAYER->current_location->exits[0].to == NULL)
+                    if (PLAYER->current_location->exits[0].to == LOCATION_NONE)
                         printf("There is nowhere to go.\n\n");
                     else IF_ACCESS_NONE(0)
                     else IF_ACCESS_LOCKED(0)
@@ -127,7 +129,7 @@ void execute_go(void)
                 {
                     for (i = 0; i <= NBR_LOCATIONS; ++i)
                     {
-                        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
+                        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == LOCATION_NONE)
                         {
                             memcpy(command.object, "", BIG_LENGTH_WORD);
                             break;
@@ -157,7 +159,7 @@ void execute_go(void)
                 {
                     for (i = 0; i <= NBR_LOCATIONS; ++i)
                     {
-                        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
+                        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == LOCATION_NONE)
                         {
                             memcpy(command.object, "", BIG_LENGTH_WORD);
                             break;
@@ -181,7 +183,7 @@ void execute_go(void)
             {
                 for (i = 0, j = 0, k = 0; i <= NBR_LOCATIONS; ++i)
                 {
-                    if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
+                    if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == LOCATION_NONE)
                         break;
                     else if (PLAYER->current_location->exits[i].passage->access != ACCESS_NONE)
                     {
@@ -225,7 +227,25 @@ void execute_go(void)
 
                 if (!locations_with_same_tag_from_current_location || locations_with_same_tag_from_current_location[0].id == ID_LOCATION_NONE)
                 {
-                    memcpy(command.object, "", BIG_LENGTH_WORD);
+                    passage_items_with_same_tag_from_current_location = retrieve_passage_item_id_by_parser_from_current_location(command.object);
+
+                    if (!passage_items_with_same_tag_from_current_location || passage_items_with_same_tag_from_current_location[0].id == ID_ITEM_NONE)
+                        memcpy(command.object, "", BIG_LENGTH_WORD);
+                    else if (passage_items_with_same_tag_from_current_location[1].id == ID_ITEM_NONE)
+                    {
+                        printf("\n");
+                        IF_ACCESS_NONE(passage_items_with_same_tag_from_current_location[0].index)
+                        else IF_ACCESS_LOCKED(passage_items_with_same_tag_from_current_location[0].index)
+                        else IF_LOCATION_FULL(passage_items_with_same_tag_from_current_location[0].index)
+                        else
+                            cross_passage(passage_items_with_same_tag_from_current_location[0].index);
+                        printf("\n\n");
+                    }
+                    else
+                    {
+                        printf("\nThere is more than one passage item in your vicinity for which this tag works.\n");
+                        memcpy(command.object, "", BIG_LENGTH_WORD);
+                    }
                 }
                 else if (locations_with_same_tag_from_current_location[1].id == ID_LOCATION_NONE)
                 {
@@ -251,7 +271,7 @@ void execute_go(void)
             {
                 printf("\n\t[Try 'go inside'.]\n\n");
             }
-            else if (PLAYER->current_location->exits[1].to == NULL)
+            else if (PLAYER->current_location->exits[1].to == LOCATION_NONE)
             {
                 if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
                     printf("\n\t[Try 'go outside'.]\n\n");
@@ -263,7 +283,7 @@ void execute_go(void)
                 printf("\n\t[Try:]\n");
                 for (i = 0; i < NBR_LOCATIONS; ++i)
                 {
-                    if (PLAYER->current_location->exits[i].to == NULL)
+                    if (PLAYER->current_location->exits[i].to == LOCATION_NONE)
                         break;
 
                     if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
@@ -277,6 +297,7 @@ void execute_go(void)
     }
 
     free(locations_with_same_tag_from_current_location);
+    free(passage_items_with_same_tag_from_current_location);
     return;
 }
 

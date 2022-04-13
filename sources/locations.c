@@ -60,6 +60,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_OUTSIDE->tags[1], "world", LENGTH_NAME);
     memcpy(LOCATION_OUTSIDE->description, "", LENGTH_DESCRIPTION);
     LOCATION_OUTSIDE->exits[0] = exit_objects[1];
+    LOCATION_OUTSIDE->exits[1] = exit_objects[0];
     LOCATION_OUTSIDE->list_of_locations_by_id[0] = ID_LOCATION_MANSION;
     LOCATION_OUTSIDE->list_of_items_by_id[0] = ID_ITEM_ENTRY_DOORS;
     LOCATION_OUTSIDE->list_of_characters_by_id[0] = ID_CHARACTER_PLAYER;
@@ -72,6 +73,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_MANSION->tags[1], "mansion", LENGTH_NAME);
     memcpy(LOCATION_MANSION->description, "The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.", LENGTH_DESCRIPTION);
     LOCATION_MANSION->exits[0] = exit_objects[1];
+    LOCATION_MANSION->exits[1] = exit_objects[0];
     LOCATION_MANSION->list_of_locations_by_id[0] = ID_LOCATION_MAIN_HALLWAY;
     LOCATION_MANSION->list_of_locations_by_id[1] = ID_LOCATION_OLD_LIBRARY;
     LOCATION_MANSION->list_of_locations_by_id[2] = ID_LOCATION_ROOM_1;
@@ -90,6 +92,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", LENGTH_DESCRIPTION);
     LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[2];
     LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
+    LOCATION_MAIN_HALLWAY->exits[2] = exit_objects[0];
     LOCATION_MAIN_HALLWAY->list_of_locations_by_id[0] = ID_LOCATION_NONE;
     LOCATION_MAIN_HALLWAY->list_of_items_by_id[0] = ID_ITEM_ENTRY_DOORS;
     LOCATION_MAIN_HALLWAY->list_of_items_by_id[1] = ID_ITEM_GRANDFATHER_CLOCK;
@@ -109,6 +112,7 @@ void populate_list_locations(void)
     LOCATION_OLD_LIBRARY->exits[1] = exit_objects[5];
     LOCATION_OLD_LIBRARY->exits[2] = exit_objects[6];
     LOCATION_OLD_LIBRARY->exits[3] = exit_objects[7];
+    LOCATION_OLD_LIBRARY->exits[4] = exit_objects[0];
     LOCATION_OLD_LIBRARY->list_of_locations_by_id[0] = ID_LOCATION_NONE;
     LOCATION_OLD_LIBRARY->list_of_items_by_id[0] = ID_ITEM_LIBRARY_DOOR;
     LOCATION_OLD_LIBRARY->list_of_items_by_id[1] = ID_ITEM_BOOKS;
@@ -126,6 +130,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_ROOM_1->tags[2], "first room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_1->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_1->exits[0] = exit_objects[8];
+    LOCATION_ROOM_1->exits[1] = exit_objects[0];
     LOCATION_ROOM_1->list_of_locations_by_id[0] = ID_LOCATION_NONE;
     LOCATION_ROOM_1->list_of_items_by_id[0] = ID_ITEM_DOOR_ROOM_1;
     LOCATION_ROOM_1->list_of_characters_by_id[0] = ID_CHARACTER_NONE;
@@ -139,6 +144,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_ROOM_2->tags[2], "second room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_2->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_2->exits[0] = exit_objects[9];
+    LOCATION_ROOM_2->exits[1] = exit_objects[0];
     LOCATION_ROOM_2->list_of_locations_by_id[0] = ID_LOCATION_NONE;
     LOCATION_ROOM_2->list_of_items_by_id[0] = ID_ITEM_DOOR_ROOM_2;
     LOCATION_ROOM_2->list_of_items_by_id[1] = ID_ITEM_ENTRY_DOORS_KEY;
@@ -153,6 +159,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_ROOM_3->tags[2], "third room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_3->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_3->exits[0] = exit_objects[10];
+    LOCATION_ROOM_3->exits[1] = exit_objects[0];
     LOCATION_ROOM_3->list_of_locations_by_id[0] = ID_LOCATION_NONE;
     LOCATION_ROOM_3->list_of_items_by_id[0] = ID_ITEM_DOOR_ROOM_3;
     LOCATION_ROOM_3->list_of_characters_by_id[0] = ID_CHARACTER_NONE;
@@ -189,7 +196,7 @@ SameTag* retrieve_location_id_by_parser_from_current_location(const char* parser
 
     for (i = 0, k = 0; i <= NBR_LOCATIONS; ++i)
     {
-        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
+        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == LOCATION_NONE)
             break;
 
         for (j = 1; j <= NBR_TAGS; ++j)

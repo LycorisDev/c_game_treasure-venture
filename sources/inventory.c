@@ -21,7 +21,7 @@ void execute_inventory(void)
         {
             if (PLAYER->inventory[i] == ID_ITEM_NONE)
                 break;
-            printf("- [%s] / %s\n", list_items[PLAYER->inventory[i]].tags[0], list_items[PLAYER->inventory[i]].description_brief);
+            printf("- [%s]\n\t%s\n", list_items[PLAYER->inventory[i]].tags[0], list_items[PLAYER->inventory[i]].description_brief);
         }
         printf("--------------------\n\n");
     }
@@ -34,9 +34,7 @@ void execute_inventory(void)
         else if (items_with_same_tag[1].id == ID_ITEM_NONE)
             printf("\n%s\n\n", list_items[items_with_same_tag[0].id].description_detailed);
         else
-        {
             printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
-        }
     }
 
     free(items_with_same_tag);

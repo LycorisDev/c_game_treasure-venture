@@ -222,15 +222,47 @@ SameTag* retrieve_takeable_item_id_by_parser_from_current_location(const char* p
         if (i == NBR_ITEMS || PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
             break;
 
+        if (list_items[PLAYER->current_location->list_of_items_by_id[i]].can_be_taken)
+        {
+            for (j = 1; j <= NBR_TAGS; ++j)
+            {
+                if (j == NBR_TAGS || strcmp("", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+                    break;
+
+                if (strcmp(parser, list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+                {
+                    items_with_same_tag[k].index = i;
+                    items_with_same_tag[k++].id = PLAYER->current_location->list_of_items_by_id[i];
+                    break;
+                }
+            }
+        }
+    }
+
+    return items_with_same_tag;
+}
+
+SameTag* retrieve_passage_item_id_by_parser_from_current_location(const char* parser)
+{
+    int i, j, k;
+    SameTag* items_with_same_tag = calloc(NBR_ITEMS, sizeof(SameTag));
+    if (!items_with_same_tag)
+        return NULL;
+
+    for (i = 0, k = 0; i <= NBR_ITEMS; ++i)
+    {
+        if (i == NBR_ITEMS || PLAYER->current_location->exits[i].passage == ITEM_NONE || PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)
+            break;
+
         for (j = 1; j <= NBR_TAGS; ++j)
         {
-            if (j == NBR_TAGS || strcmp("", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+            if (j == NBR_TAGS || strcmp("", PLAYER->current_location->exits[i].passage->tags[j]) == 0)
                 break;
 
-            if (strcmp(parser, list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0 && list_items[PLAYER->current_location->list_of_items_by_id[i]].can_be_taken)
+            if (strcmp(parser, PLAYER->current_location->exits[i].passage->tags[j]) == 0)
             {
                 items_with_same_tag[k].index = i;
-                items_with_same_tag[k++].id = PLAYER->current_location->list_of_items_by_id[i];
+                items_with_same_tag[k++].id = PLAYER->current_location->exits[i].passage->id;
                 break;
             }
         }

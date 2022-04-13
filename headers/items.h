@@ -21,6 +21,7 @@ void populate_list_items(void);
 SameTag* retrieve_item_id_by_parser_from_current_location(const char* parser);
 SameTag* retrieve_item_id_by_parser_from_inventory(const char* parser);
 SameTag* retrieve_takeable_item_id_by_parser_from_current_location(const char* parser);
+SameTag* retrieve_passage_item_id_by_parser_from_current_location(const char* parser);
 
 #endif
 
