@@ -12,7 +12,7 @@ void execute_drop(void)
         printf("\nThis place cannot hold any more item.\n\n");
         return;
     }
-    else if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE)
+    else if (PLAYER->inventory[0] == ID_ITEM_NONE)
     {
         printf("\nYou have no item on you.\n\n");
         return;
@@ -49,16 +49,16 @@ void execute_drop(void)
                 if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
                 {
                     PLAYER->current_location->list_of_items_by_id[i] = items_with_same_tag[0].id;
-                    PLAYER->list_of_items_by_id[items_with_same_tag[0].index] = ID_ITEM_NONE;
+                    PLAYER->inventory[items_with_same_tag[0].index] = ID_ITEM_NONE;
 
                     for (i = NBR_ITEMS - 1; i >= 0; --i)
                     {
-                        if (PLAYER->list_of_items_by_id[i] != ID_ITEM_NONE)
+                        if (PLAYER->inventory[i] != ID_ITEM_NONE)
                         {
                             if (i != items_with_same_tag[0].index)
                             {
-                                PLAYER->list_of_items_by_id[items_with_same_tag[0].index] = PLAYER->list_of_items_by_id[i];
-                                PLAYER->list_of_items_by_id[i] = ID_ITEM_NONE;
+                                PLAYER->inventory[items_with_same_tag[0].index] = PLAYER->inventory[i];
+                                PLAYER->inventory[i] = ID_ITEM_NONE;
                             }
                             break;
                         }
@@ -72,18 +72,18 @@ void execute_drop(void)
 
     if (strcmp(command.object, "") == 0)
     {
-        if (PLAYER->list_of_items_by_id[1] == ID_ITEM_NONE)
+        if (PLAYER->inventory[1] == ID_ITEM_NONE)
         {
-            printf("\n\t[Drop what? Try 'drop %s'.]\n\n", list_items[PLAYER->list_of_items_by_id[0]].tags[0]);
+            printf("\n\t[Drop what? Try 'drop %s'.]\n\n", list_items[PLAYER->inventory[0]].tags[0]);
         }
         else
         {
             printf("\n\t[Drop what? Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                if (PLAYER->inventory[i] == ID_ITEM_NONE)
                     break;
-                printf("\t\t['Drop %s'.]\n", list_items[PLAYER->list_of_items_by_id[i]].tags[0]);
+                printf("\t\t['Drop %s'.]\n", list_items[PLAYER->inventory[i]].tags[0]);
             }
             printf("\n");
         }

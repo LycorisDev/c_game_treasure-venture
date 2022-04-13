@@ -9,7 +9,7 @@ void execute_use(void)
     SameTag* items_with_same_tag_in_inventory = NULL;
     SameTag* items_with_same_tag_in_current_location = NULL;
 
-    if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE && PLAYER->current_location->list_of_items_by_id[0] == ID_ITEM_NONE)
+    if (PLAYER->inventory[0] == ID_ITEM_NONE && PLAYER->current_location->list_of_items_by_id[0] == ID_ITEM_NONE)
     {
         printf("\nThere is nothing for you to use.\n\n");
     }
@@ -78,9 +78,9 @@ void execute_use(void)
             printf("\n\t[Use what? Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                if (PLAYER->inventory[i] == ID_ITEM_NONE)
                     break;
-                printf("\t\t['Use %s'.]\n", list_items[PLAYER->list_of_items_by_id[i]].tags[0]);
+                printf("\t\t['Use %s'.]\n", list_items[PLAYER->inventory[i]].tags[0]);
             }
             for (i = 0; i < NBR_ITEMS; ++i)
             {

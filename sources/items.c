@@ -160,18 +160,18 @@ SameTag* retrieve_item_id_by_parser_from_inventory(const char* parser)
 
     for (i = 0, k = 0; i <= NBR_ITEMS; ++i)
     {
-        if (i == NBR_ITEMS || PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+        if (i == NBR_ITEMS || PLAYER->inventory[i] == ID_ITEM_NONE)
             break;
 
         for (j = 0; j <= NBR_TAGS; ++j)
         {
-            if (j == NBR_TAGS || list_items[PLAYER->list_of_items_by_id[i]].tags[j] == NULL)
+            if (j == NBR_TAGS || list_items[PLAYER->inventory[i]].tags[j] == NULL)
                 break;
 
-            if (strcmp(parser, list_items[PLAYER->list_of_items_by_id[i]].tags[j]) == 0)
+            if (strcmp(parser, list_items[PLAYER->inventory[i]].tags[j]) == 0)
             {
                 items_with_same_tag[k].index = i;
-                items_with_same_tag[k++].id = PLAYER->list_of_items_by_id[i];
+                items_with_same_tag[k++].id = PLAYER->inventory[i];
                 break;
             }
         }

@@ -20,13 +20,13 @@ void save_game(FILE* save_file)
     fprintf(save_file, "inventory:");
     for (i = 0; i < NBR_ITEMS; ++i)
     {
-        if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+        if (PLAYER->inventory[i] == ID_ITEM_NONE)
             break;
 
         if (!i)
-            fprintf(save_file, "%d", PLAYER->list_of_items_by_id[i]);
+            fprintf(save_file, "%d", PLAYER->inventory[i]);
         else
-            fprintf(save_file, ",%d", PLAYER->list_of_items_by_id[i]);
+            fprintf(save_file, ",%d", PLAYER->inventory[i]);
     }
     fprintf(save_file, "\n");
 

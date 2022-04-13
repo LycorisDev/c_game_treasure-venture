@@ -162,7 +162,7 @@ void initialize_game(FILE* save_file)
                 if (save_buffer[6 + NBR_EVENTS + i] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_ITEMS - 1)))
                     break;
                 else
-                    PLAYER->list_of_items_by_id[i] = id;
+                    PLAYER->inventory[i] = id;
             }
         }
     }

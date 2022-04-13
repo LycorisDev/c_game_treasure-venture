@@ -60,7 +60,7 @@ struct character
     char description[LENGTH_DESCRIPTION];
     Location* previous_location;
     Location* current_location;
-    int list_of_items_by_id[NBR_ITEMS];
+    int inventory[NBR_ITEMS];
 };
 
 extern Location list_locations[NBR_LOCATIONS];

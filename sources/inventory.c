@@ -8,7 +8,7 @@ void execute_inventory(void)
     int i;
     SameTag* items_with_same_tag = NULL;
 
-    if (PLAYER->list_of_items_by_id[0] == ID_ITEM_NONE)
+    if (PLAYER->inventory[0] == ID_ITEM_NONE)
     {
         printf("\nYou have no item on you.\n\n");
     }
@@ -19,9 +19,9 @@ void execute_inventory(void)
         printf("\t['Inventory [item]' to see the detailed description of an item.]\n\n");
         for (i = 0; i < NBR_ITEMS; ++i)
         {
-            if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+            if (PLAYER->inventory[i] == ID_ITEM_NONE)
                 break;
-            printf("- [%s] / %s\n", list_items[PLAYER->list_of_items_by_id[i]].tags[0], list_items[PLAYER->list_of_items_by_id[i]].description_brief);
+            printf("- [%s] / %s\n", list_items[PLAYER->inventory[i]].tags[0], list_items[PLAYER->inventory[i]].description_brief);
         }
         printf("--------------------\n\n");
     }

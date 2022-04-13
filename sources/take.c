@@ -8,7 +8,7 @@ void execute_take(void)
     int id_of_takeable_items[NBR_ITEMS] = {0};
     SameTag* takeable_items_with_same_tag = NULL;
 
-    if (PLAYER->list_of_items_by_id[NBR_ITEMS - 1] != ID_ITEM_NONE)
+    if (PLAYER->inventory[NBR_ITEMS - 1] != ID_ITEM_NONE)
     {
         printf("\nYour inventory is full.\n\n");
         return;
@@ -40,9 +40,9 @@ void execute_take(void)
         {
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (PLAYER->list_of_items_by_id[i] == ID_ITEM_NONE)
+                if (PLAYER->inventory[i] == ID_ITEM_NONE)
                 {
-                    PLAYER->list_of_items_by_id[i] = takeable_items_with_same_tag[0].id;
+                    PLAYER->inventory[i] = takeable_items_with_same_tag[0].id;
                     PLAYER->current_location->list_of_items_by_id[takeable_items_with_same_tag[0].index] = ID_ITEM_NONE;
 
                     for (j = NBR_ITEMS - 1; j >= 0; --j)

@@ -10,7 +10,7 @@ void populate_list_characters(void)
     memcpy(CHARACTER_NONE->description, "NO_DESCRIPTION.", LENGTH_DESCRIPTION);
     CHARACTER_NONE->previous_location = LOCATION_NONE;
     CHARACTER_NONE->current_location = LOCATION_NONE;
-    CHARACTER_NONE->list_of_items_by_id[0] = ID_ITEM_NONE;
+    CHARACTER_NONE->inventory[0] = ID_ITEM_NONE;
 
     PLAYER->id = ID_CHARACTER_PLAYER;
     memcpy(PLAYER->name, "player", LENGTH_NAME);
@@ -20,7 +20,7 @@ void populate_list_characters(void)
     memcpy(PLAYER->description, "NO_DESCRIPTION.", LENGTH_DESCRIPTION);
     PLAYER->previous_location = LOCATION_NONE;
     PLAYER->current_location = LOCATION_OUTSIDE;
-    PLAYER->list_of_items_by_id[0] = ID_ITEM_NONE;
+    PLAYER->inventory[0] = ID_ITEM_NONE;
 
     CHARACTER_LIBRARIAN->id = ID_CHARACTER_LIBRARIAN;
     memcpy(CHARACTER_LIBRARIAN->name, "librarian", LENGTH_NAME);
@@ -29,7 +29,7 @@ void populate_list_characters(void)
     memcpy(CHARACTER_LIBRARIAN->description, "The librarian seems friendly.", LENGTH_DESCRIPTION);
     CHARACTER_LIBRARIAN->previous_location = LOCATION_NONE;
     CHARACTER_LIBRARIAN->current_location = LOCATION_OLD_LIBRARY;
-    CHARACTER_LIBRARIAN->list_of_items_by_id[0] = ID_ITEM_NONE;
+    CHARACTER_LIBRARIAN->inventory[0] = ID_ITEM_NONE;
     return;
 }
 
