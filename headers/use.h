@@ -18,7 +18,7 @@
 #include "events.h"
 
 void execute_use(void);
-void use_entry_doors_key(const int used_item_id);
+void use_item_on_target(const int used_item_id);
 
 #endif
 

@@ -44,7 +44,9 @@ struct item
     int id;
     int is_singular;
     int access;
+    int unlocked_with;
     int can_be_taken;
+    int requires_target_for_use;
     char name[LENGTH_NAME];
     char tags[NBR_TAGS][LENGTH_NAME];
     char description_brief[LENGTH_DESCRIPTION];
