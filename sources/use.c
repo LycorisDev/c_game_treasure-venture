@@ -31,7 +31,7 @@ void execute_use(void)
                 else
                 {
                     /* TODO */
-                    printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
+                    printf("\nThere is more than one item in your inventory for which this tag works.\n");
                 }
             }
             else if (items_with_same_tag_in_inventory[0].id == ID_ITEM_NONE && items_with_same_tag_in_current_location[0].id != ID_ITEM_NONE)
@@ -43,13 +43,13 @@ void execute_use(void)
                 else
                 {
                     /* TODO */
-                    printf("\nThere is more than one item in your vicinity for which this tag works.\n\n");
+                    printf("\nThere is more than one item in your vicinity for which this tag works.\n");
                 }
             }
             else
             {
                 /* TODO: items both in the inventory and the current location (at least one of each) */
-                printf("\nYour inventory and vicinity both included, there is more than one item for which this tag works.\n\n");
+                printf("\nYour inventory and vicinity both included, there is more than one item for which this tag works.\n");
             }
 
             if (!used_item_id)
@@ -195,7 +195,7 @@ void use_item_on_target(const int used_item_id)
                 break;
             case ACCESS_OPEN:
                 list_items[target_id].access = ACCESS_LOCKED;
-                printf("\nYou close and lock the %s.", list_items[target_id].is_singular ? "door" : "doors");
+                printf("\nYou close and lock the %s.\n\n", list_items[target_id].is_singular ? "door" : "doors");
                 break;
             case ACCESS_CLOSED:
                 list_items[target_id].access = ACCESS_LOCKED;

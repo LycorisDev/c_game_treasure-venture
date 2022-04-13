@@ -12,11 +12,6 @@
                         printf("\t|_| |_| \\___/\\__\\___/\\__|\\_, | .__/\\___| |_|_\\_|  \\___|\n");\
                         printf("\t                          |__/|_|                      \n");
 
-#define LOCATION_NAME   if (PLAYER->current_location->inside_of->id == ID_LOCATION_NONE)\
-                            printf("You are outside. ");\
-                        else\
-                            printf("You are in the %s. ", PLAYER->current_location->name);
-
 /* Declared as extern in ../headers/main.h */
 char *parser[MAX_NBR_WORDS];
 int nbr_words_in_parser;

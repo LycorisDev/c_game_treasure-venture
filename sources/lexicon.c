@@ -48,6 +48,7 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_THING, "thing", LENGTH_WORD);
     memcpy(LEXICON_THIRD, "third", LENGTH_WORD);
     memcpy(LEXICON_USE, "use", LENGTH_WORD);
+    memcpy(LEXICON_WORLD, "world", LENGTH_WORD);
     return;
 }
 

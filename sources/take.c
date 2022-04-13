@@ -67,7 +67,8 @@ void execute_take(void)
         else
         {
             /* TODO */
-            printf("\nThere is more than one takeable item in your vicinity for which this tag works.\n\n");
+            printf("\nThere is more than one takeable item in your vicinity for which this tag works.\n");
+            memcpy(command.object, "", BIG_LENGTH_WORD);
         }
     }
 

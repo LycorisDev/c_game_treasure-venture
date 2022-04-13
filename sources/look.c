@@ -14,7 +14,7 @@ void execute_look(void)
 
     if (strcmp(command.object, "around") == 0)
     {
-        printf("\nYou are in %s. ", PLAYER->current_location->name);
+        LOCATION_NAME
         describe_location(PLAYER->current_location);
         printf("\n\n");
     }
@@ -48,7 +48,8 @@ void execute_look(void)
                 else
                 {
                     /* TODO */
-                    printf("\nThere is more than one character in your vicinity for which this tag works.\n\n");
+                    printf("\nThere is more than one character in your vicinity for which this tag works.\n");
+                    memcpy(command.object, "", BIG_LENGTH_WORD);
                 }
             }
             else if (items_with_same_tag[1].id == ID_ITEM_NONE)
@@ -59,7 +60,8 @@ void execute_look(void)
             else
             {
                 /* TODO */
-                printf("\nThere is more than one item in your vicinity for which this tag works.\n\n");
+                printf("\nThere is more than one item in your vicinity for which this tag works.\n");
+                memcpy(command.object, "", BIG_LENGTH_WORD);
                 /* TODO: Also add the case where characters match the tag as well, like even maybe 1 character and several items, or the opposite */
             }
         }
