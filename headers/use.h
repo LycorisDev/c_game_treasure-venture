@@ -19,7 +19,6 @@
 
 void execute_use(void);
 void use_entry_doors_key(const int used_item_id);
-void use_door(const int used_item_id);
 
 #endif
 

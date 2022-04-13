@@ -60,10 +60,38 @@ void execute_use(void)
                 {
                     use_entry_doors_key(used_item_id);
                 }
-                else if (used_item_id == ID_ITEM_ENTRY_DOORS || used_item_id == ID_ITEM_LIBRARY_DOOR 
-                        || used_item_id == ID_ITEM_DOOR_ROOM_1 || used_item_id == ID_ITEM_DOOR_ROOM_2 || used_item_id == ID_ITEM_DOOR_ROOM_3)
+                else if (list_items[used_item_id].access != ACCESS_NONE)
                 {
-                    use_door(used_item_id);
+                    for (i = 0; i < NBR_LOCATIONS; ++i)
+                    {
+                        if (PLAYER->current_location->exits[i].to == LOCATION_NONE)
+                        {
+                            memcpy(command.object, "", BIG_LENGTH_WORD);
+                            break;
+                        }
+                        else if (PLAYER->current_location->exits[i].passage == (list_items + used_item_id))
+                        {
+                            if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
+                            {
+                                printf("\nThe %s %s locked.\n\n", list_items[used_item_id].is_singular ? "door" : "doors", list_items[used_item_id].is_singular ? "is" : "are");
+                            }
+                            else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
+                            {
+                                PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
+                                printf("\nYou close the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
+                            }
+                            else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
+                            {
+                                PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
+                                printf("\nYou open the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
+                            }
+                            else
+                            {
+                                memcpy(command.object, "", BIG_LENGTH_WORD);
+                            }
+                            break;
+                        }
+                    }
                 }
                 else
                 {
@@ -148,7 +176,9 @@ void use_entry_doors_key(const int used_item_id)
         }
 
         if (!used_item_id)
+        {
             memcpy(command.target, "", BIG_LENGTH_WORD);
+        }
         else if (is_target_a_character && target_id == ID_CHARACTER_PLAYER)
         {
             printf("\nThe %s %s nothing to you.\n\n", command.object, list_items[used_item_id].is_singular ? "does" : "do");
@@ -190,36 +220,6 @@ void use_entry_doors_key(const int used_item_id)
 
     free(items_with_same_tag_in_current_location);
     free(characters_with_same_tag_in_current_location);
-    return;
-}
-
-void use_door(const int used_item_id)
-{
-    int i;
-    for (i = 0; i < NBR_LOCATIONS; ++i)
-    {
-        if (PLAYER->current_location->exits[i].to == LOCATION_NONE)
-            break;
-        else if (PLAYER->current_location->exits[i].passage == (list_items + used_item_id))
-        {
-            EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-                if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
-                {
-                    printf("\nThe %s %s locked.\n\n", list_items[used_item_id].is_singular ? "door" : "doors", list_items[used_item_id].is_singular ? "is" : "are");
-                }
-                else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
-                {
-                    PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
-                    printf("\nYou close the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
-                }
-                else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
-                {
-                    PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
-                    printf("\nYou open the %s.\n\n", list_items[used_item_id].is_singular ? "door" : "doors");
-                }
-            break;
-        }
-    }
     return;
 }
 
