@@ -17,7 +17,7 @@ void execute_play(void)
         }
         else
         {
-            exit_twenty_squares = execute_twenty_squares(list_characters[PLAYER->current_location->list_of_characters_by_id[i]].tags[0]);
+            exit_twenty_squares = execute_twenty_squares(list_characters[PLAYER->current_location->list_of_characters_by_id[i]].tags[1]);
             if (exit_twenty_squares == EXIT_FAILURE)
                 printf("\n\t[Error: Something went wrong with the mini-game 'Twenty Squares'.]\n\n");
             printf("%s\n\n", PLAYER->current_location->description);

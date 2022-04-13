@@ -31,12 +31,13 @@ extern int list_events[NBR_EVENTS];
     {\
         memcpy(ITEM_ENTRY_DOORS_KEY->description_obvious, "A key is left unattended on the ground.", LENGTH_DESCRIPTION);\
         memcpy(ITEM_ENTRY_DOORS_KEY->description_detailed, "The key shines in a golden color, and a small note attached to it with a string reads \"Entry\".", LENGTH_DESCRIPTION);\
-        memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "key", LENGTH_NAME);\
-        memcpy(ITEM_ENTRY_DOORS_KEY->tags[1], "entry doors key", LENGTH_NAME);\
-        memcpy(ITEM_ENTRY_DOORS_KEY->tags[2], "double doors key", LENGTH_NAME);\
-        memcpy(ITEM_ENTRY_DOORS_KEY->tags[3], "main doors key", LENGTH_NAME);\
-        memcpy(ITEM_ENTRY_DOORS_KEY->tags[4], "main entry doors key", LENGTH_NAME);\
-        memcpy(ITEM_ENTRY_DOORS_KEY->tags[5], "main double doors key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "key / entry doors key / double doors key / main doors key / main entry doors key / main double doors key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[1], "key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[2], "entry doors key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[3], "double doors key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[4], "main doors key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[5], "main entry doors key", LENGTH_NAME);\
+        memcpy(ITEM_ENTRY_DOORS_KEY->tags[6], "main double doors key", LENGTH_NAME);\
         list_events[1] = FLAG_OFF;\
     }
 

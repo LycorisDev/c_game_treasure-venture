@@ -35,7 +35,6 @@ void execute_inventory(void)
             printf("\n%s\n\n", list_items[items_with_same_tag[0].id].description_detailed);
         else
         {
-            /* TODO */
             printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
         }
     }

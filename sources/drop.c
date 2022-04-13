@@ -27,14 +27,13 @@ void execute_drop(void)
         }
         else if (items_with_same_tag[1].id != ID_ITEM_NONE)
         {
-            /* TODO: The second tag is picked, but it may still be identical, so the retrieval function needs to provide the index of the proper tag (index, id, tag) */
             printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
-            printf("\n\t[Drop what? There is more than one item in your inventory for which this tag works. Try:]\n");
+            printf("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (items_with_same_tag[i].id == ID_ITEM_NONE)
                     break;
-                printf("\t\t['Drop %s'.]\n", list_items[items_with_same_tag[i].id].tags[1]);
+                printf("\t\t['Drop %s'.]\n", list_items[items_with_same_tag[i].id].tags[0]);
             }
             printf("\n");
         }
@@ -74,11 +73,11 @@ void execute_drop(void)
     {
         if (PLAYER->inventory[1] == ID_ITEM_NONE)
         {
-            printf("\n\t[Drop what? Try 'drop %s'.]\n\n", list_items[PLAYER->inventory[0]].tags[0]);
+            printf("\n\t[Try 'drop %s'.]\n\n", list_items[PLAYER->inventory[0]].tags[0]);
         }
         else
         {
-            printf("\n\t[Drop what? Try:]\n");
+            printf("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (PLAYER->inventory[i] == ID_ITEM_NONE)

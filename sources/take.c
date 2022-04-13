@@ -66,7 +66,6 @@ void execute_take(void)
         }
         else
         {
-            /* TODO */
             printf("\nThere is more than one takeable item in your vicinity for which this tag works.\n");
             memcpy(command.object, "", BIG_LENGTH_WORD);
         }
@@ -76,11 +75,11 @@ void execute_take(void)
     {
         if (id_of_takeable_items[1] == ID_ITEM_NONE)
         {
-            printf("\n\t[Take what? Try 'take %s'.]\n\n", list_items[id_of_takeable_items[0]].tags[0]);
+            printf("\n\t[Try 'take %s'.]\n\n", list_items[id_of_takeable_items[0]].tags[0]);
         }
         else
         {
-            printf("\n\t[Take what? Try:]\n");
+            printf("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (id_of_takeable_items[i] == ID_ITEM_NONE)

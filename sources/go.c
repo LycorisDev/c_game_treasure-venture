@@ -92,6 +92,7 @@ void execute_go(void)
     int i, j, k;
     int accessible_exits[NBR_LOCATIONS] = {0};
     int locked_exits[NBR_LOCATIONS] = {0};
+    SameTag* locations_with_same_tag_from_current_location = NULL;
 
     if (PLAYER->current_location->exits[0].to == NULL)
     {
@@ -147,7 +148,7 @@ void execute_go(void)
                 else
                     memcpy(command.object, "", BIG_LENGTH_WORD);
             }
-            /* "go back" = go to your previous location if possible */
+            /* "go back" to go to your previous location if possible */
             else if (strcmp(command.object, "back") == 0)
             {
                 if (PLAYER->previous_location == LOCATION_NONE)
@@ -175,7 +176,7 @@ void execute_go(void)
                     }
                 }
             }
-            /* "go out" = go to the only exit */
+            /* "go out" to go to the only exit */
             else if (strcmp(command.object, "out") == 0)
             {
                 for (i = 0, j = 0, k = 0; i <= NBR_LOCATIONS; ++i)
@@ -214,38 +215,32 @@ void execute_go(void)
                 /* Several accessible and/or locked exits. Which one does the player want? */
                 else
                 {
+                    printf("\nThere is more than one exit. Which one do you want?\n");
                     memcpy(command.object, "", BIG_LENGTH_WORD);
                 }
             }
             else
             {
-                for (i = 0; i <= NBR_LOCATIONS; ++i)
+                locations_with_same_tag_from_current_location = retrieve_location_id_by_parser_from_current_location(command.object);
+
+                if (!locations_with_same_tag_from_current_location || locations_with_same_tag_from_current_location[0].id == ID_LOCATION_NONE)
                 {
-                    if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
-                    {
-                        memcpy(command.object, "", BIG_LENGTH_WORD);
-                        break;
-                    }
+                    memcpy(command.object, "", BIG_LENGTH_WORD);
+                }
+                else if (locations_with_same_tag_from_current_location[1].id == ID_LOCATION_NONE)
+                {
+                    printf("\n");
+                    IF_ACCESS_NONE(locations_with_same_tag_from_current_location[0].index)
+                    else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0].index)
+                    else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0].index)
                     else
-                    {
-                        for (j = 0; j <= NBR_TAGS; ++j)
-                        {
-                            if (j == NBR_TAGS || PLAYER->current_location->exits[i].to->tags[j] == NULL)
-                                break;
-                            if (strcmp(command.object, PLAYER->current_location->exits[i].to->tags[j]) == 0)
-                            {
-                                printf("\n");
-                                IF_ACCESS_NONE(i)
-                                else IF_ACCESS_LOCKED(i)
-                                else IF_LOCATION_FULL(i)
-                                else
-                                    cross_passage(i);
-                                printf("\n\n");
-                                i = NBR_LOCATIONS;
-                                break;
-                            }
-                        }
-                    }
+                        cross_passage(locations_with_same_tag_from_current_location[0].index);
+                    printf("\n\n");
+                }
+                else
+                {
+                    printf("\nThere is more than one destination from your current location for which this tag works.\n");
+                    memcpy(command.object, "", BIG_LENGTH_WORD);
                 }
             }
         }
@@ -254,18 +249,18 @@ void execute_go(void)
         {
             if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_ROOM)
             {
-                printf("\n\t[Go where? From here, try 'go inside'.]\n\n");
+                printf("\n\t[Try 'go inside'.]\n\n");
             }
             else if (PLAYER->current_location->exits[1].to == NULL)
             {
                 if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
-                    printf("\n\t[Go where? From here, try 'go outside'.]\n\n");
+                    printf("\n\t[Try 'go outside'.]\n\n");
                 else
-                    printf("\n\t[Go where? From here, try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
+                    printf("\n\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
             }
             else
             {
-                printf("\n\t[Go where? From here, try:]\n");
+                printf("\n\t[Try:]\n");
                 for (i = 0; i < NBR_LOCATIONS; ++i)
                 {
                     if (PLAYER->current_location->exits[i].to == NULL)
@@ -280,6 +275,8 @@ void execute_go(void)
             }
         }
     }
+
+    free(locations_with_same_tag_from_current_location);
     return;
 }
 

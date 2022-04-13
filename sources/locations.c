@@ -45,6 +45,7 @@ void populate_list_locations(void)
     LOCATION_NONE->inside_of = LOCATION_NONE;
     memcpy(LOCATION_NONE->name, "NO_NAME", LENGTH_NAME);
     memcpy(LOCATION_NONE->tags[0], "NO_TAG", LENGTH_NAME);
+    memcpy(LOCATION_NONE->tags[1], "NO_TAG", LENGTH_NAME);
     memcpy(LOCATION_NONE->description, "NO_DESCRIPTION.", LENGTH_DESCRIPTION);
     LOCATION_NONE->exits[0] = exit_objects[0];
     LOCATION_NONE->list_of_locations_by_id[0] = ID_LOCATION_NONE;
@@ -56,6 +57,7 @@ void populate_list_locations(void)
     LOCATION_OUTSIDE->inside_of = LOCATION_NONE;
     memcpy(LOCATION_OUTSIDE->name, "world", LENGTH_NAME);
     memcpy(LOCATION_OUTSIDE->tags[0], "world", LENGTH_NAME);
+    memcpy(LOCATION_OUTSIDE->tags[1], "world", LENGTH_NAME);
     memcpy(LOCATION_OUTSIDE->description, "", LENGTH_DESCRIPTION);
     LOCATION_OUTSIDE->exits[0] = exit_objects[1];
     LOCATION_OUTSIDE->list_of_locations_by_id[0] = ID_LOCATION_MANSION;
@@ -67,6 +69,7 @@ void populate_list_locations(void)
     LOCATION_MANSION->inside_of = LOCATION_OUTSIDE;
     memcpy(LOCATION_MANSION->name, "mansion", LENGTH_NAME);
     memcpy(LOCATION_MANSION->tags[0], "mansion", LENGTH_NAME);
+    memcpy(LOCATION_MANSION->tags[1], "mansion", LENGTH_NAME);
     memcpy(LOCATION_MANSION->description, "The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.", LENGTH_DESCRIPTION);
     LOCATION_MANSION->exits[0] = exit_objects[1];
     LOCATION_MANSION->list_of_locations_by_id[0] = ID_LOCATION_MAIN_HALLWAY;
@@ -81,8 +84,9 @@ void populate_list_locations(void)
     LOCATION_MAIN_HALLWAY->type = LOCATION_TYPE_ROOM;
     LOCATION_MAIN_HALLWAY->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_MAIN_HALLWAY->name, "main hallway", LENGTH_NAME);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[0], "hallway", LENGTH_NAME);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[1], "main hallway", LENGTH_NAME);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[0], "hallway / main hallway", LENGTH_NAME);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", LENGTH_NAME);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[2], "main hallway", LENGTH_NAME);
     memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", LENGTH_DESCRIPTION);
     LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[2];
     LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
@@ -97,8 +101,9 @@ void populate_list_locations(void)
     LOCATION_OLD_LIBRARY->type = LOCATION_TYPE_ROOM;
     LOCATION_OLD_LIBRARY->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_OLD_LIBRARY->name, "old library", LENGTH_NAME);
-    memcpy(LOCATION_OLD_LIBRARY->tags[0], "library", LENGTH_NAME);
-    memcpy(LOCATION_OLD_LIBRARY->tags[1], "old library", LENGTH_NAME);
+    memcpy(LOCATION_OLD_LIBRARY->tags[0], "library / old library", LENGTH_NAME);
+    memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", LENGTH_NAME);
+    memcpy(LOCATION_OLD_LIBRARY->tags[2], "old library", LENGTH_NAME);
     memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", LENGTH_DESCRIPTION);
     LOCATION_OLD_LIBRARY->exits[0] = exit_objects[4];
     LOCATION_OLD_LIBRARY->exits[1] = exit_objects[5];
@@ -116,8 +121,9 @@ void populate_list_locations(void)
     LOCATION_ROOM_1->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_1->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_1->name, "first room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_1->tags[0], "room 1", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_1->tags[1], "first room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_1->tags[0], "room 1 / first room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_1->tags[1], "room 1", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_1->tags[2], "first room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_1->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_1->exits[0] = exit_objects[8];
     LOCATION_ROOM_1->list_of_locations_by_id[0] = ID_LOCATION_NONE;
@@ -128,8 +134,9 @@ void populate_list_locations(void)
     LOCATION_ROOM_2->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_2->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_2->name, "second room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_2->tags[0], "room 2", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_2->tags[1], "second room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_2->tags[0], "room 2 / second room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_2->tags[1], "room 2", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_2->tags[2], "second room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_2->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_2->exits[0] = exit_objects[9];
     LOCATION_ROOM_2->list_of_locations_by_id[0] = ID_LOCATION_NONE;
@@ -141,8 +148,9 @@ void populate_list_locations(void)
     LOCATION_ROOM_3->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_3->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_3->name, "third room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_3->tags[0], "room 3", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_3->tags[1], "third room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_3->tags[0], "room 3 / third room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_3->tags[1], "room 3", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_3->tags[2], "third room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_3->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_3->exits[0] = exit_objects[10];
     LOCATION_ROOM_3->list_of_locations_by_id[0] = ID_LOCATION_NONE;
@@ -181,12 +189,12 @@ SameTag* retrieve_location_id_by_parser_from_current_location(const char* parser
 
     for (i = 0, k = 0; i <= NBR_LOCATIONS; ++i)
     {
-        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to->id == ID_LOCATION_NONE)
+        if (i == NBR_LOCATIONS || PLAYER->current_location->exits[i].to == NULL)
             break;
 
-        for (j = 0; j <= NBR_TAGS; ++j)
+        for (j = 1; j <= NBR_TAGS; ++j)
         {
-            if (j == NBR_TAGS || PLAYER->current_location->exits[i].to->tags[j] == NULL)
+            if (j == NBR_TAGS || strcmp("", PLAYER->current_location->exits[i].to->tags[j]) == 0)
                 break;
 
             if (strcmp(parser, PLAYER->current_location->exits[i].to->tags[j]) == 0)

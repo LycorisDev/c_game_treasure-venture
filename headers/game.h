@@ -1,9 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define LENGTH_NAME           100
+#define LENGTH_NAME           120
 #define LENGTH_DESCRIPTION    512
-#define NBR_TAGS              6
+#define NBR_TAGS              7
 #define NBR_LOCATIONS         16
 #define NBR_ITEMS             100
 #define NBR_CHARACTERS        5

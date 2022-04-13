@@ -20,17 +20,17 @@ void execute_look(void)
     }
     else if (NO_ITEM_AT_CURRENT_LOCATION && PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
     {
-        printf("\n\t[Look what? Try 'look around'.]\n\n");
+        printf("\n\t[Try 'look around'.]\n\n");
     }
     else
     {
         if (strcmp(command.object, "") != 0)
         {
             items_with_same_tag = retrieve_item_id_by_parser_from_current_location(command.object);
+            characters_with_same_tag = retrieve_character_id_by_parser_from_current_location(command.object);
 
             if (!items_with_same_tag || items_with_same_tag[0].id == ID_ITEM_NONE)
             {
-                characters_with_same_tag = retrieve_character_id_by_parser_from_current_location(command.object);
                 if (!characters_with_same_tag || characters_with_same_tag[0].id == ID_CHARACTER_NONE)
                     memcpy(command.object, "", BIG_LENGTH_WORD);
                 else if (characters_with_same_tag[1].id == ID_CHARACTER_NONE)
@@ -47,7 +47,6 @@ void execute_look(void)
                 }
                 else
                 {
-                    /* TODO */
                     printf("\nThere is more than one character in your vicinity for which this tag works.\n");
                     memcpy(command.object, "", BIG_LENGTH_WORD);
                 }
@@ -57,18 +56,21 @@ void execute_look(void)
                 printf("\n%s\n\n", list_items[items_with_same_tag[0].id].description_detailed);
                 EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY(items_with_same_tag[0].id)
             }
-            else
+            else if (!characters_with_same_tag || characters_with_same_tag[0].id == ID_CHARACTER_NONE)
             {
-                /* TODO */
                 printf("\nThere is more than one item in your vicinity for which this tag works.\n");
                 memcpy(command.object, "", BIG_LENGTH_WORD);
-                /* TODO: Also add the case where characters match the tag as well, like even maybe 1 character and several items, or the opposite */
+            }
+            else
+            {
+                printf("\nThere is more than one item and character in your vicinity for which this tag works.\n");
+                memcpy(command.object, "", BIG_LENGTH_WORD);
             }
         }
 
         if (strcmp(command.object, "") == 0)
         {
-            printf("\n\t[Look what? Try:]\n");
+            printf("\n\t[Try:]\n");
             printf("\t\t['Look around'.]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {

@@ -30,7 +30,6 @@ void execute_use(void)
                 }
                 else
                 {
-                    /* TODO */
                     printf("\nThere is more than one item in your inventory for which this tag works.\n");
                 }
             }
@@ -42,13 +41,11 @@ void execute_use(void)
                 }
                 else
                 {
-                    /* TODO */
                     printf("\nThere is more than one item in your vicinity for which this tag works.\n");
                 }
             }
             else
             {
-                /* TODO: items both in the inventory and the current location (at least one of each) */
                 printf("\nYour inventory and vicinity both included, there is more than one item for which this tag works.\n");
             }
 
@@ -111,7 +108,7 @@ void execute_use(void)
 
     if (strcmp(command.object, "") == 0)
     {
-        printf("\n\t[Use what? Try:]\n");
+        printf("\n\t[Try:]\n");
         for (i = 0; i < NBR_ITEMS; ++i)
         {
             if (PLAYER->inventory[i] == ID_ITEM_NONE)
@@ -151,7 +148,6 @@ void use_item_on_target(const int used_item_id)
         }
         else
         {
-            /* TODO */
             printf("\nThere is more than one item in your vicinity for which this tag works.\n\n");
         }
     }
@@ -164,13 +160,11 @@ void use_item_on_target(const int used_item_id)
         }
         else
         {
-            /* TODO */
             printf("\nThere is more than one character in your vicinity for which this tag works.\n\n");
         }
     }
     else
     {
-        /* TODO: items and characters both in current location (at least one of each) */
         printf("\nThere is more than target in your vicinity for which this tag works.\n\n");
     }
 
