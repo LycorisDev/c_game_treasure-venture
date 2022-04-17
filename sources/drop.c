@@ -4,40 +4,40 @@
 
 void execute_drop(void)
 {
-    int i;
-    SameTag* items_with_same_tag = NULL;
+    int i, j;
+    Item** items_with_same_tag = NULL;
 
-    if (PLAYER->current_location->list_of_items_by_id[NBR_ITEMS - 1] != ID_ITEM_NONE)
+    if (PLAYER->current_location->items[NBR_ITEMS - 1])
     {
         printf("\nThis place cannot hold any more item.\n\n");
         return;
     }
-    else if (PLAYER->inventory[0] == ID_ITEM_NONE)
+    else if (!PLAYER->inventory[0])
     {
         printf("\nYou have no item on you.\n\n");
         return;
     }
-    else if (strcmp(command.object, "") != 0)
+    else if (*command.object)
     {
-        items_with_same_tag = retrieve_item_id_by_parser_from_inventory(command.object);
+        items_with_same_tag = retrieve_items_by_parser_from_inventory(command.object);
 
-        if (!items_with_same_tag || items_with_same_tag[0].id == ID_ITEM_NONE)
+        if (!items_with_same_tag || !items_with_same_tag[0])
         {
-            memcpy(command.object, "", BIG_LENGTH_WORD);
+            memset(command.object, 0, sizeof(command.object));
         }
-        else if (items_with_same_tag[1].id != ID_ITEM_NONE)
+        else if (items_with_same_tag[1])
         {
             printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
             printf("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (items_with_same_tag[i].id == ID_ITEM_NONE)
+                if (!items_with_same_tag[i])
                     break;
-                printf("\t\t['Drop %s'.]\n", list_items[items_with_same_tag[i].id].tags[0]);
+                printf("\t\t['Drop %s'.]\n", items_with_same_tag[i]->tags[0]);
             }
             printf("\n");
         }
-        else if (PLAYER->current_location->list_of_items_by_id[NBR_ITEMS - 1] != ID_ITEM_NONE)
+        else if (PLAYER->current_location->items[NBR_ITEMS - 1])
         {
             printf("\nThe current location is full. No more items can be added.\n\n");
         }
@@ -45,19 +45,34 @@ void execute_drop(void)
         {
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
+                /* Look for an empty spot in the current location's item list */
+                if (!PLAYER->current_location->items[i])
                 {
-                    PLAYER->current_location->list_of_items_by_id[i] = items_with_same_tag[0].id;
-                    PLAYER->inventory[items_with_same_tag[0].index] = ID_ITEM_NONE;
+                    /* Put the dropped item there */
+                    PLAYER->current_location->items[i] = items_with_same_tag[0];
 
-                    for (i = NBR_ITEMS - 1; i >= 0; --i)
+                    for (j = 0; j < NBR_ITEMS; ++j)
                     {
-                        if (PLAYER->inventory[i] != ID_ITEM_NONE)
+                        /* Find its copy in the inventory */
+                        if (PLAYER->inventory[j] == items_with_same_tag[0])
                         {
-                            if (i != items_with_same_tag[0].index)
+                            /* Empty this spot */
+                            memset((PLAYER->inventory + j), 0, sizeof(Item*));
+
+                            /* If the item wasn't in last position in the inventory and the next spot has an item, there's now a hole */
+                            if (j != NBR_ITEMS - 1 && PLAYER->inventory[j + 1])
                             {
-                                PLAYER->inventory[items_with_same_tag[0].index] = PLAYER->inventory[i];
-                                PLAYER->inventory[i] = ID_ITEM_NONE;
+                                for (i = NBR_ITEMS - 1; i >= 0; --i)
+                                {
+                                    /* Look for the last item of the inventory */
+                                    if (PLAYER->inventory[i])
+                                    {
+                                        /* Use it to fill the hole */
+                                        PLAYER->inventory[j] = PLAYER->inventory[i];
+                                        memset((PLAYER->inventory + i), 0, sizeof(Item*));
+                                        break;
+                                    }
+                                }
                             }
                             break;
                         }
@@ -65,24 +80,24 @@ void execute_drop(void)
                     break;
                 }
             }
-            printf("\n'%s' dropped.\n\n", list_items[items_with_same_tag[0].id].name);
+            printf("\n'%s' dropped.\n\n", items_with_same_tag[0]->name);
         }
     }
 
-    if (strcmp(command.object, "") == 0)
+    if (!*command.object)
     {
-        if (PLAYER->inventory[1] == ID_ITEM_NONE)
+        if (!PLAYER->inventory[1])
         {
-            printf("\n\t[Try 'drop %s'.]\n\n", list_items[PLAYER->inventory[0]].tags[0]);
+            printf("\n\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
         }
         else
         {
             printf("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (PLAYER->inventory[i] == ID_ITEM_NONE)
+                if (!PLAYER->inventory[i])
                     break;
-                printf("\t\t['Drop %s'.]\n", list_items[PLAYER->inventory[i]].tags[0]);
+                printf("\t\t['Drop %s'.]\n", PLAYER->inventory[i]->tags[0]);
             }
             printf("\n");
         }

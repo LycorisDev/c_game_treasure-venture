@@ -3,14 +3,14 @@
 void get_string_input(char* input, const char context[], const char question[], const char choices[])
 {
     int i;
-    if (strcmp(context, "yes_no") == 0)
+    if (!strcmp(context, "yes_no"))
     {
         printf("%s %s\n\n", question, choices);
 
-        while (strcmp(input, "yes") != 0 && strcmp(input, "no") != 0)
+        while (strcmp(input, "yes") && strcmp(input, "no"))
         {
             printf("> ");
-            if (fgets(input, INPUT_SIZE, stdin) != NULL)
+            if (fgets(input, INPUT_SIZE, stdin))
             {
                 for (i = 0; i < INPUT_SIZE; ++i)
                 {
@@ -26,8 +26,6 @@ void get_string_input(char* input, const char context[], const char question[], 
             only_one_greaterthan_sign_is_printed();
         }
     }
-
-    printf("\n");
     return;
 }
 
@@ -41,7 +39,7 @@ int get_number_input(const int min_number, const int max_number, const char ques
     while (number < min_number || number > max_number)
     {
         printf("> ");
-        if (fgets(input, 8, stdin) != NULL)
+        if (fgets(input, 8, stdin))
             number = atoi(input);
         flush_stdin();
         only_one_greaterthan_sign_is_printed();
@@ -70,7 +68,7 @@ int get_number_input_amongst_array(const int number_array[], const int array_cou
     while (!is_number_valid)
     {
         printf("> ");
-        if (fgets(input, 8, stdin) != NULL)
+        if (fgets(input, 8, stdin))
         {
             number = atoi(input);
             for (i = 0; i < array_count; ++i)
@@ -93,7 +91,7 @@ int get_number_input_amongst_array(const int number_array[], const int array_cou
 void flush_stdin(void)
 {
     char c = 'A';
-    if (fseek(stdin, 0, SEEK_END) == 0)
+    if (!fseek(stdin, 0, SEEK_END))
     {
         while (c != '\n' && c != EOF)
             c = getchar();

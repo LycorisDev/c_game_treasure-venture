@@ -12,15 +12,8 @@ typedef struct location Location;
 typedef struct item Item;
 typedef struct character Character;
 
-typedef struct same_tag
-{
-    int index;
-    int id;
-} SameTag;
-
 typedef struct exit
 {
-    Location* from;
     Location* to;
     Item* passage;
 } Exit;
@@ -34,9 +27,9 @@ struct location
     char tags[NBR_TAGS][LENGTH_NAME];
     char description[LENGTH_DESCRIPTION];
     Exit exits[NBR_LOCATIONS];
-    int list_of_locations_by_id[NBR_LOCATIONS];
-    int list_of_items_by_id[NBR_ITEMS];
-    int list_of_characters_by_id[NBR_CHARACTERS];
+    Location* locations[NBR_LOCATIONS];
+    Item* items[NBR_ITEMS];
+    Character* characters[NBR_CHARACTERS];
 };
 
 struct item
@@ -44,7 +37,7 @@ struct item
     int id;
     int is_singular;
     int access;
-    int unlocked_with;
+    Item* unlocked_with;
     int can_be_taken;
     int requires_target_for_use;
     char name[LENGTH_NAME];
@@ -62,7 +55,7 @@ struct character
     char description[LENGTH_DESCRIPTION];
     Location* previous_location;
     Location* current_location;
-    int inventory[NBR_ITEMS];
+    Item* inventory[NBR_ITEMS];
 };
 
 extern Location list_locations[NBR_LOCATIONS];
@@ -70,26 +63,22 @@ extern Item list_items[NBR_ITEMS];
 extern Character list_characters[NBR_CHARACTERS];
 
 /* -------------------------------------------------------------------------------- */
-#define ACCESS_NONE                  0
 #define ACCESS_LOCKED                1
 #define ACCESS_OPEN                  2
 #define ACCESS_CLOSED                3
 /* -------------------------------------------------------------------------------- */
-#define LOCATION_TYPE_NONE           0
 #define LOCATION_TYPE_OUTSIDE        1
 #define LOCATION_TYPE_BUILDING       2
 #define LOCATION_TYPE_ROOM           3
 
-#define ID_LOCATION_NONE             0
-#define ID_LOCATION_OUTSIDE          1
-#define ID_LOCATION_MANSION          2
-#define ID_LOCATION_MAIN_HALLWAY     3
-#define ID_LOCATION_OLD_LIBRARY      4
-#define ID_LOCATION_ROOM_1           5
-#define ID_LOCATION_ROOM_2           6
-#define ID_LOCATION_ROOM_3           7
+#define ID_LOCATION_OUTSIDE          0
+#define ID_LOCATION_MANSION          1
+#define ID_LOCATION_MAIN_HALLWAY     2
+#define ID_LOCATION_OLD_LIBRARY      3
+#define ID_LOCATION_ROOM_1           4
+#define ID_LOCATION_ROOM_2           5
+#define ID_LOCATION_ROOM_3           6
 
-#define LOCATION_NONE                (list_locations + ID_LOCATION_NONE)
 #define LOCATION_OUTSIDE             (list_locations + ID_LOCATION_OUTSIDE)
 #define LOCATION_MANSION             (list_locations + ID_LOCATION_MANSION)
 #define LOCATION_MAIN_HALLWAY        (list_locations + ID_LOCATION_MAIN_HALLWAY)
@@ -98,18 +87,16 @@ extern Character list_characters[NBR_CHARACTERS];
 #define LOCATION_ROOM_2              (list_locations + ID_LOCATION_ROOM_2)
 #define LOCATION_ROOM_3              (list_locations + ID_LOCATION_ROOM_3)
 /* -------------------------------------------------------------------------------- */
-#define ID_ITEM_NONE                 0
-#define ID_ITEM_ENTRY_DOORS          1
-#define ID_ITEM_GRANDFATHER_CLOCK    2
-#define ID_ITEM_LIBRARY_DOOR         3
-#define ID_ITEM_LIBRARY_SIGN         4
-#define ID_ITEM_BOOKS                5
-#define ID_ITEM_DOOR_ROOM_1          6
-#define ID_ITEM_DOOR_ROOM_2          7
-#define ID_ITEM_DOOR_ROOM_3          8
-#define ID_ITEM_ENTRY_DOORS_KEY      9
+#define ID_ITEM_ENTRY_DOORS          0
+#define ID_ITEM_GRANDFATHER_CLOCK    1
+#define ID_ITEM_LIBRARY_DOOR         2
+#define ID_ITEM_LIBRARY_SIGN         3
+#define ID_ITEM_BOOKS                4
+#define ID_ITEM_DOOR_ROOM_1          5
+#define ID_ITEM_DOOR_ROOM_2          6
+#define ID_ITEM_DOOR_ROOM_3          7
+#define ID_ITEM_ENTRY_DOORS_KEY      8
 
-#define ITEM_NONE                    (list_items + ID_ITEM_NONE)
 #define ITEM_ENTRY_DOORS             (list_items + ID_ITEM_ENTRY_DOORS)
 #define ITEM_GRANDFATHER_CLOCK       (list_items + ID_ITEM_GRANDFATHER_CLOCK)
 #define ITEM_LIBRARY_DOOR            (list_items + ID_ITEM_LIBRARY_DOOR)
@@ -120,11 +107,9 @@ extern Character list_characters[NBR_CHARACTERS];
 #define ITEM_DOOR_ROOM_3             (list_items + ID_ITEM_DOOR_ROOM_3)
 #define ITEM_ENTRY_DOORS_KEY         (list_items + ID_ITEM_ENTRY_DOORS_KEY)
 /* -------------------------------------------------------------------------------- */
-#define ID_CHARACTER_NONE            0
-#define ID_CHARACTER_PLAYER          1
-#define ID_CHARACTER_LIBRARIAN       2
+#define ID_CHARACTER_PLAYER          0
+#define ID_CHARACTER_LIBRARIAN       1
 
-#define CHARACTER_NONE               (list_characters + ID_CHARACTER_NONE)
 #define PLAYER                       (list_characters + ID_CHARACTER_PLAYER)
 #define CHARACTER_LIBRARIAN          (list_characters + ID_CHARACTER_LIBRARIAN)
 /* -------------------------------------------------------------------------------- */

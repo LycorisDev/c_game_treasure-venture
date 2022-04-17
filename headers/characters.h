@@ -17,7 +17,7 @@
 #include "game.h"
 
 void populate_list_characters(void);
-SameTag* retrieve_character_id_by_parser_from_current_location(const char* parser);
+Character** retrieve_characters_by_parser_from_current_location(const char* parser);
 
 #endif
 

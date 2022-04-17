@@ -9,10 +9,10 @@
 void execute_look(void)
 {
     int i;
-    SameTag* items_with_same_tag = NULL;
-    SameTag* characters_with_same_tag = NULL;
+    Item** items_with_same_tag = NULL;
+    Character** characters_with_same_tag = NULL;
 
-    if (strcmp(command.object, "around") == 0)
+    if (!strcmp(command.object, "around"))
     {
         LOCATION_NAME
         describe_location(PLAYER->current_location);
@@ -24,67 +24,67 @@ void execute_look(void)
     }
     else
     {
-        if (strcmp(command.object, "") != 0)
+        if (*command.object)
         {
-            items_with_same_tag = retrieve_item_id_by_parser_from_current_location(command.object);
-            characters_with_same_tag = retrieve_character_id_by_parser_from_current_location(command.object);
+            items_with_same_tag = retrieve_items_by_parser_from_current_location(command.object);
+            characters_with_same_tag = retrieve_characters_by_parser_from_current_location(command.object);
 
-            if (!items_with_same_tag || items_with_same_tag[0].id == ID_ITEM_NONE)
+            if (!items_with_same_tag || !items_with_same_tag[0])
             {
-                if (!characters_with_same_tag || characters_with_same_tag[0].id == ID_CHARACTER_NONE)
-                    memcpy(command.object, "", BIG_LENGTH_WORD);
-                else if (characters_with_same_tag[1].id == ID_CHARACTER_NONE)
+                if (!characters_with_same_tag || !characters_with_same_tag[0])
+                    memset(command.object, 0, sizeof(command.object));
+                else if (!characters_with_same_tag[1])
                 {
-                    if (characters_with_same_tag[0].id == ID_CHARACTER_PLAYER)
+                    if (characters_with_same_tag[0] == PLAYER)
                     {
-                        /* 'look player/me/myself' is the same as the 'character' command */
+                        /* 'look [player]' is the same as the 'character' command */
                         execute_character();
                     }
                     else
                     {
-                        printf("\n%s\n\n", list_characters[characters_with_same_tag[0].id].description);
+                        printf("\n%s\n\n", characters_with_same_tag[0]->description);
                     }
                 }
                 else
                 {
                     printf("\nThere is more than one character in your vicinity for which this tag works.\n");
-                    memcpy(command.object, "", BIG_LENGTH_WORD);
+                    memset(command.object, 0, sizeof(command.object));
                 }
             }
-            else if (items_with_same_tag[1].id == ID_ITEM_NONE)
+            else if (!items_with_same_tag[1])
             {
-                printf("\n%s\n\n", list_items[items_with_same_tag[0].id].description_detailed);
-                EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY(items_with_same_tag[0].id)
+                printf("\n%s\n\n", items_with_same_tag[0]->description_detailed);
+                EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY((items_with_same_tag + 0))
             }
-            else if (!characters_with_same_tag || characters_with_same_tag[0].id == ID_CHARACTER_NONE)
+            else if (!characters_with_same_tag || !characters_with_same_tag[0])
             {
                 printf("\nThere is more than one item in your vicinity for which this tag works.\n");
-                memcpy(command.object, "", BIG_LENGTH_WORD);
+                memset(command.object, 0, sizeof(command.object));
             }
             else
             {
                 printf("\nThere is more than one item and character in your vicinity for which this tag works.\n");
-                memcpy(command.object, "", BIG_LENGTH_WORD);
+                memset(command.object, 0, sizeof(command.object));
             }
         }
 
-        if (strcmp(command.object, "") == 0)
+        if (!*command.object)
         {
             printf("\n\t[Try:]\n");
             printf("\t\t['Look around'.]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
-                if (PLAYER->current_location->list_of_items_by_id[i] == 0)
+                if (PLAYER->current_location->items[i] == 0)
                     break;
-                printf("\t\t['Look %s'.]\n", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[0]);
+                printf("\t\t['Look %s'.]\n", PLAYER->current_location->items[i]->tags[0]);
             }
             for (i = 0; i < NBR_CHARACTERS; ++i)
             {
-                if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+                if (!PLAYER->current_location->characters[i])
                     break;
-                if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
+                if (PLAYER->current_location->characters[i] == PLAYER)
                     continue;
-                printf("\t\t['Look %s'.]\n", list_characters[PLAYER->current_location->list_of_characters_by_id[i]].tags[0]);
+                printf("\t\t['Look %s'.]\n", PLAYER->current_location->characters[i]->tags[0]);
             }
             printf("\n");
         }

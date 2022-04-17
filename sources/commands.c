@@ -27,32 +27,32 @@ void parse_game_command(void)
     int i, j, parser_matches_with_lexicon = 1, index_preposition = 0, index_stop_matching = -1, max = nbr_words_in_parser;
     char object_1[LENGTH_WORD], object_2[LENGTH_WORD], object_3[LENGTH_WORD];
     char target_1[LENGTH_WORD], target_2[LENGTH_WORD], target_3[LENGTH_WORD];
-    memcpy(command.verb, "", LENGTH_WORD);
-    memcpy(command.object, "", BIG_LENGTH_WORD);
-    memcpy(command.preposition, "", LENGTH_WORD);
-    memcpy(command.target, "", BIG_LENGTH_WORD);
+    memset(command.verb, 0, sizeof(command.verb));
+    memset(command.object, 0, sizeof(command.object));
+    memset(command.preposition, 0, sizeof(command.preposition));
+    memset(command.target, 0, sizeof(command.target));
 
-    if (parser[0] != NULL)
+    if (parser[0])
     {
         for (i = 0; i < nbr_words_in_parser; ++i)
         {
             for (j = 0; j < NBR_WORDS; ++j)
             {
-                if (strcmp(list_lexicon[j], "") == 0)
+                if (!list_lexicon[j][0])
                 {
                     parser_matches_with_lexicon = 0;
                     break;
                 }
 
-                if (strcmp(parser[i], list_lexicon[j]) == 0)
+                if (!strcmp(parser[i], list_lexicon[j]))
                 {
-                    if (index_preposition == 0 && strcmp(parser[i], "on") == 0)
+                    if (index_preposition == 0 && !strcmp(parser[i], "on"))
                         index_preposition = i >= 2 && i <= 4 ? i : -1;
                     break;
                 }
             }
 
-            if (parser_matches_with_lexicon == 0)
+            if (!parser_matches_with_lexicon)
             {
                 printf("\n\t['%s' was not recognized.]\n", parser[i]);
                 index_stop_matching = i;
@@ -150,13 +150,13 @@ void parse_game_command(void)
             }
         }
 
-        if (strcmp(object_1, "") != 0)
+        if (*object_1)
         {
-            if (strcmp(object_2, "") == 0)
+            if (!*object_2)
             {
                 memcpy(command.object, object_1, BIG_LENGTH_WORD);
             }
-            else if (strcmp(object_3, "") == 0)
+            else if (!*object_3)
             {
                 memcpy(command.object, object_1, BIG_LENGTH_WORD);
                 strcat(command.object, " ");
@@ -172,13 +172,13 @@ void parse_game_command(void)
             }
         }
 
-        if (strcmp(target_1, "") != 0)
+        if (*target_1)
         {
-            if (strcmp(target_2, "") == 0)
+            if (!*target_2)
             {
                 memcpy(command.target, target_1, BIG_LENGTH_WORD);
             }
-            else if (strcmp(target_3, "") == 0)
+            else if (!*target_3)
             {
                 memcpy(command.target, target_1, BIG_LENGTH_WORD);
                 strcat(command.target, " ");
@@ -195,43 +195,43 @@ void parse_game_command(void)
         }
     }
 
-    if (parser[0] == NULL)
+    if (!parser[0])
     {
         display_commands();
     }
-    else if (strcmp(command.verb, "play") == 0)
+    else if (!strcmp(command.verb, "play"))
     {
         execute_play();
     }
-    else if (strcmp(command.verb, "inventory") == 0)
+    else if (!strcmp(command.verb, "inventory"))
     {
         execute_inventory();
     }
-    else if (strcmp(command.verb, "character") == 0)
+    else if (!strcmp(command.verb, "character"))
     {
         execute_character();
     }
-    else if (strcmp(command.verb, "go") == 0)
+    else if (!strcmp(command.verb, "go"))
     {
         execute_go();
     }
-    else if (strcmp(command.verb, "look") == 0)
+    else if (!strcmp(command.verb, "look"))
     {
         execute_look();
     }
-    else if (strcmp(command.verb, "take") == 0)
+    else if (!strcmp(command.verb, "take"))
     {
         execute_take();
     }
-    else if (strcmp(command.verb, "drop") == 0)
+    else if (!strcmp(command.verb, "drop"))
     {
         execute_drop();
     }
-    else if (strcmp(command.verb, "use") == 0)
+    else if (!strcmp(command.verb, "use"))
     {
         execute_use();
     }
-    else if (strcmp(command.verb, "hold") == 0)
+    else if (!strcmp(command.verb, "hold"))
     {
         execute_hold();
     }

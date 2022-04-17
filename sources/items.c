@@ -5,23 +5,12 @@ Item list_items[NBR_ITEMS];
 
 void populate_list_items(void)
 {
-    ITEM_NONE->id = ID_ITEM_NONE;
-    ITEM_NONE->is_singular = 1;
-    ITEM_NONE->access = ACCESS_NONE;
-    ITEM_NONE->unlocked_with = ID_ITEM_NONE;
-    ITEM_NONE->can_be_taken = 0;
-    ITEM_NONE->requires_target_for_use = 0;
-    memcpy(ITEM_NONE->name, "NO_NAME", LENGTH_NAME);
-    memcpy(ITEM_NONE->tags[0], "NO_TAG", LENGTH_NAME);
-    memcpy(ITEM_NONE->tags[1], "NO_TAG", LENGTH_NAME);
-    memcpy(ITEM_NONE->description_brief, "NO_BRIEF_DESCRIPTION.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_NONE->description_obvious, "NO_OBVIOUS_DESCRIPTION.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_NONE->description_detailed, "NO_DETAILED_DESCRIPTION.", LENGTH_DESCRIPTION);
+    memset(list_items, 0, NBR_ITEMS * sizeof(Item));
 
     ITEM_ENTRY_DOORS->id = ID_ITEM_ENTRY_DOORS;
     ITEM_ENTRY_DOORS->is_singular = 0;
     ITEM_ENTRY_DOORS->access = ACCESS_CLOSED;
-    ITEM_ENTRY_DOORS->unlocked_with = ID_ITEM_ENTRY_DOORS_KEY;
+    ITEM_ENTRY_DOORS->unlocked_with = ITEM_ENTRY_DOORS_KEY;
     ITEM_ENTRY_DOORS->can_be_taken = 0;
     ITEM_ENTRY_DOORS->requires_target_for_use = 0;
     memcpy(ITEM_ENTRY_DOORS->name, "Entry doors", LENGTH_NAME);
@@ -38,8 +27,6 @@ void populate_list_items(void)
 
     ITEM_GRANDFATHER_CLOCK->id = ID_ITEM_GRANDFATHER_CLOCK;
     ITEM_GRANDFATHER_CLOCK->is_singular = 1;
-    ITEM_GRANDFATHER_CLOCK->access = ACCESS_NONE;
-    ITEM_GRANDFATHER_CLOCK->unlocked_with = ID_ITEM_NONE;
     ITEM_GRANDFATHER_CLOCK->can_be_taken = 0;
     ITEM_GRANDFATHER_CLOCK->requires_target_for_use = 0;
     memcpy(ITEM_GRANDFATHER_CLOCK->name, "Grandfather clock", LENGTH_NAME);
@@ -53,7 +40,6 @@ void populate_list_items(void)
     ITEM_LIBRARY_DOOR->id = ID_ITEM_LIBRARY_DOOR;
     ITEM_LIBRARY_DOOR->is_singular = 1;
     ITEM_LIBRARY_DOOR->access = ACCESS_CLOSED;
-    ITEM_LIBRARY_DOOR->unlocked_with = ID_ITEM_NONE;
     ITEM_LIBRARY_DOOR->can_be_taken = 0;
     ITEM_LIBRARY_DOOR->requires_target_for_use = 0;
     memcpy(ITEM_LIBRARY_DOOR->name, "Library door", LENGTH_NAME);
@@ -67,8 +53,6 @@ void populate_list_items(void)
 
     ITEM_LIBRARY_SIGN->id = ID_ITEM_LIBRARY_SIGN;
     ITEM_LIBRARY_SIGN->is_singular = 1;
-    ITEM_LIBRARY_SIGN->access = ACCESS_NONE;
-    ITEM_LIBRARY_SIGN->unlocked_with = ID_ITEM_NONE;
     ITEM_LIBRARY_SIGN->can_be_taken = 0;
     ITEM_LIBRARY_SIGN->requires_target_for_use = 0;
     memcpy(ITEM_LIBRARY_SIGN->name, "Library sign", LENGTH_NAME);
@@ -81,8 +65,6 @@ void populate_list_items(void)
 
     ITEM_BOOKS->id = ID_ITEM_BOOKS;
     ITEM_BOOKS->is_singular = 0;
-    ITEM_BOOKS->access = ACCESS_NONE;
-    ITEM_BOOKS->unlocked_with = ID_ITEM_NONE;
     ITEM_BOOKS->can_be_taken = 0;
     ITEM_BOOKS->requires_target_for_use = 0;
     memcpy(ITEM_BOOKS->name, "Books", LENGTH_NAME);
@@ -95,7 +77,6 @@ void populate_list_items(void)
     ITEM_DOOR_ROOM_1->id = ID_ITEM_DOOR_ROOM_1;
     ITEM_DOOR_ROOM_1->is_singular = 1;
     ITEM_DOOR_ROOM_1->access = ACCESS_CLOSED;
-    ITEM_DOOR_ROOM_1->unlocked_with = ID_ITEM_NONE;
     ITEM_DOOR_ROOM_1->can_be_taken = 0;
     ITEM_DOOR_ROOM_1->requires_target_for_use = 0;
     memcpy(ITEM_DOOR_ROOM_1->name, "First room door", LENGTH_NAME);
@@ -110,7 +91,6 @@ void populate_list_items(void)
     ITEM_DOOR_ROOM_2->id = ID_ITEM_DOOR_ROOM_2;
     ITEM_DOOR_ROOM_2->is_singular = 1;
     ITEM_DOOR_ROOM_2->access = ACCESS_CLOSED;
-    ITEM_DOOR_ROOM_2->unlocked_with = ID_ITEM_NONE;
     ITEM_DOOR_ROOM_2->can_be_taken = 0;
     ITEM_DOOR_ROOM_2->requires_target_for_use = 0;
     memcpy(ITEM_DOOR_ROOM_2->name, "Second room door", LENGTH_NAME);
@@ -125,7 +105,6 @@ void populate_list_items(void)
     ITEM_DOOR_ROOM_3->id = ID_ITEM_DOOR_ROOM_3;
     ITEM_DOOR_ROOM_3->is_singular = 1;
     ITEM_DOOR_ROOM_3->access = ACCESS_CLOSED;
-    ITEM_DOOR_ROOM_3->unlocked_with = ID_ITEM_NONE;
     ITEM_DOOR_ROOM_3->can_be_taken = 0;
     ITEM_DOOR_ROOM_3->requires_target_for_use = 0;
     memcpy(ITEM_DOOR_ROOM_3->name, "Third room door", LENGTH_NAME);
@@ -139,8 +118,6 @@ void populate_list_items(void)
 
     ITEM_ENTRY_DOORS_KEY->id = ID_ITEM_ENTRY_DOORS_KEY;
     ITEM_ENTRY_DOORS_KEY->is_singular = 1;
-    ITEM_ENTRY_DOORS_KEY->access = ACCESS_NONE;
-    ITEM_ENTRY_DOORS_KEY->unlocked_with = ID_ITEM_NONE;
     ITEM_ENTRY_DOORS_KEY->can_be_taken = 1;
     ITEM_ENTRY_DOORS_KEY->requires_target_for_use = 1;
     memcpy(ITEM_ENTRY_DOORS_KEY->name, "Key", LENGTH_NAME);
@@ -152,27 +129,26 @@ void populate_list_items(void)
     return;
 }
 
-SameTag* retrieve_item_id_by_parser_from_current_location(const char* parser)
+Item** retrieve_items_by_parser_from_current_location(const char* parser)
 {
     int i, j, k;
-    SameTag* items_with_same_tag = calloc(NBR_ITEMS, sizeof(SameTag));
+    Item** items_with_same_tag = calloc(NBR_ITEMS, sizeof(Item*));
     if (!items_with_same_tag)
         return NULL;
 
-    for (i = 0, k = 0; i <= NBR_ITEMS; ++i)
+    for (i = 0, k = 0; i < NBR_ITEMS; ++i)
     {
-        if (i == NBR_ITEMS || PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
+        if (!PLAYER->current_location->items[i])
             break;
 
-        for (j = 1; j <= NBR_TAGS; ++j)
+        for (j = 1; j < NBR_TAGS; ++j)
         {
-            if (j == NBR_TAGS || strcmp("", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+            if (!PLAYER->current_location->items[i]->tags[j])
                 break;
 
-            if (strcmp(parser, list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+            if (!strcmp(parser, PLAYER->current_location->items[i]->tags[j]))
             {
-                items_with_same_tag[k].index = i;
-                items_with_same_tag[k++].id = PLAYER->current_location->list_of_items_by_id[i];
+                items_with_same_tag[k++] = PLAYER->current_location->items[i];
                 break;
             }
         }
@@ -181,27 +157,26 @@ SameTag* retrieve_item_id_by_parser_from_current_location(const char* parser)
     return items_with_same_tag;
 }
 
-SameTag* retrieve_item_id_by_parser_from_inventory(const char* parser)
+Item** retrieve_items_by_parser_from_inventory(const char* parser)
 {
     int i, j, k;
-    SameTag* items_with_same_tag = calloc(NBR_ITEMS, sizeof(SameTag));
+    Item** items_with_same_tag = calloc(NBR_ITEMS, sizeof(Item*));
     if (!items_with_same_tag)
         return NULL;
 
-    for (i = 0, k = 0; i <= NBR_ITEMS; ++i)
+    for (i = 0, k = 0; i < NBR_ITEMS; ++i)
     {
-        if (i == NBR_ITEMS || PLAYER->inventory[i] == ID_ITEM_NONE)
+        if (!PLAYER->inventory[i])
             break;
 
-        for (j = 1; j <= NBR_TAGS; ++j)
+        for (j = 1; j < NBR_TAGS; ++j)
         {
-            if (j == NBR_TAGS || strcmp("", list_items[PLAYER->inventory[i]].tags[j]) == 0)
+            if (!PLAYER->inventory[i]->tags[j])
                 break;
 
-            if (strcmp(parser, list_items[PLAYER->inventory[i]].tags[j]) == 0)
+            if (!strcmp(parser, PLAYER->inventory[i]->tags[j]))
             {
-                items_with_same_tag[k].index = i;
-                items_with_same_tag[k++].id = PLAYER->inventory[i];
+                items_with_same_tag[k++] = PLAYER->inventory[i];
                 break;
             }
         }
@@ -210,60 +185,30 @@ SameTag* retrieve_item_id_by_parser_from_inventory(const char* parser)
     return items_with_same_tag;
 }
 
-SameTag* retrieve_takeable_item_id_by_parser_from_current_location(const char* parser)
+Item** retrieve_takeable_items_by_parser_from_current_location(const char* parser)
 {
     int i, j, k;
-    SameTag* items_with_same_tag = calloc(NBR_ITEMS, sizeof(SameTag));
+    Item** items_with_same_tag = calloc(NBR_ITEMS, sizeof(Item*));
     if (!items_with_same_tag)
         return NULL;
 
-    for (i = 0, k = 0; i <= NBR_ITEMS; ++i)
+    for (i = 0, k = 0; i < NBR_ITEMS; ++i)
     {
-        if (i == NBR_ITEMS || PLAYER->current_location->list_of_items_by_id[i] == ID_ITEM_NONE)
+        if (!PLAYER->current_location->items[i])
             break;
 
-        if (list_items[PLAYER->current_location->list_of_items_by_id[i]].can_be_taken)
+        if (PLAYER->current_location->items[i]->can_be_taken)
         {
-            for (j = 1; j <= NBR_TAGS; ++j)
+            for (j = 1; j < NBR_TAGS; ++j)
             {
-                if (j == NBR_TAGS || strcmp("", list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+                if (!PLAYER->current_location->items[i]->tags[j])
                     break;
 
-                if (strcmp(parser, list_items[PLAYER->current_location->list_of_items_by_id[i]].tags[j]) == 0)
+                if (!strcmp(parser, PLAYER->current_location->items[i]->tags[j]))
                 {
-                    items_with_same_tag[k].index = i;
-                    items_with_same_tag[k++].id = PLAYER->current_location->list_of_items_by_id[i];
+                    items_with_same_tag[k++] = PLAYER->current_location->items[i];
                     break;
                 }
-            }
-        }
-    }
-
-    return items_with_same_tag;
-}
-
-SameTag* retrieve_passage_item_id_by_parser_from_current_location(const char* parser)
-{
-    int i, j, k;
-    SameTag* items_with_same_tag = calloc(NBR_ITEMS, sizeof(SameTag));
-    if (!items_with_same_tag)
-        return NULL;
-
-    for (i = 0, k = 0; i <= NBR_ITEMS; ++i)
-    {
-        if (i == NBR_ITEMS || PLAYER->current_location->exits[i].passage == ITEM_NONE || PLAYER->current_location->exits[i].passage->access == ACCESS_NONE)
-            break;
-
-        for (j = 1; j <= NBR_TAGS; ++j)
-        {
-            if (j == NBR_TAGS || strcmp("", PLAYER->current_location->exits[i].passage->tags[j]) == 0)
-                break;
-
-            if (strcmp(parser, PLAYER->current_location->exits[i].passage->tags[j]) == 0)
-            {
-                items_with_same_tag[k].index = i;
-                items_with_same_tag[k++].id = PLAYER->current_location->exits[i].passage->id;
-                break;
             }
         }
     }

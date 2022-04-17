@@ -23,33 +23,33 @@ int main(void)
     {
         set_parser_with_input();
 
-        if (parser[0] == NULL || strcmp(parser[0], "menu") != 0)
+        if (!parser[0] || strcmp(parser[0], "menu"))
         {
             parse_game_command();
         }
         else
         {
-            if (parser[1] == NULL)
+            if (!parser[1])
             {
                 access_main_menu(1);
             }
-            else if (strcmp(parser[1], "new") == 0)
+            else if (!strcmp(parser[1], "new"))
             {
                 execute_submenu_newgame();
             }
-            else if (strcmp(parser[1], "load") == 0)
+            else if (!strcmp(parser[1], "load"))
             {
                 execute_submenu_loadgame(1);
             }
-            else if (strcmp(parser[1], "save") == 0)
+            else if (!strcmp(parser[1], "save"))
             {
                 execute_submenu_save(1);
             }
-            else if (strcmp(parser[1], "about") == 0)
+            else if (!strcmp(parser[1], "about"))
             {
                 execute_submenu_about(1);
             }
-            else if (strcmp(parser[1], "quit") == 0)
+            else if (!strcmp(parser[1], "quit"))
             {
                 clear_terminal();
                 return EXIT_SUCCESS;
@@ -72,7 +72,7 @@ void set_parser_with_input(void)
     memset(parser, 0, sizeof(parser));
     nbr_words_in_parser = 0;
     printf("> ");
-    if (fgets(input, MAX_SIZE, stdin) != NULL)
+    if (fgets(input, MAX_SIZE, stdin))
     {
         if (input[0] == '\n')
             return;
@@ -84,10 +84,10 @@ void set_parser_with_input(void)
         }
 
         token = strtok(input, DELIMETERS);
-        while (token != NULL)
+        while (token)
         {
             parser[nbr_words_in_parser++] = token;
-            token = strtok (NULL, DELIMETERS);
+            token = strtok(NULL, DELIMETERS);
         }
     }
     flush_stdin();
@@ -107,25 +107,25 @@ void access_main_menu(const int has_game_begun)
         printf("\n\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
         set_parser_with_input();
 
-        if (parser[0] != NULL)
+        if (parser[0])
         {
-            if (strcmp(parser[0], "new") == 0)
+            if (!strcmp(parser[0], "new"))
             {
                 can_exit_main_menu = execute_submenu_newgame();
             }
-            else if (strcmp(parser[0], "load") == 0)
+            else if (!strcmp(parser[0], "load"))
             {
                 can_exit_main_menu = execute_submenu_loadgame(has_game_begun);
             }
-            else if (strcmp(parser[0], "save") == 0)
+            else if (!strcmp(parser[0], "save"))
             {
                 can_exit_main_menu = execute_submenu_save(has_game_begun);
             }
-            else if (strcmp(parser[0], "about") == 0)
+            else if (!strcmp(parser[0], "about"))
             {
                 execute_submenu_about(0);
             }
-            else if (strcmp(parser[0], "quit") == 0)
+            else if (!strcmp(parser[0], "quit"))
             {
                 clear_terminal();
                 exit(EXIT_SUCCESS);
@@ -201,7 +201,7 @@ int execute_submenu_save(const int has_game_begun)
     int can_exit_main_menu = 0;
     FILE* save_file = NULL;
 
-    if (has_game_begun == 0)
+    if (!has_game_begun)
         printf("\n\t[A game needs to be started for it to be saved.]\n");
     else
     {
@@ -209,7 +209,7 @@ int execute_submenu_save(const int has_game_begun)
         save_file = fopen("save.txt", "w+");
         save_game(save_file);
         fclose(save_file);
-        printf("\n\t[Game saved!]\n\n");
+        printf("\n\t[Game saved!]\n");
         LOCATION_NAME
         describe_location(PLAYER->current_location);
         printf("\n\n");

@@ -12,6 +12,7 @@ int execute_twenty_squares(const char* character)
     if (strcmp(input, "no") == 0)
         return EXIT_SUCCESS;
 
+    memcpy(input, "", INPUT_SIZE);
     clear_terminal();
     printf("TWENTY SQUARES\n\n");
     printf("This mini-game is based upon the oldest game known to mankind: a five millenia old mesopotamian board game, known today as the Game of Twenty Squares or the Royal Game of Ur.\n");

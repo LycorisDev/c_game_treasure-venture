@@ -50,13 +50,14 @@ extern char list_lexicon[NBR_WORDS][LENGTH_WORD];
 #define LEXICON_PLAYER         list_lexicon[34]
 #define LEXICON_ROOM           list_lexicon[35]
 #define LEXICON_SECOND         list_lexicon[36]
-#define LEXICON_SIGN           list_lexicon[37]
-#define LEXICON_SHINY          list_lexicon[38]
-#define LEXICON_TAKE           list_lexicon[39]
-#define LEXICON_THING          list_lexicon[40]
-#define LEXICON_THIRD          list_lexicon[41]
-#define LEXICON_USE            list_lexicon[42]
-#define LEXICON_WORLD          list_lexicon[43]
+#define LEXICON_SELF           list_lexicon[37]
+#define LEXICON_SIGN           list_lexicon[38]
+#define LEXICON_SHINY          list_lexicon[39]
+#define LEXICON_TAKE           list_lexicon[40]
+#define LEXICON_THING          list_lexicon[41]
+#define LEXICON_THIRD          list_lexicon[42]
+#define LEXICON_USE            list_lexicon[43]
+#define LEXICON_WORLD          list_lexicon[44]
 
 #endif
 

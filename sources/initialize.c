@@ -37,7 +37,7 @@ void initialize_game(FILE* save_file)
     populate_list_characters();
     populate_list_events();
 	
-    if (save_file != NULL)
+    if (save_file)
     {
         for (i = 0; i < NBR_LINES; ++i)
         {
@@ -61,7 +61,7 @@ void initialize_game(FILE* save_file)
             }
         }
 
-        if (save_buffer[0] == NULL || strcmp(save_buffer[0], "previous_location"))
+        if (!save_buffer[0] || strcmp(save_buffer[0], "previous_location"))
         {
             exit_file_corrupted(save_file);
         }
@@ -73,25 +73,25 @@ void initialize_game(FILE* save_file)
                 OR there was a non-digit character in there (could also be that the only character is non-digit)
                 OR the number is not plausible
             */
-            if (save_buffer[1] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_LOCATIONS - 1)))
+            if (save_buffer[1] == end_ptr || *end_ptr != '\0' || (id < 0 || id > (NBR_LOCATIONS - 1)))
                 exit_file_corrupted(save_file);
             else
                 PLAYER->previous_location = list_locations + id;
         }
 
-        if (save_buffer[2] == NULL || strcmp(save_buffer[2], "current_location"))
+        if (!save_buffer[2] || strcmp(save_buffer[2], "current_location"))
         {
             exit_file_corrupted(save_file);
         }
         else
         {
             id = strtol(save_buffer[3], &end_ptr, 10);
-            if (save_buffer[3] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_LOCATIONS - 1)))
+            if (save_buffer[3] == end_ptr || *end_ptr != '\0' || (id < 0 || id > (NBR_LOCATIONS - 1)))
                 exit_file_corrupted(save_file);
             else
             {
                 /* The current location is full */
-                if (PLAYER->current_location->list_of_characters_by_id[NBR_CHARACTERS - 1] != ID_CHARACTER_NONE)
+                if (PLAYER->current_location->characters[NBR_CHARACTERS - 1])
                     exit_file_corrupted(save_file);
 
                 /* Update the player's current location */
@@ -100,19 +100,19 @@ void initialize_game(FILE* save_file)
                 if (PLAYER->current_location != LOCATION_OUTSIDE)
                 {
                     /* Remove the player from the player's starter location (LOCATION_OUTSIDE) */
-                    for (i = 0; i <= NBR_CHARACTERS; ++i)
+                    for (i = 0; i < NBR_CHARACTERS; ++i)
                     {
-                        if (i == NBR_CHARACTERS || LOCATION_OUTSIDE->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+                        if (!LOCATION_OUTSIDE->characters[i])
                             break;
 
-                        if (LOCATION_OUTSIDE->list_of_characters_by_id[i] == ID_CHARACTER_PLAYER)
+                        if (LOCATION_OUTSIDE->characters[i] == PLAYER)
                         {
                             for (j = NBR_CHARACTERS - 1; j >= 0; --j)
                             {
-                                if (LOCATION_OUTSIDE->list_of_characters_by_id[j] != ID_CHARACTER_NONE)
+                                if (LOCATION_OUTSIDE->characters[j])
                                 {
-                                    LOCATION_OUTSIDE->list_of_characters_by_id[i] = LOCATION_OUTSIDE->list_of_characters_by_id[j];
-                                    LOCATION_OUTSIDE->list_of_characters_by_id[j] = ID_CHARACTER_NONE;
+                                    LOCATION_OUTSIDE->characters[i] = LOCATION_OUTSIDE->characters[j];
+                                    memset((LOCATION_OUTSIDE->characters + j), 0, sizeof(Character*));
 
                                     i = NBR_CHARACTERS;
                                     break;
@@ -124,9 +124,9 @@ void initialize_game(FILE* save_file)
                     /* Add the player to the current location */
                     for (i = 0; i < NBR_CHARACTERS; ++i)
                     {
-                        if (PLAYER->current_location->list_of_characters_by_id[i] == ID_CHARACTER_NONE)
+                        if (!PLAYER->current_location->characters[i])
                         {
-                            PLAYER->current_location->list_of_characters_by_id[i] = ID_CHARACTER_PLAYER;
+                            PLAYER->current_location->characters[i] = PLAYER;
                             break;
                         }
                     }
@@ -134,7 +134,7 @@ void initialize_game(FILE* save_file)
             }
         }
 
-        if (save_buffer[4] == NULL || strcmp(save_buffer[4], "events"))
+        if (!save_buffer[4] || strcmp(save_buffer[4], "events"))
         {
             exit_file_corrupted(save_file);
         }
@@ -150,7 +150,7 @@ void initialize_game(FILE* save_file)
             }
         }
 
-        if (save_buffer[5 + NBR_EVENTS] == NULL || strcmp(save_buffer[5 + NBR_EVENTS], "inventory"))
+        if (!save_buffer[5 + NBR_EVENTS] || strcmp(save_buffer[5 + NBR_EVENTS], "inventory"))
         {
             exit_file_corrupted(save_file);
         }
@@ -162,7 +162,7 @@ void initialize_game(FILE* save_file)
                 if (save_buffer[6 + NBR_EVENTS + i] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_ITEMS - 1)))
                     break;
                 else
-                    PLAYER->inventory[i] = id;
+                    PLAYER->inventory[i] = (list_items + id);
             }
         }
     }

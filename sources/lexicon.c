@@ -5,6 +5,8 @@ char list_lexicon[NBR_WORDS][LENGTH_WORD];
 
 void populate_list_lexicon(void)
 {
+    memset(list_lexicon, 0, NBR_WORDS * LENGTH_WORD * sizeof(char));
+
     memcpy(LEXICON_1, "1", LENGTH_WORD);
     memcpy(LEXICON_2, "2", LENGTH_WORD);
     memcpy(LEXICON_3, "3", LENGTH_WORD);
@@ -42,6 +44,7 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_PLAYER, "player", LENGTH_WORD);
     memcpy(LEXICON_ROOM, "room", LENGTH_WORD);
     memcpy(LEXICON_SECOND, "second", LENGTH_WORD);
+    memcpy(LEXICON_SELF, "self", LENGTH_WORD);
     memcpy(LEXICON_SIGN, "sign", LENGTH_WORD);
     memcpy(LEXICON_SHINY, "shiny", LENGTH_WORD);
     memcpy(LEXICON_TAKE, "take", LENGTH_WORD);
