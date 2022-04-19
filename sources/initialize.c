@@ -143,10 +143,20 @@ void initialize_game(FILE* save_file)
             for (i = 0; i < NBR_EVENTS; ++i)
             {
                 id = strtol(save_buffer[5 + i], &end_ptr, 10);
-                if (id != 0 && id != 1)
+                if (id != FLAG_ON && id != FLAG_OFF)
                     exit_file_corrupted(save_file);
-                else
-                    list_events[i] = id;
+                else if (id == FLAG_OFF)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            EXECUTE_EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
+                            break;
+                        case 1:
+                            EXECUTE_EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY
+                            break;
+                    }
+                }
             }
         }
 
