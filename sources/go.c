@@ -177,47 +177,54 @@ void execute_go(void)
                     }
                 }
             }
-            /* "go out" to go to the only exit */
+            /* "go out" to go to the only exit (if inside of a building) */
             else if (!strcmp(command.object, "out"))
             {
-                for (i = 0, j = 0, k = 0; i < NBR_LOCATIONS; ++i)
+                if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
                 {
-                    if (!PLAYER->current_location->exits[i].to)
-                        break;
-                    else if (PLAYER->current_location->exits[i].passage->access)
-                    {
-                        if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
-                            accessible_exits[j++] = &(PLAYER->current_location->exits[i]);
-                        else
-                            locked_exits[k++] = &(PLAYER->current_location->exits[i]);
-                    }
+                    printf("\nYou are already outside.\n\n");
                 }
-
-                /* There's not even one exit */
-                if (!j && !k)
-                {
-                    /* The player should never see this message */
-                    printf("\nYou cannot get out.\n\n");
-                }
-                /* Success: There is only one accessible exit */
-                else if (j == 1)
-                {
-                    printf("\n");
-                    cross_passage(accessible_exits[0]);
-                    printf("\n\n");
-                }
-                /* Almost success: There is only one exit but it is locked */
-                else if (!j && k == 1)
-                {
-                    printf("\n");
-                    PRINT_ACCESS_LOCKED(locked_exits[0])
-                    printf("\n\n");
-                }
-                /* Several accessible and/or locked exits. Which one does the player want? */
                 else
                 {
-                    printf("\nThere is more than one exit. Which one do you want?\n");
-                    memset(command.object, 0, sizeof(command.object));
+                    for (i = 0, j = 0, k = 0; i < NBR_LOCATIONS; ++i)
+                    {
+                        if (!PLAYER->current_location->exits[i].to)
+                            break;
+                        else if (PLAYER->current_location->exits[i].passage->access)
+                        {
+                            if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
+                                accessible_exits[j++] = &(PLAYER->current_location->exits[i]);
+                            else
+                                locked_exits[k++] = &(PLAYER->current_location->exits[i]);
+                        }
+                    }
+
+                    /* There's not even one exit */
+                    if (!j && !k)
+                    {
+                        /* The player should never see this message */
+                        printf("\nYou cannot get out.\n\n");
+                    }
+                    /* Success: There is only one accessible exit */
+                    else if (j == 1)
+                    {
+                        printf("\n");
+                        cross_passage(accessible_exits[0]);
+                        printf("\n\n");
+                    }
+                    /* Almost success: There is only one exit but it is locked */
+                    else if (!j && k == 1)
+                    {
+                        printf("\n");
+                        PRINT_ACCESS_LOCKED(locked_exits[0])
+                            printf("\n\n");
+                    }
+                    /* Several accessible and/or locked exits. Which one does the player want? */
+                    else
+                    {
+                        printf("\nThere is more than one exit. Which one do you want?\n");
+                        memset(command.object, 0, sizeof(command.object));
+                    }
                 }
             }
             else
@@ -234,11 +241,11 @@ void execute_go(void)
                     {
                         printf("\n");
                         IF_NO_ACCESS(locations_with_same_tag_from_passage_items_in_current_location[0])
-                        else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
-                        else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
-                        else
-                            cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                        printf("\n\n");
+                            else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
+                                else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
+                                    else
+                                        cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
+                                    printf("\n\n");
                     }
                     else
                     {
@@ -250,11 +257,11 @@ void execute_go(void)
                 {
                     printf("\n");
                     IF_NO_ACCESS(locations_with_same_tag_from_current_location[0])
-                    else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
-                    else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
-                    else
-                        cross_passage(locations_with_same_tag_from_current_location[0]);
-                    printf("\n\n");
+                        else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
+                            else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
+                                else
+                                    cross_passage(locations_with_same_tag_from_current_location[0]);
+                                printf("\n\n");
                 }
                 else
                 {
