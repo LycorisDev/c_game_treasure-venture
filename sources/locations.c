@@ -6,26 +6,28 @@ Location list_locations[NBR_LOCATIONS];
 void populate_list_locations(void)
 {
     Exit exit_objects[NBR_LOCATIONS];
-    exit_objects[0].to = LOCATION_MAIN_HALLWAY;
+    exit_objects[0].to = LOCATION_MANSION;
     exit_objects[0].passage = ITEM_ENTRY_DOORS;
     exit_objects[1].to = LOCATION_OUTSIDE;
     exit_objects[1].passage = ITEM_ENTRY_DOORS;
-    exit_objects[2].to = LOCATION_OLD_LIBRARY;
-    exit_objects[2].passage = ITEM_LIBRARY_DOOR;
-    exit_objects[3].to = LOCATION_MAIN_HALLWAY;
+    exit_objects[2].to = LOCATION_MAIN_HALLWAY;
+    exit_objects[2].passage = ITEM_ENTRY_DOORS;
+    exit_objects[3].to = LOCATION_OLD_LIBRARY;
     exit_objects[3].passage = ITEM_LIBRARY_DOOR;
-    exit_objects[4].to = LOCATION_ROOM_1;
-    exit_objects[4].passage = ITEM_DOOR_ROOM_1;
-    exit_objects[5].to = LOCATION_ROOM_2;
-    exit_objects[5].passage = ITEM_DOOR_ROOM_2;
-    exit_objects[6].to = LOCATION_ROOM_3;
-    exit_objects[6].passage = ITEM_DOOR_ROOM_3;
-    exit_objects[7].to = LOCATION_OLD_LIBRARY;
-    exit_objects[7].passage = ITEM_DOOR_ROOM_1;
+    exit_objects[4].to = LOCATION_MAIN_HALLWAY;
+    exit_objects[4].passage = ITEM_LIBRARY_DOOR;
+    exit_objects[5].to = LOCATION_ROOM_1;
+    exit_objects[5].passage = ITEM_DOOR_ROOM_1;
+    exit_objects[6].to = LOCATION_ROOM_2;
+    exit_objects[6].passage = ITEM_DOOR_ROOM_2;
+    exit_objects[7].to = LOCATION_ROOM_3;
+    exit_objects[7].passage = ITEM_DOOR_ROOM_3;
     exit_objects[8].to = LOCATION_OLD_LIBRARY;
-    exit_objects[8].passage = ITEM_DOOR_ROOM_2;
+    exit_objects[8].passage = ITEM_DOOR_ROOM_1;
     exit_objects[9].to = LOCATION_OLD_LIBRARY;
-    exit_objects[9].passage = ITEM_DOOR_ROOM_3;
+    exit_objects[9].passage = ITEM_DOOR_ROOM_2;
+    exit_objects[10].to = LOCATION_OLD_LIBRARY;
+    exit_objects[10].passage = ITEM_DOOR_ROOM_3;
 
     memset(list_locations, 0, NBR_LOCATIONS * sizeof(Location));
 
@@ -47,7 +49,8 @@ void populate_list_locations(void)
     memcpy(LOCATION_MANSION->tags[0], "mansion", LENGTH_NAME);
     memcpy(LOCATION_MANSION->tags[1], "mansion", LENGTH_NAME);
     memcpy(LOCATION_MANSION->description, "The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.", LENGTH_DESCRIPTION);
-    LOCATION_MANSION->exits[0] = exit_objects[0];
+    LOCATION_MANSION->exits[0] = exit_objects[1];
+    LOCATION_MANSION->exits[1] = exit_objects[2];
     LOCATION_MANSION->locations[0] = LOCATION_MAIN_HALLWAY;
     LOCATION_MANSION->locations[1] = LOCATION_OLD_LIBRARY;
     LOCATION_MANSION->locations[2] = LOCATION_ROOM_1;
@@ -63,8 +66,8 @@ void populate_list_locations(void)
     memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", LENGTH_NAME);
     memcpy(LOCATION_MAIN_HALLWAY->tags[2], "main hallway", LENGTH_NAME);
     memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", LENGTH_DESCRIPTION);
-    LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[1];
-    LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[2];
+    LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[0];
+    LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
     LOCATION_MAIN_HALLWAY->items[0] = ITEM_ENTRY_DOORS;
     LOCATION_MAIN_HALLWAY->items[1] = ITEM_GRANDFATHER_CLOCK;
     LOCATION_MAIN_HALLWAY->items[2] = ITEM_LIBRARY_DOOR;
@@ -78,10 +81,10 @@ void populate_list_locations(void)
     memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", LENGTH_NAME);
     memcpy(LOCATION_OLD_LIBRARY->tags[2], "old library", LENGTH_NAME);
     memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", LENGTH_DESCRIPTION);
-    LOCATION_OLD_LIBRARY->exits[0] = exit_objects[3];
-    LOCATION_OLD_LIBRARY->exits[1] = exit_objects[4];
-    LOCATION_OLD_LIBRARY->exits[2] = exit_objects[5];
-    LOCATION_OLD_LIBRARY->exits[3] = exit_objects[6];
+    LOCATION_OLD_LIBRARY->exits[0] = exit_objects[4];
+    LOCATION_OLD_LIBRARY->exits[1] = exit_objects[5];
+    LOCATION_OLD_LIBRARY->exits[2] = exit_objects[6];
+    LOCATION_OLD_LIBRARY->exits[3] = exit_objects[7];
     LOCATION_OLD_LIBRARY->items[0] = ITEM_LIBRARY_DOOR;
     LOCATION_OLD_LIBRARY->items[1] = ITEM_BOOKS;
     LOCATION_OLD_LIBRARY->items[2] = ITEM_DOOR_ROOM_1;
@@ -97,7 +100,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_ROOM_1->tags[1], "room 1", LENGTH_NAME);
     memcpy(LOCATION_ROOM_1->tags[2], "first room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_1->description, "The room seems empty.", LENGTH_DESCRIPTION);
-    LOCATION_ROOM_1->exits[0] = exit_objects[7];
+    LOCATION_ROOM_1->exits[0] = exit_objects[8];
     LOCATION_ROOM_1->items[0] = ITEM_DOOR_ROOM_1;
 
     LOCATION_ROOM_2->id = ID_LOCATION_ROOM_2;
@@ -108,7 +111,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_ROOM_2->tags[1], "room 2", LENGTH_NAME);
     memcpy(LOCATION_ROOM_2->tags[2], "second room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_2->description, "The room seems empty.", LENGTH_DESCRIPTION);
-    LOCATION_ROOM_2->exits[0] = exit_objects[8];
+    LOCATION_ROOM_2->exits[0] = exit_objects[9];
     LOCATION_ROOM_2->items[0] = ITEM_DOOR_ROOM_2;
     LOCATION_ROOM_2->items[1] = ITEM_ENTRY_DOORS_KEY;
 
@@ -120,7 +123,7 @@ void populate_list_locations(void)
     memcpy(LOCATION_ROOM_3->tags[1], "room 3", LENGTH_NAME);
     memcpy(LOCATION_ROOM_3->tags[2], "third room", LENGTH_NAME);
     memcpy(LOCATION_ROOM_3->description, "The room seems empty.", LENGTH_DESCRIPTION);
-    LOCATION_ROOM_3->exits[0] = exit_objects[9];
+    LOCATION_ROOM_3->exits[0] = exit_objects[10];
     LOCATION_ROOM_3->items[0] = ITEM_DOOR_ROOM_3;
     return;
 }
@@ -163,7 +166,15 @@ Exit** retrieve_locations_by_parser_from_current_location(const char* parser)
             if (!PLAYER->current_location->exits[i].to->tags[j])
                 break;
 
-            if (!strcmp(parser, PLAYER->current_location->exits[i].to->tags[j]))
+            /* If you exit the building */
+            if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+            {
+                /* You must not use "go [current building]" but you can use the tag of the outside location (which is the first of the building's exits) */
+                if (!strcmp(parser, PLAYER->current_location->exits[i].to->exits[0].to->tags[1]))
+                    locations_with_same_tag[k++] = &(PLAYER->current_location->exits[i]);
+                break;
+            }
+            else if (!strcmp(parser, PLAYER->current_location->exits[i].to->tags[j]))
             {
                 locations_with_same_tag[k++] = &(PLAYER->current_location->exits[i]);
                 break;

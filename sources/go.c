@@ -23,7 +23,7 @@
                                         printf("The destination is full. No more characters can access this place. ");\
                                     }
 
-void cross_passage(const Exit* exit)
+void cross_passage(Exit* exit)
 {
     int i, j;
 
@@ -37,10 +37,44 @@ void cross_passage(const Exit* exit)
         printf("You ");
     }
 
-    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && exit->to->type == LOCATION_TYPE_ROOM)
+    /* Enter a building */
+    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && exit->to->type == LOCATION_TYPE_BUILDING)
+    {
+        for (i = 0; i < NBR_LOCATIONS; ++i)
+        {
+            if (!exit->to->exits[i].to)
+                break;
+
+            /* If the building has an exit that uses the same passage item AND this exit doesn't lead to our current location */
+            if (exit->passage == exit->to->exits[i].passage && exit->to->exits[i].to != PLAYER->current_location)
+            {
+                /* The actual destination is not the building itself but the room the passage item leads to */
+                exit = &(exit->to->exits[i]);
+                break;
+            }
+        }
+
         printf("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->name, exit->to->name);
-    else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_OUTSIDE)
+    }
+    /* Exit a building */
+    else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_BUILDING)
+    {
+        for (i = 0; i < NBR_LOCATIONS; ++i)
+        {
+            if (!exit->to->exits[i].to)
+                break;
+
+            /* If the building has an exit that uses the same passage item AND this exit doesn't lead to our current location */
+            if (exit->passage == exit->to->exits[i].passage && exit->to->exits[i].to != PLAYER->current_location)
+            {
+                /* The actual destination is not the building itself but the outside location the passage item leads to */
+                exit = &(exit->to->exits[i]);
+                break;
+            }
+        }
+
         printf("leave the %s. ", PLAYER->current_location->inside_of->name);
+    }
     else
         printf("enter the %s. ", exit->to->name);
 
@@ -133,7 +167,7 @@ void execute_go(void)
                             memset(command.object, 0, sizeof(command.object));
                             break;
                         }
-                        else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_OUTSIDE)
+                        else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
                         {
                             printf("\n");
                             IF_NO_ACCESS((PLAYER->current_location->exits + i))
@@ -163,7 +197,7 @@ void execute_go(void)
                             memset(command.object, 0, sizeof(command.object));
                             break;
                         }
-                        else if (PLAYER->current_location->exits[i].to == PLAYER->previous_location)
+                        else if (PLAYER->current_location->exits[i].to == PLAYER->previous_location) 
                         {
                             printf("\n");
                             IF_NO_ACCESS((PLAYER->current_location->exits + i))
@@ -172,6 +206,26 @@ void execute_go(void)
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
                             printf("\n\n");
+                            break;
+                        }
+                        else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
+                        {
+                            j = 0;
+                            while (PLAYER->current_location->exits[i].to->exits[j].to)
+                            {
+                                if (PLAYER->current_location->exits[i].to->exits[j].to == PLAYER->previous_location)
+                                {
+                                    printf("\n");
+                                    IF_NO_ACCESS((PLAYER->current_location->exits + i))
+                                    else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
+                                    else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
+                                    else
+                                        cross_passage((PLAYER->current_location->exits + i));
+                                    printf("\n\n");
+                                    break;
+                                }
+                                ++j;
+                            }
                             break;
                         }
                     }
@@ -241,11 +295,11 @@ void execute_go(void)
                     {
                         printf("\n");
                         IF_NO_ACCESS(locations_with_same_tag_from_passage_items_in_current_location[0])
-                            else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
-                                else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
-                                    else
-                                        cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                                    printf("\n\n");
+                        else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
+                        else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
+                        else
+                            cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
+                        printf("\n\n");
                     }
                     else
                     {
@@ -257,11 +311,11 @@ void execute_go(void)
                 {
                     printf("\n");
                     IF_NO_ACCESS(locations_with_same_tag_from_current_location[0])
-                        else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
-                            else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
-                                else
-                                    cross_passage(locations_with_same_tag_from_current_location[0]);
-                                printf("\n\n");
+                    else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
+                    else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
+                    else
+                        cross_passage(locations_with_same_tag_from_current_location[0]);
+                    printf("\n\n");
                 }
                 else
                 {
@@ -273,14 +327,15 @@ void execute_go(void)
 
         if (!*command.object)
         {
-            if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_ROOM)
+            if (!PLAYER->current_location->exits[1].to)
             {
-                printf("\n\t[Try 'go inside'.]\n\n");
-            }
-            else if (!PLAYER->current_location->exits[1].to)
-            {
-                if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
-                    printf("\n\t[Try 'go outside'.]\n\n");
+                if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_BUILDING)
+                {
+                    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+                        printf("\n\t[Try 'go inside'.]\n\n");
+                    else
+                        printf("\n\t[Try 'go outside'.]\n\n");
+                }
                 else
                     printf("\n\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
             }
@@ -292,8 +347,13 @@ void execute_go(void)
                     if (!PLAYER->current_location->exits[i].to)
                         break;
 
-                    if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_OUTSIDE && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
-                        printf("\t\t['Go outside'.]\n");
+                    if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
+                    {
+                        if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+                            printf("\t\t['Go inside'.]\n");
+                        else
+                            printf("\t\t['Go outside'.]\n");
+                    }
                     else
                         printf("\t\t['Go %s'.]\n", PLAYER->current_location->exits[i].to->tags[0]);
                 }
