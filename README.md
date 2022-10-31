@@ -6,6 +6,8 @@ I wonder why anyone would want to work on the project at this time, but if you'r
 
 ---
 
+![](./ingame_screenshot.png)
+
 **DEVELOPMENT IS 70 DAYS LONG SO FAR**  
 IN 2021
 - [52 days] MARCH & APRIL: From 03/17/21 to 04/05/21 + From 04/07/21 to 04/26/21.
