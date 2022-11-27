@@ -8,7 +8,7 @@
 
 The game understands several commands, can save the ongoing game, and has events. An event example is to have the doors lock up the player inside when they cross the mansion's threshold for the first time. The game also contains a mini-game entitled "[Twenty Squares](https://github.com/TheLycorisRadiata/game_twentysquares)", that I leave you to discover as well as the game itself.  
 
-It plays on a terminal and is available on Windows in 32- and 64-bit, on Mac and on Linux.  
+The download links are in the [Mofumofu page](https://www.mofumofustudios.com/works/product/69d0e853).  
 
 ---
 
