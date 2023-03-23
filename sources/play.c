@@ -1,7 +1,21 @@
 #include "../headers/play.h"
 #include "../headers/characters.h"
 #include "../headers/locations.h"
-#include "../twenty_squares/headers/twenty_squares_main.h"
+#include "../headers/input.h"
+
+int execute_twenty_squares(const char* character)
+{
+    char input[4];
+
+    char prompt_player_wants_to_play[150] = "\n\t[Do you want to play Twenty Squares with the ";
+    strcat(prompt_player_wants_to_play, character);
+    get_string_input(input, "yes_no", prompt_player_wants_to_play, "? Yes/No]");
+    if (strcmp(input, "no") == 0)
+        return EXIT_SUCCESS;
+
+    /* Execute Twenty Squares: It returns an exit code */
+    return EXIT_SUCCESS;
+}
 
 void execute_play(void)
 {

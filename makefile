@@ -43,31 +43,10 @@ headers/save.h \
 headers/take.h \
 headers/use.h
 
-TWENTY_SQUARES_SOURCE_FILES=\
-twenty_squares/sources/twenty_squares_ability.c \
-twenty_squares/sources/twenty_squares_board.c \
-twenty_squares/sources/twenty_squares_cells.c \
-twenty_squares/sources/twenty_squares_main.c \
-twenty_squares/sources/twenty_squares_movement.c \
-twenty_squares/sources/twenty_squares_players.c \
-twenty_squares/sources/twenty_squares_selection.c \
-twenty_squares/sources/twenty_squares_turn.c
-
-TWENTY_SQUARES_HEADER_FILES=\
-twenty_squares/headers/twenty_squares.h \
-twenty_squares/headers/twenty_squares_ability.h \
-twenty_squares/headers/twenty_squares_board.h \
-twenty_squares/headers/twenty_squares_cells.h \
-twenty_squares/headers/twenty_squares_main.h \
-twenty_squares/headers/twenty_squares_movement.h \
-twenty_squares/headers/twenty_squares_players.h \
-twenty_squares/headers/twenty_squares_selection.h \
-twenty_squares/headers/twenty_squares_turn.h
-
-rpg: $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
-	@gcc -ansi -pedantic -Wall -Wextra -o rpg $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
+app: $(SOURCE_FILES) $(HEADER_FILES)
+	@gcc -ansi -pedantic -Wall -Wextra -o builds/app $(SOURCE_FILES) $(HEADER_FILES)
 
 # Package: mingw-w64
-# 32-bit Windows executable: i686-w64-mingw32-gcc -o persistence.exe $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
-# 64-bit Windows executable: x86_64-w64-mingw32-gcc -o persistence.exe $(SOURCE_FILES) $(HEADER_FILES) $(TWENTY_SQUARES_SOURCE_FILES) $(TWENTY_SQUARES_HEADER_FILES)
+# 32-bit Windows executable: i686-w64-mingw32-gcc -o builds/TreasureVenture.exe $(SOURCE_FILES) $(HEADER_FILES)
+# 64-bit Windows executable: x86_64-w64-mingw32-gcc -o builds/TreasureVenture.exe $(SOURCE_FILES) $(HEADER_FILES)
 
