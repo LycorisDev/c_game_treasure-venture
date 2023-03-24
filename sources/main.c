@@ -214,8 +214,10 @@ int execute_submenu_save(const int has_game_begun)
 
 void execute_submenu_about(const int is_game_ongoing)
 {
-    printf("\n\t[\"Prototype RPG\" is part of a VRMMORPG project named Persistence.]\n\t[This MMO is not done in one go, but one small game after another, Prototype being the first of them.]\n\t[The goal is to develop most of the gameplay, and possibly the lore as well, in a non-graphic manner.]\n\t[Once no more improvement can be made in this format, the work on the audiovisual aspect of the game will begin.]\n\n");
-    printf("\t[For more information, visit my channel:]\n\thttps://www.youtube.com/channel/UCowO_RtloSQ3qnKmvymsBRA/\n");
+    printf("\n\t[\"Treasure Venture\" is a text adventure. A text adventure game is a game that is interacted with through written commands, and which only displays written text. There is no graphical element.]\n");
+    printf("\n\t[This project differs from a classic text adventure in that \"Treasure Venture\" offers suggestions when the player is lost. Since this reveals the plot, it's usually considered as spoiling the player's enjoyment. Even so, I've allowed myself to make the handling of the game more accessible, which I hope will make for a bigger playerbase and therefore increase my chances of receiving critiques on my work.]\n");
+    printf("\n\t[\"Treasure Venture\" understands several commands, can save the ongoing game, and has events. An event example is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled \"Twenty Squares\", that I leave you to discover as well as the game itself.]\n");
+    printf("\n\t[For more information, visit my channel:]\n\thttps://www.youtube.com/@thelycorisradiata/\n");
 
     if (is_game_ongoing)
     {
