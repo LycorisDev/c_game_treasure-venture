@@ -9,7 +9,8 @@ int execute_twenty_squares(const char* character)
 {
     char input[4];
     void* mini_game_obj;
-    void (*mini_game_func)();
+    int (*mini_game_func)();
+    int mini_game_result = EXIT_FAILURE;
 
     char prompt_player_wants_to_play[150] = "\n\t[Do you want to play Twenty Squares with the ";
     strcat(prompt_player_wants_to_play, character);
@@ -34,12 +35,12 @@ int execute_twenty_squares(const char* character)
     }
 
     /* Call the mini-game function using the function pointer */
-    (*mini_game_func)();
+    mini_game_result = (*mini_game_func)();
 
     /* Unload the mini-game library */
     dlclose(mini_game_obj);
 
-    return EXIT_SUCCESS;
+    return mini_game_result;
 }
 
 void execute_play(void)
