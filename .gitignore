@@ -3,6 +3,5 @@
 *.swp
 
 # Test builds
-[Bb]uilds/*
-![Bb]uilds/placeholder
+[Bb]uilds/
 

@@ -1,52 +1,65 @@
-SOURCE_FILES=\
-sources/character.c \
-sources/characters.c \
-sources/commands.c \
-sources/drop.c \
-sources/events.c \
-sources/go.c \
-sources/hold.c \
-sources/initialize.c \
-sources/input.c \
-sources/inventory.c \
-sources/items.c \
-sources/lexicon.c \
-sources/locations.c \
-sources/look.c \
-sources/main.c \
-sources/play.c \
-sources/rng.c \
-sources/save.c \
-sources/take.c \
-sources/use.c
+CC = gcc
+CFLAGS = -fPIC -MMD -ansi -pedantic -Wall -Wextra 
+LDFLAGS = 
 
-HEADER_FILES=\
-headers/character.h \
-headers/characters.h \
-headers/commands.h \
-headers/drop.h \
-headers/events.h \
-headers/game.h \
-headers/go.h \
-headers/hold.h \
-headers/initialize.h \
-headers/input.h \
-headers/inventory.h \
-headers/items.h \
-headers/lexicon.h \
-headers/locations.h \
-headers/look.h \
-headers/main.h \
-headers/play.h \
-headers/rng.h \
-headers/save.h \
-headers/take.h \
-headers/use.h
+DIR_BUILD = builds
+DIR_OBJ = $(DIR_BUILD)/unix/objects
 
-app: $(SOURCE_FILES) $(HEADER_FILES)
-	@gcc -ansi -pedantic -Wall -Wextra -o builds/app $(SOURCE_FILES) $(HEADER_FILES)
+EXECUTABLE = $(DIR_BUILD)/unix/treasure-venture
 
-# Package: mingw-w64
-# 32-bit Windows executable: i686-w64-mingw32-gcc -o builds/TreasureVenture.exe $(SOURCE_FILES) $(HEADER_FILES)
-# 64-bit Windows executable: x86_64-w64-mingw32-gcc -o builds/TreasureVenture.exe $(SOURCE_FILES) $(HEADER_FILES)
+SOURCE_FILES = $(wildcard sources/*.c)
+OBJ_FILES = $(patsubst sources/%.c, $(DIR_OBJ)/%.o, $(SOURCE_FILES))
+-include $(OBJ_FILES:.o=.d)
+
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJ_FILES)
+	@$(CC) $(LDFLAGS) $^ -o $@
+
+$(DIR_OBJ)/%.o: sources/%.c
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c $^ -o $@
+
+# NPM package: gcc-mingw-w64
+.PHONY: win64
+.PHONY: win32
+win64:
+	@$(MAKE) -s all \
+	CC=x86_64-w64-mingw32-gcc \
+	DIR_OBJ=$(DIR_BUILD)/win64/objects \
+	EXECUTABLE=$(DIR_BUILD)/win64/TreasureVenture-64bit.exe
+win32:
+	@$(MAKE) -s all \
+	CC=i686-w64-mingw32-gcc \
+	DIR_OBJ=$(DIR_BUILD)/win32/objects \
+	EXECUTABLE=$(DIR_BUILD)/win32/TreasureVenture-32bit.exe
+
+.PHONY: clean
+.PHONY: clean-unix
+.PHONY: clean-win64
+.PHONY: clean-win32
+.PHONY: clean-obj
+.PHONY: clean-obj-unix
+.PHONY: clean-obj-win64
+.PHONY: clean-obj-win32
+clean:
+	@make -s clean-unix
+	@make -s clean-win64
+	@make -s clean-win32
+clean-unix:
+	@rm -rf builds/unix/
+clean-win64:
+	@rm -rf builds/win64/
+clean-win32:
+	@rm -rf builds/win32/
+clean-obj:
+	@make -s clean-obj-unix
+	@make -s clean-obj-win64
+	@make -s clean-obj-win32
+clean-unix:
+	@rm -rf builds/unix/objects/
+clean-win64:
+	@rm -rf builds/win64/objects/
+clean-win32:
+	@rm -rf builds/win32/objects/
 
