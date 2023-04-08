@@ -56,10 +56,10 @@ clean-obj:
 	@make -s clean-obj-unix
 	@make -s clean-obj-win64
 	@make -s clean-obj-win32
-clean-unix:
+clean-obj-unix:
 	@rm -rf builds/unix/objects/
-clean-win64:
+clean-obj-win64:
 	@rm -rf builds/win64/objects/
-clean-win32:
+clean-obj-win32:
 	@rm -rf builds/win32/objects/
 
