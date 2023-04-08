@@ -23,7 +23,14 @@ int execute_twenty_squares(const char* character)
         return EXIT_FAILURE;
     }
 
+    #ifdef _WIN32
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wpedantic"
+    #endif
     *(void **) (&mini_game_func) = LIB_FUNC(mini_game_obj, "start");
+    #ifdef _WIN32
+        #pragma GCC diagnostic pop
+    #endif
     if (!mini_game_func)
     {
         fprintf(stderr, "Error obtaining pointer to mini-game entry point function: %s\n", LIB_ERROR);
