@@ -3,42 +3,37 @@
 #include "../headers/locations.h"
 #include "../headers/input.h"
 
-#include <dlfcn.h>
-
 int execute_twenty_squares(const char* character)
 {
-    char input[4];
-    void* mini_game_obj;
+    LIB_HANDLE mini_game_obj;
     int (*mini_game_func)();
     int mini_game_result = EXIT_FAILURE;
 
+    char input[4];
     char prompt_player_wants_to_play[150] = "\n\t[Do you want to play Twenty Squares with the ";
     strcat(prompt_player_wants_to_play, character);
     get_string_input(input, "yes_no", prompt_player_wants_to_play, "? Yes/No]");
     if (strcmp(input, "no") == 0)
         return EXIT_SUCCESS;
 
-    /* Load the mini-game library (= shared object) */
-    mini_game_obj = dlopen("./plugins/libtwenty-squares.so", RTLD_NOW);
+    mini_game_obj = LOAD_LIB(LIB_PATH_TWENTY_SQUARES);
     if (!mini_game_obj)
     {
-        fprintf(stderr, "Error loading mini-game library: %s\n", dlerror());
+        fprintf(stderr, "Error loading mini-game library: %s\n", LIB_ERROR);
         return EXIT_FAILURE;
     }
 
-    /* Obtain a pointer to the mini-game entry point function */
-    *(void **) (&mini_game_func) = dlsym(mini_game_obj, "start");
+    *(void **) (&mini_game_func) = LIB_FUNC(mini_game_obj, "start");
     if (!mini_game_func)
     {
-        fprintf(stderr, "Error obtaining pointer to mini-game entry point function: %s\n", dlerror());
+        fprintf(stderr, "Error obtaining pointer to mini-game entry point function: %s\n", LIB_ERROR);
+        UNLOAD_LIB(mini_game_obj);
         return EXIT_FAILURE;
     }
 
-    /* Call the mini-game function using the function pointer */
     mini_game_result = (*mini_game_func)();
 
-    /* Unload the mini-game library */
-    dlclose(mini_game_obj);
+    UNLOAD_LIB(mini_game_obj);
 
     return mini_game_result;
 }
