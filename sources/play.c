@@ -4,17 +4,14 @@
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 
-int execute_twenty_squares(const char* character)
+int execute_mini_game(const char* mini_game_name, const char* character)
 {
     LIB_HANDLE mini_game_obj;
     int (*mini_game_func)();
     int mini_game_result = EXIT_FAILURE;
 
-    char input[4];
-    char prompt_player_wants_to_play[150] = "\n\t[Do you want to play Twenty Squares with the ";
-    strcat(prompt_player_wants_to_play, character);
-    get_string_input(input, "yes_no", prompt_player_wants_to_play, "? Yes/No]");
-    if (strcmp(input, "no") == 0)
+    write_line("\n\t[Do you want to play %s with the %s? Yes/No]\n\n", mini_game_name, character);
+    if (!input_yes_no())
         return EXIT_SUCCESS;
 
     mini_game_obj = LOAD_LIB(LIB_PATH_TWENTY_SQUARES);
@@ -49,7 +46,8 @@ int execute_twenty_squares(const char* character)
 void execute_play(void)
 {
     int i;
-    int exit_twenty_squares = EXIT_FAILURE;
+    int exit_mini_game = EXIT_FAILURE;
+    char* mini_game_name = "Twenty Squares";
 
     for (i = 0; i < NBR_CHARACTERS; ++i)
     {
@@ -62,9 +60,9 @@ void execute_play(void)
         if (PLAYER->current_location->characters[i] == PLAYER)
             continue;
 
-        exit_twenty_squares = execute_twenty_squares(PLAYER->current_location->characters[i]->tags[1]);
-        if (exit_twenty_squares == EXIT_FAILURE)
-            write_line("\n\t[Error: Something went wrong with the mini-game 'Twenty Squares'.]\n");
+        exit_mini_game = execute_mini_game(mini_game_name, PLAYER->current_location->characters[i]->tags[1]);
+        if (exit_mini_game == EXIT_FAILURE)
+            write_line("\n\t[Error: Something went wrong with the mini-game '%s'.]\n", mini_game_name);
 
         LOCATION_NAME
         describe_location(PLAYER->current_location);

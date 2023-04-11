@@ -14,6 +14,7 @@ int nbr_words_in_parser;
 
 int main(void)
 {
+    TERMINAL_UTF8_ENCODING
     access_main_menu(0);
     while (1)
     {
@@ -47,7 +48,7 @@ int main(void)
             }
             else if (!strcmp(parser[1], "quit"))
             {
-                clear_terminal();
+                CLEAR_TERMINAL
                 return EXIT_SUCCESS;
             }
             else
@@ -94,7 +95,7 @@ void access_main_menu(const int has_game_begun)
 {
     int can_exit_main_menu = 0;
 
-    clear_terminal();
+    CLEAR_TERMINAL
     TITLE
     write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
 
@@ -123,19 +124,19 @@ void access_main_menu(const int has_game_begun)
             }
             else if (!strcmp(parser[0], "quit"))
             {
-                clear_terminal();
+                CLEAR_TERMINAL
                 exit(EXIT_SUCCESS);
             }
             else
             {
-                clear_terminal();
+                CLEAR_TERMINAL
                 TITLE
                 write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
             }
         }
         else
         {
-            clear_terminal();
+            CLEAR_TERMINAL
             TITLE
             write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
         }
@@ -148,7 +149,7 @@ int execute_submenu_newgame(void)
     int can_exit_main_menu = 1;
     FILE* save_file = NULL;
     initialize_game(save_file);
-    clear_terminal();
+    CLEAR_TERMINAL
     write_line("\n\t[A new game will start...]\n");
 
     if ((save_file = fopen("save.txt", "r")))
@@ -158,7 +159,7 @@ int execute_submenu_newgame(void)
     }
 
     sleep(1);
-    clear_terminal();
+    CLEAR_TERMINAL
     LOCATION_NAME
     describe_location(PLAYER->current_location);
     write_line("\n\n");
@@ -185,7 +186,7 @@ int execute_submenu_loadgame(const int has_game_begun)
     }
 
     sleep(1);
-    clear_terminal();
+    CLEAR_TERMINAL
     LOCATION_NAME
     describe_location(PLAYER->current_location);
     write_line("\n\n");

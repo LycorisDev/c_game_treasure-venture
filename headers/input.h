@@ -18,13 +18,26 @@
 #include <ctype.h>
 #endif
 
-void get_string_input(char* input, const char context[], const char question[], const char choices[]);
-int get_number_input(const int min_number, const int max_number, const char question[]);
-int get_number_input_amongst_array(const int number_array[], const int array_count, const char question[]);
+#ifndef TERMINAL_UTF8_ENCODING
+    #ifdef _WIN32
+        #define TERMINAL_UTF8_ENCODING SetConsoleOutputCP(CP_UTF8);
+    #else
+        #define TERMINAL_UTF8_ENCODING
+    #endif
+#endif
+
+#ifndef CLEAR_TERMINAL
+    #ifdef _WIN32
+	    #define CLEAR_TERMINAL system("cls");
+    #elif defined(__ANDROID__)
+	    #define CLEAR_TERMINAL system("clear");
+    #else
+	    #define CLEAR_TERMINAL write(STDOUT_FILENO, "\033c", 2);
+    #endif
+#endif
+
+int input_yes_no(void);
 void flush_stdin(void);
-void only_one_greaterthan_sign_is_printed(void);
-void press_enter_to_continue(void);
-void clear_terminal(void);
 
 #define INPUT_SIZE    40
 
