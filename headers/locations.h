@@ -15,11 +15,12 @@
 #endif
 
 #include "game.h"
+#include "output.h"
 
 #define LOCATION_NAME   if (!PLAYER->current_location->inside_of)\
-                            printf("\nYou are outside. ");\
+                            write_line("\nYou are outside. ");\
                         else\
-                            printf("\nYou are in the %s. ", PLAYER->current_location->name);
+                            write_line("\nYou are in the %s. ", PLAYER->current_location->name);
 
 void populate_list_locations(void);
 void describe_location(const Location* location);

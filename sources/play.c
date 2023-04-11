@@ -20,7 +20,7 @@ int execute_twenty_squares(const char* character)
     mini_game_obj = LOAD_LIB(LIB_PATH_TWENTY_SQUARES);
     if (!mini_game_obj)
     {
-        fprintf(stderr, "Error loading mini-game library: %s\n", LIB_ERROR);
+        f_write_line(stderr, "Error loading mini-game library: %s\n", LIB_ERROR);
         return EXIT_FAILURE;
     }
 
@@ -34,7 +34,7 @@ int execute_twenty_squares(const char* character)
     #endif
     if (!mini_game_func)
     {
-        fprintf(stderr, "Error obtaining pointer to mini-game entry point function: %s\n", LIB_ERROR);
+        f_write_line(stderr, "Error obtaining pointer to mini-game entry point function: %s\n", LIB_ERROR);
         UNLOAD_LIB(mini_game_obj);
         return EXIT_FAILURE;
     }

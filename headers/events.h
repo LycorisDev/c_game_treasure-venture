@@ -6,6 +6,8 @@
 #include <string.h>
 #endif
 
+#include "output.h"
+
 void populate_list_events(void);
 
 #define NBR_EVENTS 	10
@@ -24,7 +26,7 @@ extern int list_events[NBR_EVENTS];
     if (list_events[0] == FLAG_ON && PLAYER->current_location == LOCATION_MAIN_HALLWAY)\
     {\
         EXECUTE_EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME\
-        printf("A distinct noise lets you know the entry doors have locked, seemingly all by themselves. You hope this is no haunting place. ");\
+        write_line("A distinct noise lets you know the entry doors have locked, seemingly all by themselves. You hope this is no haunting place. ");\
     }
 
 /* Used in go.c and look.c -------------------------------------------------------- */
