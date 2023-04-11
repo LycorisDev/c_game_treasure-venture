@@ -1,4 +1,5 @@
 #include "../headers/initialize.h"
+#include "../headers/output.h"
 #include "../headers/lexicon.h"
 #include "../headers/locations.h"
 #include "../headers/items.h"
@@ -18,8 +19,8 @@
 
 void exit_file_corrupted(FILE* save_file)
 {
-    printf("\n\t[Error: The save file has been corrupted.]\n");
-    printf("\t[It will be deleted and the game will close.]\n");
+    write_line("\n\t[Error: The save file has been corrupted.]\n");
+    write_line("\t[It will be deleted and the game will close.]\n");
     fclose(save_file);
     remove("save.txt");
     exit(EXIT_FAILURE);

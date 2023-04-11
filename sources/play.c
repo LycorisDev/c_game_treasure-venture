@@ -1,7 +1,8 @@
 #include "../headers/play.h"
+#include "../headers/input.h"
+#include "../headers/output.h"
 #include "../headers/characters.h"
 #include "../headers/locations.h"
-#include "../headers/input.h"
 
 int execute_twenty_squares(const char* character)
 {
@@ -54,7 +55,7 @@ void execute_play(void)
     {
         if (!PLAYER->current_location->characters[i])
         {
-            printf("\nYou see no one around you to play with.\n\n");
+            write_line("\nYou see no one around you to play with.\n\n");
             break;
         }
 
@@ -63,11 +64,11 @@ void execute_play(void)
 
         exit_twenty_squares = execute_twenty_squares(PLAYER->current_location->characters[i]->tags[1]);
         if (exit_twenty_squares == EXIT_FAILURE)
-            printf("\n\t[Error: Something went wrong with the mini-game 'Twenty Squares'.]\n");
+            write_line("\n\t[Error: Something went wrong with the mini-game 'Twenty Squares'.]\n");
 
         LOCATION_NAME
         describe_location(PLAYER->current_location);
-        printf("\n\n");
+        write_line("\n\n");
         break;
     }
 

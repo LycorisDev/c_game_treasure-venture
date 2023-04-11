@@ -1,4 +1,5 @@
 #include "../headers/commands.h"
+#include "../headers/output.h"
 
 #include "../headers/play.h"
 #include "../headers/inventory.h"
@@ -15,10 +16,10 @@ Command command;
 
 void display_commands(void)
 {
-    printf("\n");
-    printf("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
-    printf("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
-    printf("\n");
+    write_line("\n");
+    write_line("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
+    write_line("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
+    write_line("\n");
     return;
 }
 
@@ -54,7 +55,7 @@ void parse_game_command(void)
 
             if (!parser_matches_with_lexicon)
             {
-                printf("\n\t['%s' was not recognized.]\n", parser[i]);
+                write_line("\n\t['%s' was not recognized.]\n", parser[i]);
                 index_stop_matching = i;
                 break;
             }

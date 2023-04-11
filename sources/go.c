@@ -1,6 +1,7 @@
 #include "../headers/game.h"
 #include "../headers/events.h"
 #include "../headers/go.h"
+#include "../headers/output.h"
 #include "../headers/commands.h"
 #include "../headers/locations.h"
 #include "../headers/items.h"
@@ -8,10 +9,10 @@
 #define IF_NO_ACCESS(exit)          if (!exit->to || !exit->passage->access)\
                                     {\
                                         /* The player should never see this message */\
-                                        printf("You cannot access this place. ");\
+                                        write_line("You cannot access this place. ");\
                                     }
 
-#define PRINT_ACCESS_LOCKED(exit)   printf("The %s %s locked. ", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
+#define PRINT_ACCESS_LOCKED(exit)   write_line("The %s %s locked. ", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
 
 #define IF_ACCESS_LOCKED(exit)      if (exit->passage->access == ACCESS_LOCKED)\
                                     {\
@@ -20,7 +21,7 @@
 
 #define IF_LOCATION_FULL(exit)      if (exit->to->characters[NBR_CHARACTERS - 1])\
                                     {\
-                                        printf("The destination is full. No more characters can access this place. ");\
+                                        write_line("The destination is full. No more characters can access this place. ");\
                                     }
 
 void cross_passage(Exit* exit)
@@ -30,11 +31,11 @@ void cross_passage(Exit* exit)
     if (exit->passage->access == ACCESS_CLOSED)
     {
         exit->passage->access = ACCESS_OPEN;
-        printf("You open the %s and ", exit->passage->is_singular ? "door" : "doors");
+        write_line("You open the %s and ", exit->passage->is_singular ? "door" : "doors");
     }
     else
     {
-        printf("You ");
+        write_line("You ");
     }
 
     /* Enter a building */
@@ -54,7 +55,7 @@ void cross_passage(Exit* exit)
             }
         }
 
-        printf("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->name, exit->to->name);
+        write_line("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->name, exit->to->name);
     }
     /* Exit a building */
     else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_BUILDING)
@@ -73,10 +74,10 @@ void cross_passage(Exit* exit)
             }
         }
 
-        printf("leave the %s. ", PLAYER->current_location->inside_of->name);
+        write_line("leave the %s. ", PLAYER->current_location->inside_of->name);
     }
     else
-        printf("enter the %s. ", exit->to->name);
+        write_line("enter the %s. ", exit->to->name);
 
     /* Update the player's previous and current locations */
     PLAYER->previous_location = PLAYER->current_location;
@@ -131,7 +132,7 @@ void execute_go(void)
 
     if (!PLAYER->current_location->exits[0].to)
     {
-        printf("\nThere is nowhere to go.\n\n");
+        write_line("\nThere is nowhere to go.\n\n");
     }
     else
     {
@@ -142,15 +143,15 @@ void execute_go(void)
             {
                 if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
                 {
-                    printf("\n");
+                    write_line("\n");
                     if (!PLAYER->current_location->exits[0].to)
-                        printf("There is nowhere to go.\n\n");
+                        write_line("There is nowhere to go.\n\n");
                     else IF_NO_ACCESS((PLAYER->current_location->exits + 0))
                     else IF_ACCESS_LOCKED((PLAYER->current_location->exits + 0))
                     else IF_LOCATION_FULL((PLAYER->current_location->exits + 0))
                     else
                         cross_passage((PLAYER->current_location->exits + 0));
-                    printf("\n\n");
+                    write_line("\n\n");
                 }
                 else
                     memset(command.object, 0, sizeof(command.object));
@@ -169,13 +170,13 @@ void execute_go(void)
                         }
                         else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
                         {
-                            printf("\n");
+                            write_line("\n");
                             IF_NO_ACCESS((PLAYER->current_location->exits + i))
                             else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
                             else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
-                            printf("\n\n");
+                            write_line("\n\n");
                             break;
                         }
                     }
@@ -199,13 +200,13 @@ void execute_go(void)
                         }
                         else if (PLAYER->current_location->exits[i].to == PLAYER->previous_location) 
                         {
-                            printf("\n");
+                            write_line("\n");
                             IF_NO_ACCESS((PLAYER->current_location->exits + i))
                             else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
                             else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
-                            printf("\n\n");
+                            write_line("\n\n");
                             break;
                         }
                         else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
@@ -215,13 +216,13 @@ void execute_go(void)
                             {
                                 if (PLAYER->current_location->exits[i].to->exits[j].to == PLAYER->previous_location)
                                 {
-                                    printf("\n");
+                                    write_line("\n");
                                     IF_NO_ACCESS((PLAYER->current_location->exits + i))
                                     else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
                                     else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
                                     else
                                         cross_passage((PLAYER->current_location->exits + i));
-                                    printf("\n\n");
+                                    write_line("\n\n");
                                     break;
                                 }
                                 ++j;
@@ -236,7 +237,7 @@ void execute_go(void)
             {
                 if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
                 {
-                    printf("\nYou are already outside.\n\n");
+                    write_line("\nYou are already outside.\n\n");
                 }
                 else
                 {
@@ -257,26 +258,26 @@ void execute_go(void)
                     if (!j && !k)
                     {
                         /* The player should never see this message */
-                        printf("\nYou cannot get out.\n\n");
+                        write_line("\nYou cannot get out.\n\n");
                     }
                     /* Success: There is only one accessible exit */
                     else if (j == 1)
                     {
-                        printf("\n");
+                        write_line("\n");
                         cross_passage(accessible_exits[0]);
-                        printf("\n\n");
+                        write_line("\n\n");
                     }
                     /* Almost success: There is only one exit but it is locked */
                     else if (!j && k == 1)
                     {
-                        printf("\n");
+                        write_line("\n");
                         PRINT_ACCESS_LOCKED(locked_exits[0])
-                            printf("\n\n");
+                            write_line("\n\n");
                     }
                     /* Several accessible and/or locked exits. Which one does the player want? */
                     else
                     {
-                        printf("\nThere is more than one exit. Which one do you want?\n");
+                        write_line("\nThere is more than one exit. Which one do you want?\n");
                         memset(command.object, 0, sizeof(command.object));
                     }
                 }
@@ -293,33 +294,33 @@ void execute_go(void)
                         memset(command.object, 0, sizeof(command.object));
                     else if (!locations_with_same_tag_from_passage_items_in_current_location[1])
                     {
-                        printf("\n");
+                        write_line("\n");
                         IF_NO_ACCESS(locations_with_same_tag_from_passage_items_in_current_location[0])
                         else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
                         else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
                         else
                             cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                        printf("\n\n");
+                        write_line("\n\n");
                     }
                     else
                     {
-                        printf("\nThere is more than one passage item in your vicinity for which this tag works.\n");
+                        write_line("\nThere is more than one passage item in your vicinity for which this tag works.\n");
                         memset(command.object, 0, sizeof(command.object));
                     }
                 }
                 else if (!locations_with_same_tag_from_current_location[1])
                 {
-                    printf("\n");
+                    write_line("\n");
                     IF_NO_ACCESS(locations_with_same_tag_from_current_location[0])
                     else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
                     else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
                     else
                         cross_passage(locations_with_same_tag_from_current_location[0]);
-                    printf("\n\n");
+                    write_line("\n\n");
                 }
                 else
                 {
-                    printf("\nThere is more than one destination from your current location for which this tag works.\n");
+                    write_line("\nThere is more than one destination from your current location for which this tag works.\n");
                     memset(command.object, 0, sizeof(command.object));
                 }
             }
@@ -332,16 +333,16 @@ void execute_go(void)
                 if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_BUILDING)
                 {
                     if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                        printf("\n\t[Try 'go inside'.]\n\n");
+                        write_line("\n\t[Try 'go inside'.]\n\n");
                     else
-                        printf("\n\t[Try 'go outside'.]\n\n");
+                        write_line("\n\t[Try 'go outside'.]\n\n");
                 }
                 else
-                    printf("\n\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
+                    write_line("\n\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
             }
             else
             {
-                printf("\n\t[Try:]\n");
+                write_line("\n\t[Try:]\n");
                 for (i = 0; i < NBR_LOCATIONS; ++i)
                 {
                     if (!PLAYER->current_location->exits[i].to)
@@ -350,14 +351,14 @@ void execute_go(void)
                     if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
                     {
                         if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                            printf("\t\t['Go inside'.]\n");
+                            write_line("\t\t['Go inside'.]\n");
                         else
-                            printf("\t\t['Go outside'.]\n");
+                            write_line("\t\t['Go outside'.]\n");
                     }
                     else
-                        printf("\t\t['Go %s'.]\n", PLAYER->current_location->exits[i].to->tags[0]);
+                        write_line("\t\t['Go %s'.]\n", PLAYER->current_location->exits[i].to->tags[0]);
                 }
-                printf("\n");
+                write_line("\n");
             }
         }
     }

@@ -1,4 +1,5 @@
 #include "../headers/locations.h"
+#include "../headers/output.h"
 
 /* Declared as extern in ../headers/game.h, included in ../headers/locations.h */
 Location list_locations[NBR_LOCATIONS];
@@ -134,9 +135,9 @@ void describe_location(const Location* location)
 
     /* Temporary: If we are outside, print the description of the first location in "outside"'s location list. Turns out there's only one, the mansion. */
     if (location->type == LOCATION_TYPE_OUTSIDE)
-        printf("%s ", location->locations[0]->description);
+        write_line("%s ", location->locations[0]->description);
     else
-        printf("%s ", location->description);
+        write_line("%s ", location->description);
 
     for (i = 0; i < NBR_ITEMS; ++i)
     {
@@ -145,7 +146,7 @@ void describe_location(const Location* location)
 
         /* Only mention items which are not an access to an exit, such as a door */
         if (!location->items[i]->access)
-            printf("%s ", location->items[i]->description_obvious);
+            write_line("%s ", location->items[i]->description_obvious);
     }
 }
 

@@ -1,4 +1,5 @@
 #include "../headers/drop.h"
+#include "../headers/output.h"
 #include "../headers/commands.h"
 #include "../headers/items.h"
 
@@ -9,12 +10,12 @@ void execute_drop(void)
 
     if (PLAYER->current_location->items[NBR_ITEMS - 1])
     {
-        printf("\nThis place cannot hold any more item.\n\n");
+        write_line("\nThis place cannot hold any more item.\n\n");
         return;
     }
     else if (!PLAYER->inventory[0])
     {
-        printf("\nYou have no item on you.\n\n");
+        write_line("\nYou have no item on you.\n\n");
         return;
     }
     else if (*command.object)
@@ -27,19 +28,19 @@ void execute_drop(void)
         }
         else if (items_with_same_tag[1])
         {
-            printf("\nThere is more than one item in your inventory for which this tag works.\n\n");
-            printf("\n\t[Try:]\n");
+            write_line("\nThere is more than one item in your inventory for which this tag works.\n\n");
+            write_line("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!items_with_same_tag[i])
                     break;
-                printf("\t\t['Drop %s'.]\n", items_with_same_tag[i]->tags[0]);
+                write_line("\t\t['Drop %s'.]\n", items_with_same_tag[i]->tags[0]);
             }
-            printf("\n");
+            write_line("\n");
         }
         else if (PLAYER->current_location->items[NBR_ITEMS - 1])
         {
-            printf("\nThe current location is full. No more items can be added.\n\n");
+            write_line("\nThe current location is full. No more items can be added.\n\n");
         }
         else
         {
@@ -80,7 +81,7 @@ void execute_drop(void)
                     break;
                 }
             }
-            printf("\n'%s' dropped.\n\n", items_with_same_tag[0]->name);
+            write_line("\n'%s' dropped.\n\n", items_with_same_tag[0]->name);
         }
     }
 
@@ -88,18 +89,18 @@ void execute_drop(void)
     {
         if (!PLAYER->inventory[1])
         {
-            printf("\n\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
+            write_line("\n\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
         }
         else
         {
-            printf("\n\t[Try:]\n");
+            write_line("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!PLAYER->inventory[i])
                     break;
-                printf("\t\t['Drop %s'.]\n", PLAYER->inventory[i]->tags[0]);
+                write_line("\t\t['Drop %s'.]\n", PLAYER->inventory[i]->tags[0]);
             }
-            printf("\n");
+            write_line("\n");
         }
     }
 

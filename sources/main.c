@@ -1,11 +1,12 @@
 #include "../headers/main.h"
 #include "../headers/input.h"
+#include "../headers/output.h"
 #include "../headers/commands.h"
 #include "../headers/initialize.h"
 #include "../headers/save.h"
 #include "../headers/locations.h"
 
-#define TITLE printf("\t-[ TREASURE VENTURE ]-\n");
+#define TITLE write_line("\t-[ TREASURE VENTURE ]-\n");
 
 /* Declared as extern in ../headers/main.h */
 char *parser[MAX_NBR_WORDS];
@@ -66,7 +67,7 @@ void set_parser_with_input(void)
     char input[MAX_SIZE] = {0};
     memset(parser, 0, sizeof(parser));
     nbr_words_in_parser = 0;
-    printf("> ");
+    write_line("> ");
     if (fgets(input, MAX_SIZE, stdin))
     {
         if (input[0] == '\n')
@@ -95,11 +96,11 @@ void access_main_menu(const int has_game_begun)
 
     clear_terminal();
     TITLE
-    printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
+    write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
 
     while (!can_exit_main_menu)
     {
-        printf("\n\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
+        write_line("\n\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
         set_parser_with_input();
 
         if (parser[0])
@@ -129,14 +130,14 @@ void access_main_menu(const int has_game_begun)
             {
                 clear_terminal();
                 TITLE
-                printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
+                write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
             }
         }
         else
         {
             clear_terminal();
             TITLE
-            printf("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
+            write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
         }
     }
     return;
@@ -148,11 +149,11 @@ int execute_submenu_newgame(void)
     FILE* save_file = NULL;
     initialize_game(save_file);
     clear_terminal();
-    printf("\n\t[A new game will start...]\n");
+    write_line("\n\t[A new game will start...]\n");
 
     if ((save_file = fopen("save.txt", "r")))
     {
-        printf("\t[The save file still exists.]\n");
+        write_line("\t[The save file still exists.]\n");
         fclose(save_file);
     }
 
@@ -160,7 +161,7 @@ int execute_submenu_newgame(void)
     clear_terminal();
     LOCATION_NAME
     describe_location(PLAYER->current_location);
-    printf("\n\n");
+    write_line("\n\n");
     return can_exit_main_menu;
 }
 
@@ -173,21 +174,21 @@ int execute_submenu_loadgame(const int has_game_begun)
     {
         initialize_game(save_file);
         fclose(save_file);
-        printf("\n\t[Your saved game will resume...]\n\n");
+        write_line("\n\t[Your saved game will resume...]\n\n");
     }
     else
     {
         if (!has_game_begun)
             initialize_game(save_file);
-        printf("\n\t[No save could be found.]\n");
-        has_game_begun ? printf("\t[The current game will resume...]\n\n") : printf("\t[A new game will start...]\n\n");
+        write_line("\n\t[No save could be found.]\n");
+        has_game_begun ? write_line("\t[The current game will resume...]\n\n") : write_line("\t[A new game will start...]\n\n");
     }
 
     sleep(1);
     clear_terminal();
     LOCATION_NAME
     describe_location(PLAYER->current_location);
-    printf("\n\n");
+    write_line("\n\n");
     return can_exit_main_menu;
 }
 
@@ -197,33 +198,33 @@ int execute_submenu_save(const int has_game_begun)
     FILE* save_file = NULL;
 
     if (!has_game_begun)
-        printf("\n\t[A game needs to be started for it to be saved.]\n");
+        write_line("\n\t[A game needs to be started for it to be saved.]\n");
     else
     {
         can_exit_main_menu = 1;
         save_file = fopen("save.txt", "w+");
         save_game(save_file);
         fclose(save_file);
-        printf("\n\t[Game saved!]\n");
+        write_line("\n\t[Game saved!]\n");
         LOCATION_NAME
         describe_location(PLAYER->current_location);
-        printf("\n\n");
+        write_line("\n\n");
     }
     return can_exit_main_menu;
 }
 
 void execute_submenu_about(const int is_game_ongoing)
 {
-    printf("\n\t[\"Treasure Venture\" is a text adventure. A text adventure game is a game that is interacted with through written commands, and which only displays written text. There is no graphical element.]\n");
-    printf("\n\t[This project differs from a classic text adventure in that \"Treasure Venture\" offers suggestions when the player is lost. Since this reveals the plot, it's usually considered as spoiling the player's enjoyment. Even so, I've allowed myself to make the handling of the game more accessible, which I hope will make for a bigger playerbase and therefore increase my chances of receiving critiques on my work.]\n");
-    printf("\n\t[\"Treasure Venture\" understands several commands, can save the ongoing game, and has events. An event example is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled \"Twenty Squares\", that I leave you to discover as well as the game itself.]\n");
-    printf("\n\t[For more information, visit my channel:]\n\thttps://www.youtube.com/@thelycorisradiata/\n");
+    write_line("\n\t[\"Treasure Venture\" is a text adventure. A text adventure game is a game that is interacted with through written commands, and which only displays written text. There is no graphical element.]\n");
+    write_line("\n\t[This project differs from a classic text adventure in that \"Treasure Venture\" offers suggestions when the player is lost. Since this reveals the plot, it's usually considered as spoiling the player's enjoyment. Even so, I've allowed myself to make the handling of the game more accessible, which I hope will make for a bigger playerbase and therefore increase my chances of receiving critiques on my work.]\n");
+    write_line("\n\t[\"Treasure Venture\" understands several commands, can save the ongoing game, and has events. An event example is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled \"Twenty Squares\", that I leave you to discover as well as the game itself.]\n");
+    write_line("\n\t[For more information, visit my channel:]\n\thttps://www.youtube.com/@thelycorisradiata/\n");
 
     if (is_game_ongoing)
     {
         LOCATION_NAME
         describe_location(PLAYER->current_location);
-        printf("\n\n");
+        write_line("\n\n");
     }
     return;
 }

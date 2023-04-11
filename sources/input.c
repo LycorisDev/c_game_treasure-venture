@@ -1,15 +1,16 @@
 #include "../headers/input.h"
+#include "../headers/output.h"
 
 void get_string_input(char* input, const char context[], const char question[], const char choices[])
 {
     int i;
     if (!strcmp(context, "yes_no"))
     {
-        printf("%s %s\n\n", question, choices);
+        write_line("%s %s\n\n", question, choices);
 
         while (strcmp(input, "yes") && strcmp(input, "no"))
         {
-            printf("> ");
+            write_line("> ");
             if (fgets(input, INPUT_SIZE, stdin))
             {
                 for (i = 0; i < INPUT_SIZE; ++i)
@@ -34,18 +35,18 @@ int get_number_input(const int min_number, const int max_number, const char ques
     char input[8] = {0};
     int number = 0;
 
-    printf("%s %d - %d.\n\n", question, min_number, max_number);
+    write_line("%s %d - %d.\n\n", question, min_number, max_number);
 
     while (number < min_number || number > max_number)
     {
-        printf("> ");
+        write_line("> ");
         if (fgets(input, 8, stdin))
             number = atoi(input);
         flush_stdin();
         only_one_greaterthan_sign_is_printed();
     }
 
-    printf("\n");
+    write_line("\n");
     return number;
 }
 
@@ -56,18 +57,18 @@ int get_number_input_amongst_array(const int number_array[], const int array_cou
     char input[8] = {0};
     int i, number = 0, is_number_valid = 0;
 
-    printf("%s\n", question);
+    write_line("%s\n", question);
     for (i = 0; i < array_count; ++i)
     {
         if (i == array_count - 1)
-            printf("%d.\n\n", number_array[i]);
+            write_line("%d.\n\n", number_array[i]);
         else
-            printf("%d - ", number_array[i]);
+            write_line("%d - ", number_array[i]);
     }
 
     while (!is_number_valid)
     {
-        printf("> ");
+        write_line("> ");
         if (fgets(input, 8, stdin))
         {
             number = atoi(input);
@@ -84,7 +85,7 @@ int get_number_input_amongst_array(const int number_array[], const int array_cou
         only_one_greaterthan_sign_is_printed();
     }
 
-    printf("\n");
+    write_line("\n");
     return number;
 }
 
@@ -101,15 +102,15 @@ void flush_stdin(void)
 
 void only_one_greaterthan_sign_is_printed(void)
 {
-    printf("\r");
+    write_line("\r");
     return;
 }
 
 void press_enter_to_continue(void)
 {
     char c = '\0';
-    printf("Press ENTER to continue.\n");
-    printf("> ");
+    write_line("Press ENTER to continue.\n");
+    write_line("> ");
     while (c != '\n')
     {
         c = getchar();
@@ -120,7 +121,7 @@ void press_enter_to_continue(void)
 
 void clear_terminal(void)
 {
-    printf("\033c");
+    write_line("\033c");
     return;
 }
 
