@@ -5,3 +5,7 @@
 # Test builds
 [Bb]uilds/
 
+# Save files
+
+save.txt
+
