@@ -17,7 +17,7 @@ int execute_mini_game(const char* mini_game_name, const char* character)
     mini_game_obj = LOAD_LIB(LIB_PATH_TWENTY_SQUARES);
     if (!mini_game_obj)
     {
-        f_write_line(stderr, "Error loading mini-game library: %s\n", LIB_ERROR);
+        f_write_line(stderr, "\n\t[Error: The %s library can't be loaded -> %s]\n", mini_game_name, LIB_ERROR);
         return EXIT_FAILURE;
     }
 
@@ -25,13 +25,13 @@ int execute_mini_game(const char* mini_game_name, const char* character)
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Wpedantic"
     #endif
-    *(void **) (&mini_game_func) = LIB_FUNC(mini_game_obj, "start");
+    *(void **) (&mini_game_func) = LIB_FUNC(mini_game_obj, "start_twenty_squares");
     #ifdef _WIN32
         #pragma GCC diagnostic pop
     #endif
     if (!mini_game_func)
     {
-        f_write_line(stderr, "Error obtaining pointer to mini-game entry point function: %s\n", LIB_ERROR);
+        f_write_line(stderr, "\n\t[Error: The pointer to the %s library start function can't be obtained -> %s]\n", mini_game_name, LIB_ERROR);
         UNLOAD_LIB(mini_game_obj);
         return EXIT_FAILURE;
     }
@@ -62,7 +62,7 @@ void execute_play(void)
 
         exit_mini_game = execute_mini_game(mini_game_name, PLAYER->current_location->characters[i]->tags[1]);
         if (exit_mini_game == EXIT_FAILURE)
-            write_line("\n\t[Error: Something went wrong with the mini-game '%s'.]\n", mini_game_name);
+            f_write_line(stderr, "\n\t[Error: Something went wrong with the '%s' mini-game.]\n", mini_game_name);
 
         LOCATION_NAME
         describe_location(PLAYER->current_location);

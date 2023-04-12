@@ -17,6 +17,12 @@
 #define STANDARD_LIBRARY_CTYPE
 #include <ctype.h>
 #endif
+#ifndef STANDARD_LIBRARY_WINDOWS
+#define STANDARD_LIBRARY_WINDOWS
+    #ifdef _WIN32
+    #include <windows.h>
+    #endif
+#endif
 
 #ifndef TERMINAL_UTF8_ENCODING
     #ifdef _WIN32
