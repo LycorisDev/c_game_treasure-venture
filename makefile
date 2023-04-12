@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -fPIC -MMD -ansi -pedantic -Wall -Wextra 
-LDFLAGS = 
+TS_LIB = -lts
 
 DIR_BUILD = builds
 DIR_OBJ = $(DIR_BUILD)/unix/objects
@@ -14,7 +14,7 @@ OBJ_FILES = $(patsubst sources/%.c, $(DIR_OBJ)/%.o, $(SOURCE_FILES))
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ_FILES)
-	@$(CC) $(LDFLAGS) $^ -o $@
+	@$(CC) $^ -o $@ -O2 -Lplugins/twenty-squares/static $(TS_LIB)
 
 $(DIR_OBJ)/%.o: sources/%.c
 	@mkdir -p $(@D)
@@ -26,11 +26,13 @@ $(DIR_OBJ)/%.o: sources/%.c
 win64:
 	@$(MAKE) -s all \
 	CC=x86_64-w64-mingw32-gcc \
+	TS_LIB=-lts64 \
 	DIR_OBJ=$(DIR_BUILD)/win64/objects \
 	EXECUTABLE=$(DIR_BUILD)/win64/TreasureVenture-64bit.exe
 win32:
 	@$(MAKE) -s all \
 	CC=i686-w64-mingw32-gcc \
+	TS_LIB=-lts32 \
 	DIR_OBJ=$(DIR_BUILD)/win32/objects \
 	EXECUTABLE=$(DIR_BUILD)/win32/TreasureVenture-32bit.exe
 

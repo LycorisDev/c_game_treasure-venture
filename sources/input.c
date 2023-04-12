@@ -26,6 +26,7 @@ int input_yes_no(void)
     return strcmp(input, "no");
 }
 
+/* ALREADY PRESENT IN THE "TWENTY SQUARES" LIBRARY
 void flush_stdin(void)
 {
     char c = 'A';
@@ -36,4 +37,4 @@ void flush_stdin(void)
     }
     return;
 }
-
+*/

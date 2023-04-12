@@ -4,10 +4,18 @@
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 
-int execute_mini_game(const char* mini_game_name, const char* character)
+int static_mini_game(const char* mini_game_name, const char* character)
 {
-    LIB_HANDLE mini_game_obj;
-    int (*mini_game_func)();
+    write_line("\n\t[Do you want to play %s with the %s? Yes/No]\n\n", mini_game_name, character);
+    if (!input_yes_no())
+        return EXIT_SUCCESS;
+    return start_twenty_squares();
+}
+
+int dynamic_mini_game(const char* mini_game_name, const char* character)
+{
+    LIB_HANDLE mini_game_obj = NULL;
+    int (*mini_game_func)() = NULL;
     int mini_game_result = EXIT_FAILURE;
 
     write_line("\n\t[Do you want to play %s with the %s? Yes/No]\n\n", mini_game_name, character);
@@ -60,7 +68,7 @@ void execute_play(void)
         if (PLAYER->current_location->characters[i] == PLAYER)
             continue;
 
-        exit_mini_game = execute_mini_game(mini_game_name, PLAYER->current_location->characters[i]->tags[1]);
+        exit_mini_game = static_mini_game(mini_game_name, PLAYER->current_location->characters[i]->tags[1]);
         if (exit_mini_game == EXIT_FAILURE)
             f_write_line(stderr, "\n\t[Error: Something went wrong with the '%s' mini-game.]\n", mini_game_name);
 
