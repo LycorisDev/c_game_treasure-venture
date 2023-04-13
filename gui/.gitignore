@@ -1,0 +1,11 @@
+# Temporary files
+*~
+*.swp
+
+# Test builds
+[Bb]uilds/
+
+# Save files
+
+save.txt
+
