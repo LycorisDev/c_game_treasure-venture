@@ -14,15 +14,10 @@ static gboolean is_window_maximized = FALSE;
 static void on_maximize_button_clicked(GtkWidget* btn, GtkWidget* window)
 {
     if (is_window_maximized)
-    {
         gtk_window_unmaximize(GTK_WINDOW(window));
-        is_window_maximized = FALSE;
-    }
     else
-    {
         gtk_window_maximize(GTK_WINDOW(window));
-        is_window_maximized = TRUE;
-    }
+    is_window_maximized = !is_window_maximized;
     return;
 }
 
