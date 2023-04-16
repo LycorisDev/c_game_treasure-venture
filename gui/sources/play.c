@@ -1,6 +1,6 @@
 #include "../headers/play.h"
+#include "../headers/main.h"
 #include "../headers/input.h"
-#include "../headers/output.h"
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 

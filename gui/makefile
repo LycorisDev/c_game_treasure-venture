@@ -13,14 +13,15 @@ OBJ_FILES = $(patsubst sources/%.c, $(DIR_OBJ)/%.o, $(SOURCE_FILES))
 
 all: $(EXECUTABLE)
 
+# Package: libgtk-4-dev
 $(EXECUTABLE): $(OBJ_FILES)
-	@$(CC) $^ -o $@ -O2 -Lplugins/twenty-squares/static $(TS_LIB)
+	@$(CC) `pkg-config --cflags gtk4` $^ -o $@ -O2 -Lplugins/twenty-squares/static $(TS_LIB) `pkg-config --libs gtk4`
 
 $(DIR_OBJ)/%.o: sources/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c $^ -o $@
 
-# NPM package: gcc-mingw-w64
+# Package: gcc-mingw-w64
 .PHONY: win64
 .PHONY: win32
 win64:

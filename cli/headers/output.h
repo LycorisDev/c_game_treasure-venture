@@ -3,11 +3,11 @@
 
 #ifndef STANDARD_LIBRARY_STDIO
 #define STANDARD_LIBRARY_STDIO
-    #include <stdio.h>
+#include <stdio.h>
 #endif
 #ifndef STANDARD_LIBRARY_STDARG
 #define STANDARD_LIBRARY_STDARG
-    #include <stdarg.h>
+#include <stdarg.h>
 #endif
 
 void write_int(int num);

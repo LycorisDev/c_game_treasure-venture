@@ -1,5 +1,5 @@
 #include "../headers/character.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 
 void execute_character(void)
 {

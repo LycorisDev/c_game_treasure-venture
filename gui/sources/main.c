@@ -1,232 +1,231 @@
+#include <gtk/gtk.h>
 #include "../headers/main.h"
-#include "../headers/input.h"
-#include "../headers/output.h"
-#include "../headers/commands.h"
-#include "../headers/initialize.h"
-#include "../headers/save.h"
-#include "../headers/locations.h"
+#include "../headers/start.h"
 
-#define TITLE write_line("\t-[ TREASURE VENTURE ]-\n");
-
-/* Declared as extern in ../headers/main.h */
-char *parser[MAX_NBR_WORDS];
+char* parser[MAX_NBR_WORDS];
 int nbr_words_in_parser;
 
-int main(void)
-{
-    TERMINAL_UTF8_ENCODING
-    access_main_menu(0);
-    while (1)
-    {
-        set_parser_with_input();
+static GtkWidget* window = NULL;
+static GtkTextBuffer* output_buffer = NULL;
+static gboolean is_window_maximized = FALSE;
 
-        if (!parser[0] || strcmp(parser[0], "menu"))
-        {
-            parse_game_command();
-        }
+static void on_app_activated(GApplication* app, gpointer user_data);
+static void on_minimize_button_clicked(GtkWidget* btn);
+static void on_maximize_button_clicked(GtkWidget* btn);
+static void on_close_button_clicked(GtkWidget* btn);
+static void on_text_input_sent(GtkEntry* input_field);
+static void parse_input(const char* raw_input);
+static int output_int(int num, char* p_text, int index);
+
+int main(int argc, char* argv[])
+{
+    GtkApplication* app;
+    int status;
+    char app_name[] = "Treasure Venture";
+
+    app = gtk_application_new("com.mofumofustudios.treasure_venture", G_APPLICATION_FLAGS_NONE);
+    g_signal_connect(app, "activate", G_CALLBACK(on_app_activated), app_name);
+
+    status = g_application_run(G_APPLICATION(app), argc, argv);
+    g_object_unref(app);
+    return status;
+}
+
+void add_output(const char* format, ...)
+{
+    int i, j;
+    int max_len = 509;
+    char* text = calloc(max_len + 1, sizeof(char));
+    const char* tmp = NULL;
+    va_list args;
+
+    if (text == NULL)
+        return;
+
+    va_start(args, format);
+
+    for (i = 0, j = 0; i < max_len; ++i)
+    {
+        if (format[i] == '\0')
+            break;
+
+        if (format[i] != '%')
+            text[j++] = format[i];
         else
         {
-            if (!parser[1])
+            ++i;
+
+            if (format[i] == '%')
             {
-                access_main_menu(1);
+                text[j++] = format[i];
             }
-            else if (!strcmp(parser[1], "new"))
+            else if (format[i] == 's')
             {
-                execute_submenu_newgame();
+                tmp = va_arg(args, const char*);
+                strcat(text, tmp);
+                j += strlen(tmp);
             }
-            else if (!strcmp(parser[1], "load"))
+            else if (format[i] == 'd')
             {
-                execute_submenu_loadgame(1);
-            }
-            else if (!strcmp(parser[1], "save"))
-            {
-                execute_submenu_save(1);
-            }
-            else if (!strcmp(parser[1], "about"))
-            {
-                execute_submenu_about(1);
-            }
-            else if (!strcmp(parser[1], "quit"))
-            {
-                CLEAR_TERMINAL
-                return EXIT_SUCCESS;
-            }
-            else
-            {
-                access_main_menu(1);
+               j = output_int(va_arg(args, int), text, j);
             }
         }
     }
-    /* This return statement shouldn't be accessible. */
-    return EXIT_FAILURE;
+
+    va_end(args);
+
+    gtk_text_buffer_insert_at_cursor(output_buffer, text, -1);
+    free(text);
+    return;
 }
 
-void set_parser_with_input(void)
+void reset_output(void)
+{
+    gtk_text_buffer_set_text(output_buffer, "", -1);
+}
+
+void close_window(void)
+{
+    gtk_window_close(GTK_WINDOW(window));
+    return;
+}
+
+static void on_app_activated(GApplication* app, gpointer user_data)
+{
+    char* app_name = (char*)user_data;
+    GtkWidget *title_bar, *close_button, *maximize_button, *minimize_button;
+    GtkWidget *box, *output_area, *input_field;
+
+    /* Window */
+    window = gtk_application_window_new(GTK_APPLICATION(app));
+    gtk_window_set_title(GTK_WINDOW(window), app_name);
+    gtk_window_set_default_size(GTK_WINDOW(window), 640, 480);
+
+    /* Title bar */
+    title_bar = gtk_header_bar_new();
+    gtk_window_set_titlebar(GTK_WINDOW(window), title_bar);
+    gtk_header_bar_set_show_title_buttons(GTK_HEADER_BAR(title_bar), FALSE);
+
+    /* Title bar buttons */
+    close_button = gtk_button_new_from_icon_name("window-close");
+    gtk_header_bar_pack_end(GTK_HEADER_BAR(title_bar), close_button);
+    g_signal_connect(close_button, "clicked", G_CALLBACK(on_close_button_clicked), NULL);
+
+    maximize_button = gtk_button_new_from_icon_name("window-maximize");
+    gtk_header_bar_pack_end(GTK_HEADER_BAR(title_bar), maximize_button);
+    g_signal_connect(maximize_button, "clicked", G_CALLBACK(on_maximize_button_clicked), NULL);
+
+    minimize_button = gtk_button_new_from_icon_name("window-minimize");
+    gtk_header_bar_pack_end(GTK_HEADER_BAR(title_bar), minimize_button);
+    g_signal_connect(minimize_button, "clicked", G_CALLBACK(on_minimize_button_clicked), NULL);
+
+    /* Container */
+    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+    gtk_window_set_child(GTK_WINDOW(window), box);
+
+    /* Children of the container */
+    output_area = gtk_text_view_new();
+    gtk_widget_set_hexpand(output_area, TRUE);
+    gtk_widget_set_vexpand(output_area, TRUE);
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(output_area), FALSE);
+    output_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(output_area));
+    gtk_text_buffer_set_text(output_buffer, "", -1);
+    gtk_box_append(GTK_BOX(box), output_area);
+
+    input_field = gtk_entry_new();
+    gtk_entry_set_placeholder_text(GTK_ENTRY(input_field), "Type here...");
+    gtk_box_append(GTK_BOX(box), input_field);
+    g_signal_connect(input_field, "activate", G_CALLBACK(on_text_input_sent), NULL);
+
+    /* Put the focus in the input field */
+    gtk_widget_grab_focus(input_field);
+
+    /* Present the window */
+    gtk_window_present(GTK_WINDOW(window));
+
+    /* Start the game */
+    return;
+}
+
+static void on_minimize_button_clicked(GtkWidget* btn)
+{
+    gtk_window_minimize(GTK_WINDOW(window));
+    return;
+}
+
+static void on_maximize_button_clicked(GtkWidget* btn)
+{
+    if (is_window_maximized)
+        gtk_window_unmaximize(GTK_WINDOW(window));
+    else
+        gtk_window_maximize(GTK_WINDOW(window));
+    is_window_maximized = !is_window_maximized;
+    return;
+}
+
+static void on_close_button_clicked(GtkWidget* btn)
+{
+    close_window();
+    return;
+}
+
+static void on_text_input_sent(GtkEntry* input_field)
+{
+    const char* text = gtk_editable_get_text(GTK_EDITABLE(input_field));
+    if (strlen(text) != 0)
+    {
+        parse_input(text);
+        gtk_editable_set_text(GTK_EDITABLE(input_field), "\0");
+        /* interact(); */
+    }
+    return;
+}
+
+static void parse_input(const char* raw_input)
 {
     int i;
     char *token = NULL;
     char input[MAX_SIZE] = {0};
+
+    /* Reset parser */
     memset(parser, 0, sizeof(parser));
     nbr_words_in_parser = 0;
-    write_line("> ");
-    if (fgets(input, MAX_SIZE, stdin))
-    {
-        if (input[0] == '\n')
-            return;
-        for (i = 0; i < MAX_SIZE; ++i)
-        {
-            if (input[i] == '\0')
-                break;
-            input[i] = tolower(input[i]);
-        }
 
-        token = strtok(input, DELIMETERS);
-        while (token)
-        {
-            parser[nbr_words_in_parser++] = token;
-            token = strtok(NULL, DELIMETERS);
-        }
+    /* Set input to lowercase */
+    for (i = 0; i < MAX_SIZE; ++i)
+    {
+        if (raw_input[i] == '\0')
+            break;
+        input[i] = tolower(raw_input[i]);
     }
-    flush_stdin();
-    return;
-}
 
-void access_main_menu(const int has_game_begun)
-{
-    int can_exit_main_menu = 0;
-
-    CLEAR_TERMINAL
-    TITLE
-    write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
-
-    while (!can_exit_main_menu)
+    /* Fill parser */
+    token = strtok(input, DELIMETERS);
+    while (token)
     {
-        write_line("\n\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
-        set_parser_with_input();
-
-        if (parser[0])
-        {
-            if (!strcmp(parser[0], "new"))
-            {
-                can_exit_main_menu = execute_submenu_newgame();
-            }
-            else if (!strcmp(parser[0], "load"))
-            {
-                can_exit_main_menu = execute_submenu_loadgame(has_game_begun);
-            }
-            else if (!strcmp(parser[0], "save"))
-            {
-                can_exit_main_menu = execute_submenu_save(has_game_begun);
-            }
-            else if (!strcmp(parser[0], "about"))
-            {
-                execute_submenu_about(0);
-            }
-            else if (!strcmp(parser[0], "quit"))
-            {
-                CLEAR_TERMINAL
-                exit(EXIT_SUCCESS);
-            }
-            else
-            {
-                CLEAR_TERMINAL
-                TITLE
-                write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
-            }
-        }
-        else
-        {
-            CLEAR_TERMINAL
-            TITLE
-            write_line("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
-        }
+        parser[nbr_words_in_parser++] = token;
+        token = strtok(NULL, DELIMETERS);
     }
     return;
 }
 
-int execute_submenu_newgame(void)
+static int output_int(int num, char* p_text, int index)
 {
-    int can_exit_main_menu = 1;
-    FILE* save_file = NULL;
-    initialize_game(save_file);
-    CLEAR_TERMINAL
-    write_line("\n\t[A new game will start...]\n");
+    int a;
 
-    if ((save_file = fopen("save.txt", "r")))
+    if (num < 0)
     {
-        write_line("\t[The save file still exists.]\n");
-        fclose(save_file);
+        p_text[index++] = '-';
+        num *= -1;
     }
 
-    sleep(1);
-    CLEAR_TERMINAL
-    LOCATION_NAME
-    describe_location(PLAYER->current_location);
-    write_line("\n\n");
-    return can_exit_main_menu;
-}
-
-int execute_submenu_loadgame(const int has_game_begun)
-{
-    int can_exit_main_menu = 1;
-    FILE* save_file = NULL;
-
-    if ((save_file = fopen("save.txt", "r")))
+    if (num > 9)
     {
-        initialize_game(save_file);
-        fclose(save_file);
-        write_line("\n\t[Your saved game will resume...]\n\n");
+        a = num / 10;
+        num -= 10 * a;
+        index = output_int(a, p_text, index);
     }
-    else
-    {
-        if (!has_game_begun)
-            initialize_game(save_file);
-        write_line("\n\t[No save could be found.]\n");
-        has_game_begun ? write_line("\t[The current game will resume...]\n\n") : write_line("\t[A new game will start...]\n\n");
-    }
-
-    sleep(1);
-    CLEAR_TERMINAL
-    LOCATION_NAME
-    describe_location(PLAYER->current_location);
-    write_line("\n\n");
-    return can_exit_main_menu;
-}
-
-int execute_submenu_save(const int has_game_begun)
-{
-    int can_exit_main_menu = 0;
-    FILE* save_file = NULL;
-
-    if (!has_game_begun)
-        write_line("\n\t[A game needs to be started for it to be saved.]\n");
-    else
-    {
-        can_exit_main_menu = 1;
-        save_file = fopen("save.txt", "w+");
-        save_game(save_file);
-        fclose(save_file);
-        write_line("\n\t[Game saved!]\n");
-        LOCATION_NAME
-        describe_location(PLAYER->current_location);
-        write_line("\n\n");
-    }
-    return can_exit_main_menu;
-}
-
-void execute_submenu_about(const int is_game_ongoing)
-{
-    write_line("\n\t[\"Treasure Venture\" is a text adventure. A text adventure game is a game that is interacted with through written commands, and which only displays written text. There is no graphical element.]\n");
-    write_line("\n\t[This project differs from a classic text adventure in that \"Treasure Venture\" offers suggestions when the player is lost. Since this reveals the plot, it's usually considered as spoiling the player's enjoyment. Even so, I've allowed myself to make the handling of the game more accessible, which I hope will make for a bigger playerbase and therefore increase my chances of receiving critiques on my work.]\n");
-    write_line("\n\t[\"Treasure Venture\" understands several commands, can save the ongoing game, and has events. An event example is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled \"Twenty Squares\", that I leave you to discover as well as the game itself.]\n");
-    write_line("\n\t[For more information, visit my channel:]\n\thttps://www.youtube.com/@thelycorisradiata/\n");
-
-    if (is_game_ongoing)
-    {
-        LOCATION_NAME
-        describe_location(PLAYER->current_location);
-        write_line("\n\n");
-    }
-    return;
+    p_text[index++] = '0' + num;
+    return index;
 }
 

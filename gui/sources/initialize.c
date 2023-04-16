@@ -1,5 +1,5 @@
 #include "../headers/initialize.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 #include "../headers/lexicon.h"
 #include "../headers/locations.h"
 #include "../headers/items.h"

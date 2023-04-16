@@ -1,5 +1,5 @@
 #include "../headers/inventory.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 #include "../headers/commands.h"
 #include "../headers/characters.h"
 #include "../headers/items.h"

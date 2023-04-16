@@ -6,7 +6,7 @@
 #include <string.h>
 #endif
 
-#include "output.h"
+#include "main.h"
 
 void populate_list_events(void);
 

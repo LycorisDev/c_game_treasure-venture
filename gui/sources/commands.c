@@ -1,5 +1,5 @@
 #include "../headers/commands.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 
 #include "../headers/play.h"
 #include "../headers/inventory.h"

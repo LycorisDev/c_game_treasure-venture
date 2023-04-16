@@ -17,7 +17,11 @@
 #ifndef PLUGIN_HANDLER
 #define PLUGIN_HANDLER
     #ifdef _WIN32 /* Defined for both 64 and 32-bit */
+        #ifndef STANDARD_LIBRARY_WINDOWS
+        #define STANDARD_LIBRARY_WINDOWS
         #include <windows.h>
+        #endif
+
         #define LIB_HANDLE HMODULE
         #define LOAD_LIB(file) LoadLibrary(file)
         #define LIB_FUNC(handle, function) GetProcAddress(handle, function)
@@ -30,7 +34,11 @@
         #define LIB_PATH_TWENTY_SQUARES "../../plugins/twenty-squares/libts32.dll"
         #endif
     #else
+        #ifndef STANDARD_LIBRARY_DLFCN
+        #define STANDARD_LIBRARY_DLFCN
         #include <dlfcn.h>
+        #endif
+
         #define LIB_HANDLE void*
         #define LOAD_LIB(file) dlopen(file, RTLD_NOW)
         #define LIB_FUNC(handle, function) dlsym(handle, function)

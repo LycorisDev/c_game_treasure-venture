@@ -1,5 +1,5 @@
 #include "../headers/locations.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 
 /* Declared as extern in ../headers/game.h, included in ../headers/locations.h */
 Location list_locations[NBR_LOCATIONS];

@@ -1,5 +1,5 @@
 #include "../headers/input.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 
 int input_yes_no(void)
 {
@@ -26,15 +26,3 @@ int input_yes_no(void)
     return strcmp(input, "no");
 }
 
-/* ALREADY PRESENT IN THE "TWENTY SQUARES" LIBRARY
-void flush_stdin(void)
-{
-    char c = 'A';
-    if (!fseek(stdin, 0, SEEK_END))
-    {
-        while (c != '\n' && c != EOF)
-            c = getchar();
-    }
-    return;
-}
-*/

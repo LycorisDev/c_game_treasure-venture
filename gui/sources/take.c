@@ -1,5 +1,5 @@
 #include "../headers/take.h"
-#include "../headers/output.h"
+#include "../headers/main.h"
 #include "../headers/commands.h"
 #include "../headers/items.h"
 

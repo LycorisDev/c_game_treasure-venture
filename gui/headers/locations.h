@@ -14,8 +14,8 @@
 #include <string.h>
 #endif
 
+#include "main.h"
 #include "game.h"
-#include "output.h"
 
 #define LOCATION_NAME   if (!PLAYER->current_location->inside_of)\
                             write_line("\nYou are outside. ");\
