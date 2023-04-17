@@ -135,9 +135,9 @@ void describe_location(const Location* location)
 
     /* Temporary: If we are outside, print the description of the first location in "outside"'s location list. Turns out there's only one, the mansion. */
     if (location->type == LOCATION_TYPE_OUTSIDE)
-        write_line("%s ", location->locations[0]->description);
+        add_output("%s ", location->locations[0]->description);
     else
-        write_line("%s ", location->description);
+        add_output("%s ", location->description);
 
     for (i = 0; i < NBR_ITEMS; ++i)
     {
@@ -146,7 +146,7 @@ void describe_location(const Location* location)
 
         /* Only mention items which are not an access to an exit, such as a door */
         if (!location->items[i]->access)
-            write_line("%s ", location->items[i]->description_obvious);
+            add_output("%s ", location->items[i]->description_obvious);
     }
 }
 

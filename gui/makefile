@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -fPIC -MMD -ansi -pedantic -Wall -Wextra 
+CFLAGS = -fPIC -MMD -Wall -Wextra
 TS_LIB = -lts
 
 DIR_BUILD = builds
@@ -17,9 +17,14 @@ all: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJ_FILES)
 	@$(CC) `pkg-config --cflags gtk4` $^ -o $@ -O2 -Lplugins/twenty-squares/static $(TS_LIB) `pkg-config --libs gtk4`
 
+# File with GTK code
+$(DIR_OBJ)/main.o: sources/main.c
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) `pkg-config --cflags gtk4` -c $^ -o $@ `pkg-config --libs gtk4`
+
 $(DIR_OBJ)/%.o: sources/%.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -c $^ -o $@
+	@$(CC) $(CFLAGS) -ansi -pedantic -c $^ -o $@
 
 # Package: gcc-mingw-w64
 .PHONY: win64

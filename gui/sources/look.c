@@ -17,11 +17,11 @@ void execute_look(void)
     {
         LOCATION_NAME
         describe_location(PLAYER->current_location);
-        write_line("\n\n");
+        add_output("\n\n");
     }
     else if (NO_ITEM_AT_CURRENT_LOCATION && PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
     {
-        write_line("\n\t[Try 'look around'.]\n\n");
+        add_output("\n\t[Try 'look around'.]\n\n");
     }
     else
     {
@@ -43,41 +43,41 @@ void execute_look(void)
                     }
                     else
                     {
-                        write_line("\n%s\n\n", characters_with_same_tag[0]->description);
+                        add_output("\n%s\n\n", characters_with_same_tag[0]->description);
                     }
                 }
                 else
                 {
-                    write_line("\nThere is more than one character in your vicinity for which this tag works.\n");
+                    add_output("\nThere is more than one character in your vicinity for which this tag works.\n");
                     memset(command.object, 0, sizeof(command.object));
                 }
             }
             else if (!items_with_same_tag[1])
             {
-                write_line("\n%s\n\n", items_with_same_tag[0]->description_detailed);
+                add_output("\n%s\n\n", items_with_same_tag[0]->description_detailed);
                 EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY((items_with_same_tag + 0))
             }
             else if (!characters_with_same_tag || !characters_with_same_tag[0])
             {
-                write_line("\nThere is more than one item in your vicinity for which this tag works.\n");
+                add_output("\nThere is more than one item in your vicinity for which this tag works.\n");
                 memset(command.object, 0, sizeof(command.object));
             }
             else
             {
-                write_line("\nThere is more than one item and character in your vicinity for which this tag works.\n");
+                add_output("\nThere is more than one item and character in your vicinity for which this tag works.\n");
                 memset(command.object, 0, sizeof(command.object));
             }
         }
 
         if (!*command.object)
         {
-            write_line("\n\t[Try:]\n");
-            write_line("\t\t['Look around'.]\n");
+            add_output("\n\t[Try:]\n");
+            add_output("\t\t['Look around'.]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (PLAYER->current_location->items[i] == 0)
                     break;
-                write_line("\t\t['Look %s'.]\n", PLAYER->current_location->items[i]->tags[0]);
+                add_output("\t\t['Look %s'.]\n", PLAYER->current_location->items[i]->tags[0]);
             }
             for (i = 0; i < NBR_CHARACTERS; ++i)
             {
@@ -85,9 +85,9 @@ void execute_look(void)
                     break;
                 if (PLAYER->current_location->characters[i] == PLAYER)
                     continue;
-                write_line("\t\t['Look %s'.]\n", PLAYER->current_location->characters[i]->tags[0]);
+                add_output("\t\t['Look %s'.]\n", PLAYER->current_location->characters[i]->tags[0]);
             }
-            write_line("\n");
+            add_output("\n");
         }
     }
 

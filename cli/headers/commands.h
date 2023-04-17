@@ -20,8 +20,6 @@
 void display_commands(void);
 void parse_game_command(void);
 
-#define BIG_LENGTH_WORD    (LENGTH_WORD * 3 + 2)
-
 typedef struct command
 {
     char verb[LENGTH_WORD];

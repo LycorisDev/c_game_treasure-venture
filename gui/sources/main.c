@@ -1,20 +1,17 @@
 #include <gtk/gtk.h>
 #include "../headers/main.h"
+#include "../headers/parser.h"
 #include "../headers/start.h"
-
-char* parser[MAX_NBR_WORDS];
-int nbr_words_in_parser;
 
 static GtkWidget* window = NULL;
 static GtkTextBuffer* output_buffer = NULL;
 static gboolean is_window_maximized = FALSE;
 
 static void on_app_activated(GApplication* app, gpointer user_data);
-static void on_minimize_button_clicked(GtkWidget* btn);
-static void on_maximize_button_clicked(GtkWidget* btn);
-static void on_close_button_clicked(GtkWidget* btn);
+static void on_minimize_button_clicked(void);
+static void on_maximize_button_clicked(void);
+static void on_close_button_clicked(void);
 static void on_text_input_sent(GtkEntry* input_field);
-static void parse_input(const char* raw_input);
 static int output_int(int num, char* p_text, int index);
 
 int main(int argc, char* argv[])
@@ -144,16 +141,17 @@ static void on_app_activated(GApplication* app, gpointer user_data)
     gtk_window_present(GTK_WINDOW(window));
 
     /* Start the game */
+    access_main_menu();
     return;
 }
 
-static void on_minimize_button_clicked(GtkWidget* btn)
+static void on_minimize_button_clicked(void)
 {
     gtk_window_minimize(GTK_WINDOW(window));
     return;
 }
 
-static void on_maximize_button_clicked(GtkWidget* btn)
+static void on_maximize_button_clicked(void)
 {
     if (is_window_maximized)
         gtk_window_unmaximize(GTK_WINDOW(window));
@@ -163,7 +161,7 @@ static void on_maximize_button_clicked(GtkWidget* btn)
     return;
 }
 
-static void on_close_button_clicked(GtkWidget* btn)
+static void on_close_button_clicked(void)
 {
     close_window();
     return;
@@ -172,40 +170,9 @@ static void on_close_button_clicked(GtkWidget* btn)
 static void on_text_input_sent(GtkEntry* input_field)
 {
     const char* text = gtk_editable_get_text(GTK_EDITABLE(input_field));
-    if (strlen(text) != 0)
-    {
-        parse_input(text);
-        gtk_editable_set_text(GTK_EDITABLE(input_field), "\0");
-        /* interact(); */
-    }
-    return;
-}
-
-static void parse_input(const char* raw_input)
-{
-    int i;
-    char *token = NULL;
-    char input[MAX_SIZE] = {0};
-
-    /* Reset parser */
-    memset(parser, 0, sizeof(parser));
-    nbr_words_in_parser = 0;
-
-    /* Set input to lowercase */
-    for (i = 0; i < MAX_SIZE; ++i)
-    {
-        if (raw_input[i] == '\0')
-            break;
-        input[i] = tolower(raw_input[i]);
-    }
-
-    /* Fill parser */
-    token = strtok(input, DELIMETERS);
-    while (token)
-    {
-        parser[nbr_words_in_parser++] = token;
-        token = strtok(NULL, DELIMETERS);
-    }
+    parse_input(text);
+    gtk_editable_set_text(GTK_EDITABLE(input_field), "\0");
+    interact();
     return;
 }
 

@@ -13,6 +13,10 @@
 #define STANDARD_LIBRARY_STRING
 #include <string.h>
 #endif
+#ifndef STANDARD_LIBRARY_STDARG
+#define STANDARD_LIBRARY_STDARG
+#include <stdarg.h>
+#endif
 
 #include "game.h"
 #include "events.h"

@@ -9,7 +9,7 @@
 #define TITLE write_line("\t-[ TREASURE VENTURE ]-\n");
 
 /* Declared as extern in ../headers/main.h */
-char *parser[MAX_NBR_WORDS];
+char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
 int nbr_words_in_parser;
 
 int main(void)
@@ -83,7 +83,7 @@ void set_parser_with_input(void)
         token = strtok(input, DELIMETERS);
         while (token)
         {
-            parser[nbr_words_in_parser++] = token;
+            strcpy(parser[nbr_words_in_parser++], token);
             token = strtok(NULL, DELIMETERS);
         }
     }

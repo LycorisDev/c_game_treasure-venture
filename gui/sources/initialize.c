@@ -19,11 +19,12 @@
 
 void exit_file_corrupted(FILE* save_file)
 {
-    write_line("\n\t[Error: The save file has been corrupted.]\n");
-    write_line("\t[It will be deleted and the game will close.]\n");
+    add_output("\n\t[Error: The save file has been corrupted.]\n");
+    add_output("\t[It will be deleted and the game will close.]\n");
     fclose(save_file);
     remove("save.txt");
-    exit(EXIT_FAILURE);
+    close_window();
+    return;
 }
 
 void initialize_game(FILE* save_file)

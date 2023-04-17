@@ -10,12 +10,12 @@ void execute_drop(void)
 
     if (PLAYER->current_location->items[NBR_ITEMS - 1])
     {
-        write_line("\nThis place cannot hold any more item.\n\n");
+        add_output("\nThis place cannot hold any more item.\n\n");
         return;
     }
     else if (!PLAYER->inventory[0])
     {
-        write_line("\nYou have no item on you.\n\n");
+        add_output("\nYou have no item on you.\n\n");
         return;
     }
     else if (*command.object)
@@ -28,19 +28,19 @@ void execute_drop(void)
         }
         else if (items_with_same_tag[1])
         {
-            write_line("\nThere is more than one item in your inventory for which this tag works.\n\n");
-            write_line("\n\t[Try:]\n");
+            add_output("\nThere is more than one item in your inventory for which this tag works.\n\n");
+            add_output("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!items_with_same_tag[i])
                     break;
-                write_line("\t\t['Drop %s'.]\n", items_with_same_tag[i]->tags[0]);
+                add_output("\t\t['Drop %s'.]\n", items_with_same_tag[i]->tags[0]);
             }
-            write_line("\n");
+            add_output("\n");
         }
         else if (PLAYER->current_location->items[NBR_ITEMS - 1])
         {
-            write_line("\nThe current location is full. No more items can be added.\n\n");
+            add_output("\nThe current location is full. No more items can be added.\n\n");
         }
         else
         {
@@ -81,7 +81,7 @@ void execute_drop(void)
                     break;
                 }
             }
-            write_line("\n'%s' dropped.\n\n", items_with_same_tag[0]->name);
+            add_output("\n'%s' dropped.\n\n", items_with_same_tag[0]->name);
         }
     }
 
@@ -89,18 +89,18 @@ void execute_drop(void)
     {
         if (!PLAYER->inventory[1])
         {
-            write_line("\n\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
+            add_output("\n\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
         }
         else
         {
-            write_line("\n\t[Try:]\n");
+            add_output("\n\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!PLAYER->inventory[i])
                     break;
-                write_line("\t\t['Drop %s'.]\n", PLAYER->inventory[i]->tags[0]);
+                add_output("\t\t['Drop %s'.]\n", PLAYER->inventory[i]->tags[0]);
             }
-            write_line("\n");
+            add_output("\n");
         }
     }
 

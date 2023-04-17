@@ -28,6 +28,7 @@
     #endif
 #endif
 
+#include "lexicon.h"
 #include "game.h"
 
 /* sleep(1);
@@ -42,11 +43,12 @@ int execute_submenu_loadgame(const int has_game_begun);
 int execute_submenu_save(const int has_game_begun);
 void execute_submenu_about(const int is_game_ongoing);
 
+#define BIG_LENGTH_WORD    (LENGTH_WORD * 3 + 2)
 #define MAX_NBR_WORDS    100
 #define MAX_SIZE         (MAX_NBR_WORDS * 24)
 #define DELIMETERS       "\n\t\"\\ .,/:?!^"
 
-extern char *parser[MAX_NBR_WORDS];
+extern char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
 extern int nbr_words_in_parser;
 
 #endif

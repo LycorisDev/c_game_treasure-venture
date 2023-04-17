@@ -36,6 +36,7 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_MANSION, "mansion", LENGTH_WORD);
     memcpy(LEXICON_ME, "me", LENGTH_WORD);
     memcpy(LEXICON_MYSELF, "myself", LENGTH_WORD);
+    memcpy(LEXICON_NO, "no", LENGTH_WORD);
     memcpy(LEXICON_OLD, "old", LENGTH_WORD);
     memcpy(LEXICON_ON, "on", LENGTH_WORD);
     memcpy(LEXICON_OUT, "out", LENGTH_WORD);
@@ -52,6 +53,7 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_THIRD, "third", LENGTH_WORD);
     memcpy(LEXICON_USE, "use", LENGTH_WORD);
     memcpy(LEXICON_WORLD, "world", LENGTH_WORD);
+    memcpy(LEXICON_YES, "yes", LENGTH_WORD);
     return;
 }
 
