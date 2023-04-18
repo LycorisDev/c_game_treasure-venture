@@ -3,7 +3,8 @@
 #include "../headers/parser.h"
 #include "../headers/start.h"
 
-static GtkWidget* window = NULL;
+static GtkWidget *window = NULL;
+static GtkCssProvider* css_provider = NULL;
 static GtkTextBuffer* output_buffer = NULL;
 static gboolean is_window_maximized = FALSE;
 
@@ -24,6 +25,7 @@ int main(int argc, char* argv[])
     g_signal_connect(app, "activate", G_CALLBACK(on_app_activated), app_name);
 
     status = g_application_run(G_APPLICATION(app), argc, argv);
+    g_object_unref(css_provider);
     g_object_unref(app);
     return status;
 }
@@ -91,7 +93,12 @@ static void on_app_activated(GApplication* app, gpointer user_data)
 {
     char* app_name = (char*)user_data;
     GtkWidget *title_bar, *close_button, *maximize_button, *minimize_button;
-    GtkWidget *box, *output_area, *input_field;
+    GtkWidget *box, *scrolled_window, *output_area, *input_field;
+    GtkStyleContext* style_context_output_area;
+
+    /* CSS provider */
+    css_provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(css_provider, "textview { padding: 10px; }\n", -1);
 
     /* Window */
     window = gtk_application_window_new(GTK_APPLICATION(app));
@@ -125,9 +132,21 @@ static void on_app_activated(GApplication* app, gpointer user_data)
     gtk_widget_set_hexpand(output_area, TRUE);
     gtk_widget_set_vexpand(output_area, TRUE);
     gtk_text_view_set_editable(GTK_TEXT_VIEW(output_area), FALSE);
+    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(output_area), FALSE);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(output_area), GTK_WRAP_WORD_CHAR);
+    gtk_text_view_set_justification(GTK_TEXT_VIEW(output_area), GTK_JUSTIFY_FILL);
     output_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(output_area));
     gtk_text_buffer_set_text(output_buffer, "", -1);
-    gtk_box_append(GTK_BOX(box), output_area);
+
+    style_context_output_area = gtk_widget_get_style_context(output_area);
+    gtk_style_context_add_provider(style_context_output_area, 
+        GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    scrolled_window = gtk_scrolled_window_new();
+    gtk_widget_set_vexpand(scrolled_window, TRUE);
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolled_window), output_area);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_box_append(GTK_BOX(box), scrolled_window);
 
     input_field = gtk_entry_new();
     gtk_entry_set_placeholder_text(GTK_ENTRY(input_field), "Type here...");
