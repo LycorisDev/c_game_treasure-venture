@@ -3,7 +3,7 @@
 #include "../headers/parser.h"
 #include "../headers/start.h"
 
-static GtkWidget *window = NULL;
+static GtkWidget *window = NULL, *output_area = NULL;
 static GtkCssProvider* css_provider = NULL;
 static GtkTextBuffer* output_buffer = NULL;
 static gboolean is_window_maximized = FALSE;
@@ -14,6 +14,7 @@ static void on_maximize_button_clicked(void);
 static void on_close_button_clicked(void);
 static void on_text_input_sent(GtkEntry* input_field);
 static int output_int(int num, char* p_text, int index);
+static void scroll_to_bottom(void);
 
 int main(int argc, char* argv[])
 {
@@ -75,6 +76,7 @@ void add_output(const char* format, ...)
 
     gtk_text_buffer_insert_at_cursor(output_buffer, text, -1);
     free(text);
+    scroll_to_bottom();
     return;
 }
 
@@ -93,7 +95,7 @@ static void on_app_activated(GApplication* app, gpointer user_data)
 {
     char* app_name = (char*)user_data;
     GtkWidget *title_bar, *close_button, *maximize_button, *minimize_button;
-    GtkWidget *box, *scrolled_window, *output_area, *input_field;
+    GtkWidget *box, *scrolled_window, *input_field;
     GtkStyleContext* style_context_output_area;
 
     /* CSS provider */
@@ -213,5 +215,17 @@ static int output_int(int num, char* p_text, int index)
     }
     p_text[index++] = '0' + num;
     return index;
+}
+
+static void scroll_to_bottom(void)
+{
+    GtkTextIter end_iter;
+    GtkTextMark* end_mark;
+
+    gtk_text_buffer_get_end_iter(output_buffer, &end_iter);
+    end_mark = gtk_text_buffer_create_mark(output_buffer, "end", &end_iter, FALSE);
+    gtk_text_view_scroll_mark_onscreen(GTK_TEXT_VIEW(output_area), end_mark);
+    gtk_text_buffer_delete_mark(output_buffer, end_mark);
+    return;
 }
 
