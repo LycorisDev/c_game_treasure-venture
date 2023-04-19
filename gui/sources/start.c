@@ -16,7 +16,11 @@ static void execute_submenu_about(void);
 
 void interact(void)
 {
-    if (game_state == STATE_MENU)
+    if (yes_no_callback != NULL)
+    {
+        parse_yes_no();
+    }
+    else if (game_state == STATE_MENU)
     {
         if (!parser[0])
         {
