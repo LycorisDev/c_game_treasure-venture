@@ -10,6 +10,7 @@
 /* Declared as extern in ../headers/main.h */
 char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
 int nbr_words_in_parser;
+yes_no_callback_t yes_no_callback = NULL;
 
 static void set_parser_with_input(void);
 static void access_main_menu(const int has_game_begun);
@@ -27,7 +28,23 @@ int main(void)
     {
         set_parser_with_input();
 
-        if (!parser[0] || strcmp(parser[0], "menu"))
+        if (yes_no_callback != NULL)
+        {
+            if (parser[0])
+            {
+                if (!strcmp(parser[0], "yes"))
+                {
+                    yes_no_callback(1);
+                    yes_no_callback = NULL;
+                }
+                else if (!strcmp(parser[0], "no"))
+                {
+                    yes_no_callback(0);
+                    yes_no_callback = NULL;
+                }
+            }
+        }
+        else if (!parser[0] || strcmp(parser[0], "menu"))
         {
             parse_game_command();
         }

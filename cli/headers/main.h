@@ -60,5 +60,8 @@ Sleep for 1 second. This function requires unistd.h on Unix, and Windows.h on Wi
 extern char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
 extern int nbr_words_in_parser;
 
+typedef void (*yes_no_callback_t)(const int);
+extern yes_no_callback_t yes_no_callback;
+
 #endif
 

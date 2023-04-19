@@ -52,9 +52,7 @@
 #include "game.h"
 
 void execute_play(void);
-
-/* Mini-game */
-int start_twenty_squares(void);
+/* Mini-game */ int start_twenty_squares(void);
 
 #endif
 
