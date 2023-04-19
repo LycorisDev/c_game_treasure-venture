@@ -17,7 +17,7 @@
     */
 #define NBR_CHARACTERS_IN_LINE 56
 
-void exit_file_corrupted(FILE* save_file)
+static void exit_file_corrupted(FILE* save_file)
 {
     add_output("\n\t[Error: The save file has been corrupted.]\n");
     add_output("\t[It will be deleted and the game will close.]\n");

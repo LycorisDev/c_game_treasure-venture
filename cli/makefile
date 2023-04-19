@@ -9,7 +9,6 @@ EXECUTABLE = $(DIR_BUILD)/unix/treasure-venture
 
 SOURCE_FILES = $(wildcard sources/*.c)
 OBJ_FILES = $(patsubst sources/%.c, $(DIR_OBJ)/%.o, $(SOURCE_FILES))
--include $(OBJ_FILES:.o=.d)
 
 all: $(EXECUTABLE)
 
@@ -19,6 +18,7 @@ $(EXECUTABLE): $(OBJ_FILES)
 $(DIR_OBJ)/%.o: sources/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c $^ -o $@
+-include $(DIR_OBJ)/%.d
 
 # NPM package: gcc-mingw-w64
 .PHONY: win64

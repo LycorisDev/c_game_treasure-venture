@@ -18,7 +18,6 @@
 #include "lexicon.h"
 #include "parser.h"
 
-void display_commands(void);
 void parse_game_command(void);
 
 typedef struct command

@@ -3,7 +3,7 @@
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 
-void static_mini_game(int yes_no)
+static void static_mini_game(const int yes_no)
 {
     if (yes_no)
         start_twenty_squares();
@@ -14,7 +14,8 @@ void static_mini_game(int yes_no)
     return;
 }
 
-void dynamic_mini_game(int yes_no)
+/*
+static void dynamic_mini_game(int yes_no)
 {
     LIB_HANDLE mini_game_obj = NULL;
     int (*mini_game_func)() = NULL;
@@ -53,6 +54,7 @@ void dynamic_mini_game(int yes_no)
     add_output("\n\n");
     return;
 }
+*/
 
 void execute_play(void)
 {

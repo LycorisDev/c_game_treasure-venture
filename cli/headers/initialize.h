@@ -16,7 +16,6 @@
 
 #include "game.h"
 
-void exit_file_corrupted(FILE* save_file);
 void initialize_game(FILE* save_file);
 
 #endif

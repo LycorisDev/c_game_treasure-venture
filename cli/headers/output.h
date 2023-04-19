@@ -10,8 +10,6 @@
 #include <stdarg.h>
 #endif
 
-void write_int(int num);
-void f_write_int(FILE* stream, int num);
 void write_line(const char* format, ...);
 void f_write_line(FILE* stream, const char* format, ...);
 

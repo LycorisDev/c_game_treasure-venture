@@ -1,6 +1,6 @@
 #include "../headers/output.h"
 
-void write_int(int num)
+static void write_int(int num)
 {
     int a;
 
@@ -20,7 +20,7 @@ void write_int(int num)
     return;
 }
 
-void f_write_int(FILE* stream, int num)
+static void f_write_int(FILE* stream, int num)
 {
     int a;
 

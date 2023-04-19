@@ -14,7 +14,7 @@
 /* Declared as extern in ../headers/commands.h */
 Command command;
 
-void display_commands(void)
+static void display_commands(void)
 {
     write_line("\n");
     write_line("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");

@@ -18,7 +18,6 @@
 #include "events.h"
 
 void execute_use(void);
-void use_item_on_target(const Item* used_item);
 
 #endif
 

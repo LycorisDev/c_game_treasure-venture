@@ -4,6 +4,8 @@
 #include "../headers/items.h"
 #include "../headers/characters.h"
 
+static void use_item_on_target(const Item* used_item);
+
 void execute_use(void)
 {
     int i;
@@ -131,7 +133,7 @@ void execute_use(void)
     return;
 }
 
-void use_item_on_target(const Item* used_item)
+static void use_item_on_target(const Item* used_item)
 {
     int is_target_a_character = 0;
     Item** items_with_same_tag_in_current_location = retrieve_items_by_parser_from_current_location(command.target);

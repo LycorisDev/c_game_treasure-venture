@@ -1,10 +1,40 @@
 #include "../headers/play.h"
-#include "../headers/input.h"
 #include "../headers/output.h"
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 
-int static_mini_game(const char* mini_game_name, const char* character)
+#ifndef STANDARD_LIBRARY_CTYPE
+#define STANDARD_LIBRARY_CTYPE
+#include <ctype.h>
+#endif
+void flush_stdin(void);
+
+static int input_yes_no(void)
+{
+    int i;
+    char input[4] = {0};
+    while (strcmp(input, "yes") && strcmp(input, "no"))
+    {
+        write_line("> ");
+        if (fgets(input, 4, stdin))
+        {
+            for (i = 0; i < 4; ++i)
+            {
+                if (input[i] == '\n')
+                {
+                    input[i] = '\0';
+                    break;
+                }
+                input[i] = tolower(input[i]);
+            }
+        }
+        flush_stdin();
+        write_line("\r");
+    }
+    return strcmp(input, "no");
+}
+
+static int static_mini_game(const char* mini_game_name, const char* character)
 {
     write_line("\n\t[Do you want to play %s with the %s? Yes/No]\n\n", mini_game_name, character);
     if (!input_yes_no())
@@ -12,7 +42,8 @@ int static_mini_game(const char* mini_game_name, const char* character)
     return start_twenty_squares();
 }
 
-int dynamic_mini_game(const char* mini_game_name, const char* character)
+/*
+static int dynamic_mini_game(const char* mini_game_name, const char* character)
 {
     LIB_HANDLE mini_game_obj = NULL;
     int (*mini_game_func)() = NULL;
@@ -50,6 +81,7 @@ int dynamic_mini_game(const char* mini_game_name, const char* character)
 
     return mini_game_result;
 }
+*/
 
 void execute_play(void)
 {

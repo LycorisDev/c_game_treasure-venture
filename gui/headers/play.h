@@ -62,8 +62,6 @@
 
 #include "game.h"
 
-void static_mini_game(int yes_no);
-void dynamic_mini_game(int yes_no);
 void execute_play(void);
 
 /* Mini-game */

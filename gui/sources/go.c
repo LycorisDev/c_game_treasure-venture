@@ -24,7 +24,7 @@
                                         add_output("The destination is full. No more characters can access this place. ");\
                                     }
 
-void cross_passage(Exit* exit)
+static void cross_passage(Exit* exit)
 {
     int i, j;
 

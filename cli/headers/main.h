@@ -34,14 +34,23 @@
 /* sleep(1);
 Sleep for 1 second. This function requires unistd.h on Unix, and Windows.h on Windows. */
 
-void clear_terminal(void);
-void set_parser_with_input(void);
-void flush_stdin(void);
-void access_main_menu(const int has_game_begun);
-int execute_submenu_newgame(void);
-int execute_submenu_loadgame(const int has_game_begun);
-int execute_submenu_save(const int has_game_begun);
-void execute_submenu_about(const int is_game_ongoing);
+#ifndef TERMINAL_UTF8_ENCODING
+    #ifdef _WIN32
+        #define TERMINAL_UTF8_ENCODING SetConsoleOutputCP(CP_UTF8);
+    #else
+        #define TERMINAL_UTF8_ENCODING
+    #endif
+#endif
+
+#ifndef CLEAR_TERMINAL
+    #ifdef _WIN32
+	    #define CLEAR_TERMINAL system("cls");
+    #elif defined(__ANDROID__)
+	    #define CLEAR_TERMINAL system("clear");
+    #else
+	    #define CLEAR_TERMINAL write(STDOUT_FILENO, "\033c", 2);
+    #endif
+#endif
 
 #define BIG_LENGTH_WORD    (LENGTH_WORD * 3 + 2)
 #define MAX_NBR_WORDS    100

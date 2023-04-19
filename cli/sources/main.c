@@ -1,5 +1,4 @@
 #include "../headers/main.h"
-#include "../headers/input.h"
 #include "../headers/output.h"
 #include "../headers/commands.h"
 #include "../headers/initialize.h"
@@ -11,6 +10,14 @@
 /* Declared as extern in ../headers/main.h */
 char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
 int nbr_words_in_parser;
+
+static void set_parser_with_input(void);
+static void access_main_menu(const int has_game_begun);
+static int execute_submenu_newgame(void);
+static int execute_submenu_loadgame(const int has_game_begun);
+static int execute_submenu_save(const int has_game_begun);
+static void execute_submenu_about(const int is_game_ongoing);
+void flush_stdin(void);
 
 int main(void)
 {
@@ -61,7 +68,7 @@ int main(void)
     return EXIT_FAILURE;
 }
 
-void set_parser_with_input(void)
+static void set_parser_with_input(void)
 {
     int i;
     char *token = NULL;
@@ -91,7 +98,7 @@ void set_parser_with_input(void)
     return;
 }
 
-void access_main_menu(const int has_game_begun)
+static void access_main_menu(const int has_game_begun)
 {
     int can_exit_main_menu = 0;
 
@@ -144,7 +151,7 @@ void access_main_menu(const int has_game_begun)
     return;
 }
 
-int execute_submenu_newgame(void)
+static int execute_submenu_newgame(void)
 {
     int can_exit_main_menu = 1;
     FILE* save_file = NULL;
@@ -166,7 +173,7 @@ int execute_submenu_newgame(void)
     return can_exit_main_menu;
 }
 
-int execute_submenu_loadgame(const int has_game_begun)
+static int execute_submenu_loadgame(const int has_game_begun)
 {
     int can_exit_main_menu = 1;
     FILE* save_file = NULL;
@@ -193,7 +200,7 @@ int execute_submenu_loadgame(const int has_game_begun)
     return can_exit_main_menu;
 }
 
-int execute_submenu_save(const int has_game_begun)
+static int execute_submenu_save(const int has_game_begun)
 {
     int can_exit_main_menu = 0;
     FILE* save_file = NULL;
@@ -214,7 +221,7 @@ int execute_submenu_save(const int has_game_begun)
     return can_exit_main_menu;
 }
 
-void execute_submenu_about(const int is_game_ongoing)
+static void execute_submenu_about(const int is_game_ongoing)
 {
     write_line("\n\t[\"Treasure Venture\" is a text adventure. A text adventure game is a game that is interacted with through written commands, and which only displays written text. There is no graphical element.]\n");
     write_line("\n\t[This project differs from a classic text adventure in that \"Treasure Venture\" offers suggestions when the player is lost. Since this reveals the plot, it's usually considered as spoiling the player's enjoyment. Even so, I've allowed myself to make the handling of the game more accessible, which I hope will make for a bigger playerbase and therefore increase my chances of receiving critiques on my work.]\n");
@@ -229,4 +236,17 @@ void execute_submenu_about(const int is_game_ongoing)
     }
     return;
 }
+
+/* ALREADY PRESENT IN THE "TWENTY SQUARES" LIBRARY
+void flush_stdin(void)
+{
+    char c = 'A';
+    if (!fseek(stdin, 0, SEEK_END))
+    {
+        while (c != '\n' && c != EOF)
+            c = getchar();
+    }
+    return;
+}
+*/
 

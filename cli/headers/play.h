@@ -51,8 +51,6 @@
 
 #include "game.h"
 
-int static_mini_game(const char* mini_game_name, const char* character);
-int dynamic_mini_game(const char* mini_game_name, const char* character);
 void execute_play(void);
 
 /* Mini-game */
