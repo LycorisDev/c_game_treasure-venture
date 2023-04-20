@@ -17,21 +17,8 @@
 #define STANDARD_LIBRARY_CTYPE
 #include <ctype.h>
 #endif
-#ifndef STANDARD_LIBRARY_UNISTD
-#define STANDARD_LIBRARY_UNISTD
-#include <unistd.h>
-#endif
-#ifndef STANDARD_LIBRARY_WINDOWS
-#define STANDARD_LIBRARY_WINDOWS
-    #ifdef _WIN32
-    #include <windows.h>
-    #endif
-#endif
 
 #include "game.h"
-
-/* sleep(1);
-Sleep for 1 second. This function requires unistd.h on Unix, and Windows.h on Windows. */
 
 void interact(void);
 void access_main_menu(void);

@@ -8,6 +8,7 @@
 #define STATE_MENU 0
 #define STATE_GAME 1
 static int game_state = STATE_MENU;
+static int is_game_ongoing = 0;
 
 static void execute_submenu_newgame(void);
 static void execute_submenu_loadgame(void);
@@ -107,6 +108,7 @@ void access_main_menu(void)
 static void execute_submenu_newgame(void)
 {
     FILE* save_file = NULL;
+
     initialize_game(save_file);
     reset_output();
     add_output("\n\t[A new game will start...]\n");
@@ -117,9 +119,8 @@ static void execute_submenu_newgame(void)
         fclose(save_file);
     }
 
-    sleep(1);
-    reset_output();
     game_state = STATE_GAME;
+    is_game_ongoing = 1;
 
     LOCATION_NAME
     describe_location(PLAYER->current_location);
@@ -130,6 +131,8 @@ static void execute_submenu_newgame(void)
 static void execute_submenu_loadgame(void)
 {
     FILE* save_file = NULL;
+
+    reset_output();
 
     if ((save_file = fopen("save.txt", "r")))
     {
@@ -145,9 +148,8 @@ static void execute_submenu_loadgame(void)
         game_state == STATE_GAME ? add_output("\t[The current game will resume...]\n\n") : add_output("\t[A new game will start...]\n\n");
     }
 
-    sleep(1);
-    reset_output();
     game_state = STATE_GAME;
+    is_game_ongoing = 1;
 
     LOCATION_NAME
     describe_location(PLAYER->current_location);
@@ -159,7 +161,7 @@ static void execute_submenu_save(void)
 {
     FILE* save_file = NULL;
 
-    if (game_state != STATE_GAME)
+    if (!is_game_ongoing)
         add_output("\t[A game needs to be started for it to be saved.]\n");
     else
     {
@@ -168,9 +170,12 @@ static void execute_submenu_save(void)
         fclose(save_file);
         add_output("\n\t[Game saved!]\n");
 
-        LOCATION_NAME
-        describe_location(PLAYER->current_location);
-        add_output("\n\n");
+        if (game_state == STATE_GAME)
+        {
+            LOCATION_NAME
+            describe_location(PLAYER->current_location);
+            add_output("\n\n");
+        }
     }
     return;
 }
