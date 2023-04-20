@@ -17,15 +17,7 @@
     */
 #define NBR_CHARACTERS_IN_LINE 56
 
-static void exit_file_corrupted(FILE* save_file)
-{
-    add_output("\n\t[Error: The save file has been corrupted.]\n");
-    add_output("\t[It will be deleted and the game will close.]\n");
-    fclose(save_file);
-    remove("save.txt");
-    close_window();
-    return;
-}
+static void exit_file_corrupted(FILE* save_file);
 
 void initialize_game(FILE* save_file)
 {
@@ -152,10 +144,10 @@ void initialize_game(FILE* save_file)
                     switch (i)
                     {
                         case 0:
-                            EXECUTE_EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
+                            execute_event_first_time_player_enters_mansion();
                             break;
                         case 1:
-                            EXECUTE_EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY
+                            execute_event_player_finds_entry_doors_key();
                             break;
                     }
                 }
@@ -178,6 +170,16 @@ void initialize_game(FILE* save_file)
             }
         }
     }
+    return;
+}
+
+static void exit_file_corrupted(FILE* save_file)
+{
+    add_output("\n\t[Error: The save file has been corrupted.]\n");
+    add_output("\t[It will be deleted and the game will close.]\n");
+    fclose(save_file);
+    remove("save.txt");
+    close_window();
     return;
 }
 

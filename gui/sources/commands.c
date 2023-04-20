@@ -14,20 +14,13 @@
 /* Declared as extern in ../headers/commands.h */
 Command command;
 
-static void display_commands(void)
-{
-    add_output("\n");
-    add_output("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
-    add_output("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
-    add_output("\n");
-    return;
-}
+static void display_commands(void);
 
 void parse_game_command(void)
 {
     int i, j, parser_matches_with_lexicon = 1, index_preposition = 0, index_stop_matching = -1, max = nbr_words_in_parser;
-    char object_1[LENGTH_WORD], object_2[LENGTH_WORD], object_3[LENGTH_WORD];
-    char target_1[LENGTH_WORD], target_2[LENGTH_WORD], target_3[LENGTH_WORD];
+    char object_1[LENGTH_WORD] = {0}, object_2[LENGTH_WORD] = {0}, object_3[LENGTH_WORD] = {0};
+    char target_1[LENGTH_WORD] = {0}, target_2[LENGTH_WORD] = {0}, target_3[LENGTH_WORD] = {0};
     memset(command.verb, 0, sizeof(command.verb));
     memset(command.object, 0, sizeof(command.object));
     memset(command.preposition, 0, sizeof(command.preposition));
@@ -240,6 +233,15 @@ void parse_game_command(void)
     {
         display_commands();
     }
+    return;
+}
+
+static void display_commands(void)
+{
+    add_output("\n");
+    add_output("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
+    add_output("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
+    add_output("\n");
     return;
 }
 

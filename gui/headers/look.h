@@ -19,9 +19,5 @@
 
 void execute_look(void);
 
-#define NO_ITEM_AT_CURRENT_LOCATION                     (!PLAYER->current_location->items[0])
-#define NO_CHARACTER_AT_CURRENT_LOCATION                (!PLAYER->current_location->characters[0])
-#define PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION    (PLAYER->current_location->characters[0] == PLAYER && !PLAYER->current_location->characters[1])
-
 #endif
 

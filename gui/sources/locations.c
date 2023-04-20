@@ -150,6 +150,15 @@ void describe_location(const Location* location)
     }
 }
 
+void display_location_name(void)
+{
+    if (!PLAYER->current_location->inside_of)
+        add_output("\nYou are outside. ");
+    else
+        add_output("\nYou are in the %s. ", PLAYER->current_location->name);
+    return;
+}
+
 Exit** retrieve_locations_by_parser_from_current_location(const char* parser)
 {
     int i, j, k;

@@ -7,6 +7,10 @@
 #include "../headers/events.h"
 #include "../headers/character.h"
 
+#define COND_NO_ITEM_AT_CURRENT_LOCATION                     (!PLAYER->current_location->items[0])
+#define COND_NO_CHARACTER_AT_CURRENT_LOCATION                (!PLAYER->current_location->characters[0])
+#define COND_PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION    (PLAYER->current_location->characters[0] == PLAYER && !PLAYER->current_location->characters[1])
+
 void execute_look(void)
 {
     int i;
@@ -15,11 +19,11 @@ void execute_look(void)
 
     if (!strcmp(command.object, "around"))
     {
-        LOCATION_NAME
+        display_location_name();
         describe_location(PLAYER->current_location);
         add_output("\n\n");
     }
-    else if (NO_ITEM_AT_CURRENT_LOCATION && PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
+    else if (COND_NO_ITEM_AT_CURRENT_LOCATION && COND_PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
     {
         add_output("\n\t[Try 'look around'.]\n\n");
     }
@@ -55,7 +59,7 @@ void execute_look(void)
             else if (!items_with_same_tag[1])
             {
                 add_output("\n%s\n\n", items_with_same_tag[0]->description_detailed);
-                EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY((items_with_same_tag + 0))
+                event_player_finds_entry_doors_key(items_with_same_tag[0]->id);
             }
             else if (!characters_with_same_tag || !characters_with_same_tag[0])
             {

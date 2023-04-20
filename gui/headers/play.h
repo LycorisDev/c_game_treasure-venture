@@ -24,10 +24,10 @@
     #endif
 #endif
 
-
+/*
 #ifndef PLUGIN_HANDLER
 #define PLUGIN_HANDLER
-    #ifdef _WIN32 /* Defined for both 64 and 32-bit */
+    #ifdef _WIN32
         #ifndef STANDARD_LIBRARY_WINDOWS
         #define STANDARD_LIBRARY_WINDOWS
         #include <windows.h>
@@ -59,6 +59,7 @@
         #define LIB_PATH_TWENTY_SQUARES "plugins/twenty-squares/libts.so"
     #endif
 #endif
+*/
 
 #include "game.h"
 

@@ -24,102 +24,7 @@
                                         add_output("The destination is full. No more characters can access this place. ");\
                                     }
 
-static void cross_passage(Exit* exit)
-{
-    int i, j;
-
-    if (exit->passage->access == ACCESS_CLOSED)
-    {
-        exit->passage->access = ACCESS_OPEN;
-        add_output("You open the %s and ", exit->passage->is_singular ? "door" : "doors");
-    }
-    else
-    {
-        add_output("You ");
-    }
-
-    /* Enter a building */
-    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && exit->to->type == LOCATION_TYPE_BUILDING)
-    {
-        for (i = 0; i < NBR_LOCATIONS; ++i)
-        {
-            if (!exit->to->exits[i].to)
-                break;
-
-            /* If the building has an exit that uses the same passage item AND this exit doesn't lead to our current location */
-            if (exit->passage == exit->to->exits[i].passage && exit->to->exits[i].to != PLAYER->current_location)
-            {
-                /* The actual destination is not the building itself but the room the passage item leads to */
-                exit = &(exit->to->exits[i]);
-                break;
-            }
-        }
-
-        add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->name, exit->to->name);
-    }
-    /* Exit a building */
-    else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_BUILDING)
-    {
-        for (i = 0; i < NBR_LOCATIONS; ++i)
-        {
-            if (!exit->to->exits[i].to)
-                break;
-
-            /* If the building has an exit that uses the same passage item AND this exit doesn't lead to our current location */
-            if (exit->passage == exit->to->exits[i].passage && exit->to->exits[i].to != PLAYER->current_location)
-            {
-                /* The actual destination is not the building itself but the outside location the passage item leads to */
-                exit = &(exit->to->exits[i]);
-                break;
-            }
-        }
-
-        add_output("leave the %s. ", PLAYER->current_location->inside_of->name);
-    }
-    else
-        add_output("enter the %s. ", exit->to->name);
-
-    /* Update the player's previous and current locations */
-    PLAYER->previous_location = PLAYER->current_location;
-    PLAYER->current_location = exit->to;
-
-    /* Remove the player from their previous location */
-    for (i = 0; i < NBR_CHARACTERS; ++i)
-    {
-        if (!PLAYER->previous_location->characters[i])
-            break;
-
-        if (PLAYER->previous_location->characters[i] == PLAYER)
-        {
-            for (j = NBR_CHARACTERS - 1; j >= 0; --j)
-            {
-                if (PLAYER->previous_location->characters[j])
-                {
-                    PLAYER->previous_location->characters[i] = PLAYER->previous_location->characters[j];
-                    memset((PLAYER->previous_location->characters + j), 0, sizeof(Character*));
-
-                    i = NBR_CHARACTERS;
-                    break;
-                }
-            }
-        }
-    }
-
-    /* Add the player to their current location */
-    for (i = 0; i < NBR_CHARACTERS; ++i)
-    {
-        /* Put the player in the first available spot */
-        if (!PLAYER->current_location->characters[i])
-        {
-            PLAYER->current_location->characters[i] = PLAYER;
-            break;
-        }
-    }
-
-    EVENT_PLAYER_ENTERS_MANSION_FOR_THE_FIRST_TIME
-    describe_location(PLAYER->current_location);
-    return;
-}
+static void cross_passage(Exit* exit);
 
 void execute_go(void)
 {
@@ -365,6 +270,103 @@ void execute_go(void)
 
     free(locations_with_same_tag_from_current_location);
     free(locations_with_same_tag_from_passage_items_in_current_location);
+    return;
+}
+
+static void cross_passage(Exit* exit)
+{
+    int i, j;
+
+    if (exit->passage->access == ACCESS_CLOSED)
+    {
+        exit->passage->access = ACCESS_OPEN;
+        add_output("You open the %s and ", exit->passage->is_singular ? "door" : "doors");
+    }
+    else
+    {
+        add_output("You ");
+    }
+
+    /* Enter a building */
+    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && exit->to->type == LOCATION_TYPE_BUILDING)
+    {
+        for (i = 0; i < NBR_LOCATIONS; ++i)
+        {
+            if (!exit->to->exits[i].to)
+                break;
+
+            /* If the building has an exit that uses the same passage item AND this exit doesn't lead to our current location */
+            if (exit->passage == exit->to->exits[i].passage && exit->to->exits[i].to != PLAYER->current_location)
+            {
+                /* The actual destination is not the building itself but the room the passage item leads to */
+                exit = &(exit->to->exits[i]);
+                break;
+            }
+        }
+
+        add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->name, exit->to->name);
+    }
+    /* Exit a building */
+    else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_BUILDING)
+    {
+        for (i = 0; i < NBR_LOCATIONS; ++i)
+        {
+            if (!exit->to->exits[i].to)
+                break;
+
+            /* If the building has an exit that uses the same passage item AND this exit doesn't lead to our current location */
+            if (exit->passage == exit->to->exits[i].passage && exit->to->exits[i].to != PLAYER->current_location)
+            {
+                /* The actual destination is not the building itself but the outside location the passage item leads to */
+                exit = &(exit->to->exits[i]);
+                break;
+            }
+        }
+
+        add_output("leave the %s. ", PLAYER->current_location->inside_of->name);
+    }
+    else
+        add_output("enter the %s. ", exit->to->name);
+
+    /* Update the player's previous and current locations */
+    PLAYER->previous_location = PLAYER->current_location;
+    PLAYER->current_location = exit->to;
+
+    /* Remove the player from their previous location */
+    for (i = 0; i < NBR_CHARACTERS; ++i)
+    {
+        if (!PLAYER->previous_location->characters[i])
+            break;
+
+        if (PLAYER->previous_location->characters[i] == PLAYER)
+        {
+            for (j = NBR_CHARACTERS - 1; j >= 0; --j)
+            {
+                if (PLAYER->previous_location->characters[j])
+                {
+                    PLAYER->previous_location->characters[i] = PLAYER->previous_location->characters[j];
+                    memset((PLAYER->previous_location->characters + j), 0, sizeof(Character*));
+
+                    i = NBR_CHARACTERS;
+                    break;
+                }
+            }
+        }
+    }
+
+    /* Add the player to their current location */
+    for (i = 0; i < NBR_CHARACTERS; ++i)
+    {
+        /* Put the player in the first available spot */
+        if (!PLAYER->current_location->characters[i])
+        {
+            PLAYER->current_location->characters[i] = PLAYER;
+            break;
+        }
+    }
+
+    event_first_time_player_enters_mansion();
+    describe_location(PLAYER->current_location);
     return;
 }
 

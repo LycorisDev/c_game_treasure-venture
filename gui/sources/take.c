@@ -77,7 +77,7 @@ void execute_take(void)
                 }
             }
 
-            EVENT_PLAYER_FINDS_ENTRY_DOORS_KEY((takeable_items_with_same_tag + 0))
+            event_player_finds_entry_doors_key(takeable_items_with_same_tag[0]->id);
             add_output("\n'%s' added to your inventory.\n\n", takeable_items_with_same_tag[0]->name);
         }
         else

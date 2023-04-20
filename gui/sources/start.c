@@ -122,7 +122,7 @@ static void execute_submenu_newgame(void)
     game_state = STATE_GAME;
     is_game_ongoing = 1;
 
-    LOCATION_NAME
+    display_location_name();
     describe_location(PLAYER->current_location);
     add_output("\n\n");
     return;
@@ -151,7 +151,7 @@ static void execute_submenu_loadgame(void)
     game_state = STATE_GAME;
     is_game_ongoing = 1;
 
-    LOCATION_NAME
+    display_location_name();
     describe_location(PLAYER->current_location);
     add_output("\n\n");
     return;
@@ -172,7 +172,7 @@ static void execute_submenu_save(void)
 
         if (game_state == STATE_GAME)
         {
-            LOCATION_NAME
+            display_location_name();
             describe_location(PLAYER->current_location);
             add_output("\n\n");
         }
@@ -189,7 +189,7 @@ static void execute_submenu_about(void)
 
     if (game_state == STATE_GAME)
     {
-        LOCATION_NAME
+        display_location_name();
         describe_location(PLAYER->current_location);
         add_output("\n\n");
     }

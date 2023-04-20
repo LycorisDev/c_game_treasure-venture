@@ -3,12 +3,38 @@
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 
+static void static_mini_game(const int yes_no);
+/* static void dynamic_mini_game(int yes_no); */
+
+void execute_play(void)
+{
+    int i;
+
+    for (i = 0; i < NBR_CHARACTERS; ++i)
+    {
+        if (!PLAYER->current_location->characters[i])
+        {
+            add_output("\nYou see no one around you to play with.\n\n");
+            return;
+        }
+
+        if (PLAYER->current_location->characters[i] == PLAYER)
+            continue;
+
+        break;
+    }
+
+    add_output("\n\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n", PLAYER->current_location->characters[i]->tags[1]);
+    yes_no_callback = &static_mini_game;
+    return;
+}
+
 static void static_mini_game(const int yes_no)
 {
     if (yes_no)
         start_twenty_squares();
 
-    LOCATION_NAME
+    display_location_name();
     describe_location(PLAYER->current_location);
     add_output("\n\n");
     return;
@@ -49,33 +75,10 @@ static void dynamic_mini_game(int yes_no)
         UNLOAD_LIB(mini_game_obj);
     }
 
-    LOCATION_NAME
+    display_location_name();
     describe_location(PLAYER->current_location);
     add_output("\n\n");
     return;
 }
 */
-
-void execute_play(void)
-{
-    int i;
-
-    for (i = 0; i < NBR_CHARACTERS; ++i)
-    {
-        if (!PLAYER->current_location->characters[i])
-        {
-            add_output("\nYou see no one around you to play with.\n\n");
-            return;
-        }
-
-        if (PLAYER->current_location->characters[i] == PLAYER)
-            continue;
-
-        break;
-    }
-
-    add_output("\n\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n", PLAYER->current_location->characters[i]->tags[1]);
-    yes_no_callback = &static_mini_game;
-    return;
-}
 
