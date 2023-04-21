@@ -10,7 +10,6 @@
 #include <stdarg.h>
 #endif
 
-void write_line(const char* format, ...);
 void f_write_line(FILE* stream, const char* format, ...);
 
 #endif

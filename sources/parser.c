@@ -23,14 +23,15 @@ void parse_input(const char* raw_input)
     return;
 }
 
-#ifndef GUI
+#ifdef CLI
 void get_and_parse_cli_input(void)
 {
+    char input[MAX_SIZE] = {0};
     char c = 'A';
 
     /* Get input from stdin */
-    write_line("\n");
-    write_line("> ");
+    f_write_line(stdout, "\n");
+    f_write_line(stdout, "> ");
     if (fgets(input, MAX_SIZE, stdin))
     {
         if (input[0] == '\n')
@@ -38,7 +39,7 @@ void get_and_parse_cli_input(void)
         /* Parse here */
         parse_input(input);
     }
-    write_line("\n");
+    f_write_line(stdout, "\n");
 
     /* Flush stdin */
     if (!fseek(stdin, 0, SEEK_END))

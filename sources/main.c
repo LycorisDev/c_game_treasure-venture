@@ -1,29 +1,11 @@
-#include "../headers/main.h"
-#include "../headers/parser.h"
-#include "../headers/start.h"
-
 #ifdef GUI
     #include <gtk/gtk.h>
 #else
-    #ifndef STANDARD_LIBRARY_STDIO
-    #define STANDARD_LIBRARY_STDIO
-    #include <stdio.h>
-    #endif
-    #ifndef STANDARD_LIBRARY_STDLIB
-    #define STANDARD_LIBRARY_STDLIB
-    #include <stdlib.h>
-    #endif
-    #ifndef STANDARD_LIBRARY_UNISTD
-    #define STANDARD_LIBRARY_UNISTD
-    #include <unistd.h>
-    #endif
-    #ifndef STANDARD_LIBRARY_WINDOWS
-    #define STANDARD_LIBRARY_WINDOWS
-        #ifdef _WIN32
-        #include <Windows.h>
-        #endif
-    #endif
+    #include "../headers/output.h"
 #endif
+#include "../headers/main.h"
+#include "../headers/parser.h"
+#include "../headers/start.h"
 
 #ifdef GUI
 static GtkWidget *window = NULL, *output_area = NULL;
@@ -40,24 +22,10 @@ static void scroll_to_bottom(void);
 #endif
 static int output_int(int num, char* p_text, int index);
 
+#ifdef GUI
 int main(int argc, char* argv[])
 {
     int status = EXIT_SUCCESS;
-    #ifndef GUI
-    char input[MAX_SIZE] = {0};
-
-        #ifdef _WIN32
-        /* Terminal UTF8 encoding */
-        SetConsoleOutputCP(CP_UTF8);
-        #endif
-
-    access_main_menu();
-    while (1)
-    {
-        get_and_parse_cli_input();
-        interact();
-    }
-    #else
     char app_name[] = "Treasure Venture";
     GtkApplication* app;
 
@@ -67,11 +35,27 @@ int main(int argc, char* argv[])
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(css_provider);
     g_object_unref(app);
-    #endif
     return status;
 }
+#else
+int main(void)
+{
+    #ifdef _WIN32
+    /* Terminal UTF8 encoding */
+    SetConsoleOutputCP(CP_UTF8);
+    #endif
 
-/* TODO: CLI */
+    access_main_menu();
+    while (1)
+    {
+        get_and_parse_cli_input();
+        interact();
+    }
+
+    return EXIT_SUCCESS;
+}
+#endif
+
 void add_output(const char* format, ...)
 {
     int i, j;
@@ -118,6 +102,8 @@ void add_output(const char* format, ...)
     #ifdef GUI
     gtk_text_buffer_insert_at_cursor(output_buffer, text, -1);
     scroll_to_bottom();
+    #else
+    f_write_line(stdout, text);
     #endif
 
     free(text);

@@ -143,10 +143,14 @@ static void execute_submenu_loadgame(void)
     }
     else
     {
-        if (game_state != STATE_GAME)
-            initialize_game(save_file);
         add_output("\n\t[No save could be found.]\n");
-        game_state == STATE_GAME ? add_output("\t[The current game will resume...]\n\n") : add_output("\t[A new game will start...]\n\n");
+        if (is_game_ongoing)
+            add_output("\t[The current game will resume...]\n\n");
+        else
+        {
+            add_output("\t[A new game will start...]\n\n");
+            initialize_game(save_file);
+        }
     }
 
     game_state = STATE_GAME;

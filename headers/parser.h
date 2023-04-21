@@ -29,7 +29,7 @@ extern yes_no_callback_t yes_no_callback;
 
 void parse_input(const char* raw_input);
 #ifndef GUI
-void get_and_parse_cli_input(void)
+void get_and_parse_cli_input(void);
 #endif
 void parse_yes_no(void);
 
