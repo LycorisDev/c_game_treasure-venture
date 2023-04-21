@@ -100,6 +100,7 @@ void access_main_menu(void)
 {
     game_state = STATE_MENU;
     reset_output();
+    add_output("\t-[ TREASURE VENTURE ]-\n");
     add_output("\n\t[During the game, type 'Menu' to go back to the main menu.]\n");
     add_output("\n\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
     return;

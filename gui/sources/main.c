@@ -1,8 +1,31 @@
-#include <gtk/gtk.h>
 #include "../headers/main.h"
 #include "../headers/parser.h"
 #include "../headers/start.h"
 
+#ifdef GUI
+    #include <gtk/gtk.h>
+#else
+    #ifndef STANDARD_LIBRARY_STDIO
+    #define STANDARD_LIBRARY_STDIO
+    #include <stdio.h>
+    #endif
+    #ifndef STANDARD_LIBRARY_STDLIB
+    #define STANDARD_LIBRARY_STDLIB
+    #include <stdlib.h>
+    #endif
+    #ifndef STANDARD_LIBRARY_UNISTD
+    #define STANDARD_LIBRARY_UNISTD
+    #include <unistd.h>
+    #endif
+    #ifndef STANDARD_LIBRARY_WINDOWS
+    #define STANDARD_LIBRARY_WINDOWS
+        #ifdef _WIN32
+        #include <Windows.h>
+        #endif
+    #endif
+#endif
+
+#ifdef GUI
 static GtkWidget *window = NULL, *output_area = NULL;
 static GtkCssProvider* css_provider = NULL;
 static GtkTextBuffer* output_buffer = NULL;
@@ -13,14 +36,30 @@ static void on_minimize_button_clicked(void);
 static void on_maximize_button_clicked(void);
 static void on_close_button_clicked(void);
 static void on_text_input_sent(GtkEntry* input_field);
-static int output_int(int num, char* p_text, int index);
 static void scroll_to_bottom(void);
+#endif
+static int output_int(int num, char* p_text, int index);
 
 int main(int argc, char* argv[])
 {
-    GtkApplication* app;
-    int status;
+    int status = EXIT_SUCCESS;
+    #ifndef GUI
+    char input[MAX_SIZE] = {0};
+
+        #ifdef _WIN32
+        /* Terminal UTF8 encoding */
+        SetConsoleOutputCP(CP_UTF8);
+        #endif
+
+    access_main_menu();
+    while (1)
+    {
+        get_and_parse_cli_input();
+        interact();
+    }
+    #else
     char app_name[] = "Treasure Venture";
+    GtkApplication* app;
 
     app = gtk_application_new("com.mofumofustudios.treasure_venture", G_APPLICATION_FLAGS_NONE);
     g_signal_connect(app, "activate", G_CALLBACK(on_app_activated), app_name);
@@ -28,9 +67,11 @@ int main(int argc, char* argv[])
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(css_provider);
     g_object_unref(app);
+    #endif
     return status;
 }
 
+/* TODO: CLI */
 void add_output(const char* format, ...)
 {
     int i, j;
@@ -74,23 +115,63 @@ void add_output(const char* format, ...)
 
     va_end(args);
 
+    #ifdef GUI
     gtk_text_buffer_insert_at_cursor(output_buffer, text, -1);
-    free(text);
     scroll_to_bottom();
+    #endif
+
+    free(text);
     return;
 }
 
 void reset_output(void)
 {
+    #ifdef GUI
     gtk_text_buffer_set_text(output_buffer, "", -1);
+    #else
+        #ifdef _WIN32
+	    system("cls");
+        #elif defined(__ANDROID__)
+	    system("clear");
+        #else
+	    write(STDOUT_FILENO, "\033c", 2);
+        #endif
+    #endif
+    return;
 }
 
 void close_window(void)
 {
+    #ifdef GUI
     gtk_window_close(GTK_WINDOW(window));
+    #else
+    reset_output();
+    exit(EXIT_SUCCESS);
+    #endif
     return;
 }
 
+static int output_int(int num, char* p_text, int index)
+{
+    int a;
+
+    if (num < 0)
+    {
+        p_text[index++] = '-';
+        num *= -1;
+    }
+
+    if (num > 9)
+    {
+        a = num / 10;
+        num -= 10 * a;
+        index = output_int(a, p_text, index);
+    }
+    p_text[index++] = '0' + num;
+    return index;
+}
+
+#ifdef GUI
 static void on_app_activated(GApplication* app, gpointer user_data)
 {
     char* app_name = (char*)user_data;
@@ -197,26 +278,6 @@ static void on_text_input_sent(GtkEntry* input_field)
     return;
 }
 
-static int output_int(int num, char* p_text, int index)
-{
-    int a;
-
-    if (num < 0)
-    {
-        p_text[index++] = '-';
-        num *= -1;
-    }
-
-    if (num > 9)
-    {
-        a = num / 10;
-        num -= 10 * a;
-        index = output_int(a, p_text, index);
-    }
-    p_text[index++] = '0' + num;
-    return index;
-}
-
 static void scroll_to_bottom(void)
 {
     GtkTextIter end_iter;
@@ -228,4 +289,5 @@ static void scroll_to_bottom(void)
     gtk_text_buffer_delete_mark(output_buffer, end_mark);
     return;
 }
+#endif
 

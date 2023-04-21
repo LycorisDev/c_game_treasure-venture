@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -fPIC -MMD -Wall -Wextra
 CFLAGS_C89 = -ansi -pedantic
+INTERFACE_FLAG = -DGUI
 TS_LIB = -lts
 
 DIR_BUILD = builds
@@ -20,13 +21,17 @@ $(EXECUTABLE): $(OBJ_FILES)
 # File with GTK code
 $(DIR_OBJ)/main.o: sources/main.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) `pkg-config --cflags gtk4` -c $< -o $@ `pkg-config --libs gtk4`
+	@$(CC) $(CFLAGS) $(INTERFACE_FLAG) `pkg-config --cflags gtk4` -c $< -o $@ `pkg-config --libs gtk4`
 -include $(DIR_OBJ)/main.d
 
 $(DIR_OBJ)/%.o: sources/%.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) $(CFLAGS_C89) -c $< -o $@
+	@$(CC) $(CFLAGS) $(CFLAGS_C89) $(INTERFACE_FLAG) -c $< -o $@
 -include $(DIR_OBJ)/%.d
+
+.PHONY: cli
+cli:
+	@$(MAKE) -s all INTERFACE_FLAG=-DCLI
 
 # Package: gcc-mingw-w64
 .PHONY: win64

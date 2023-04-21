@@ -1,6 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#ifndef STANDARD_LIBRARY_STDIO
+#define STANDARD_LIBRARY_STDIO
+#include <stdio.h>
+#endif
 #ifndef STANDARD_LIBRARY_STRING
 #define STANDARD_LIBRARY_STRING
 #include <string.h>
@@ -24,6 +28,9 @@ typedef void (*yes_no_callback_t)(const int);
 extern yes_no_callback_t yes_no_callback;
 
 void parse_input(const char* raw_input);
+#ifndef GUI
+void get_and_parse_cli_input(void)
+#endif
 void parse_yes_no(void);
 
 #endif

@@ -1,4 +1,5 @@
 #include "../headers/parser.h"
+#include "../headers/output.h"
 
 char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
 int nbr_words_in_parser;
@@ -21,6 +22,33 @@ void parse_input(const char* raw_input)
     fill_parser(input);
     return;
 }
+
+#ifndef GUI
+void get_and_parse_cli_input(void)
+{
+    char c = 'A';
+
+    /* Get input from stdin */
+    write_line("\n");
+    write_line("> ");
+    if (fgets(input, MAX_SIZE, stdin))
+    {
+        if (input[0] == '\n')
+            return;
+        /* Parse here */
+        parse_input(input);
+    }
+    write_line("\n");
+
+    /* Flush stdin */
+    if (!fseek(stdin, 0, SEEK_END))
+    {
+        while (c != '\n' && c != EOF)
+            c = getchar();
+    }
+    return;
+}
+#endif
 
 void parse_yes_no(void)
 {
