@@ -14,14 +14,14 @@
 #include <ctype.h>
 #endif
 
+/* For the LENGTH_WORD macro */
 #include "lexicon.h"
-#define BIG_LENGTH_WORD    (LENGTH_WORD * 3 + 2)
 
-#define MAX_NBR_WORDS    100
-#define MAX_SIZE         (MAX_NBR_WORDS * 24)
-#define DELIMETERS       "\n\t\"\\ .,/:?!^"
+#define INPUT_MAX_LENGTH        160
+#define INPUT_TOKEN_DELIMETERS  "\n\t\"\\ .,/:?!^"
+#define PARSER_NBR_WORDS        24
 
-extern char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
+extern char parser[PARSER_NBR_WORDS][LENGTH_WORD];
 extern int nbr_words_in_parser;
 
 typedef void (*yes_no_callback_t)(const int);

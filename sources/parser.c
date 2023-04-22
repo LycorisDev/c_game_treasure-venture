@@ -1,7 +1,7 @@
 #include "../headers/parser.h"
 #include "../headers/output.h"
 
-char parser[MAX_NBR_WORDS][BIG_LENGTH_WORD];
+char parser[PARSER_NBR_WORDS][LENGTH_WORD];
 int nbr_words_in_parser;
 yes_no_callback_t yes_no_callback = NULL;
 
@@ -11,7 +11,7 @@ static void fill_parser(char input[]);
 
 void parse_input(const char* raw_input)
 {
-    char input[MAX_SIZE] = {0};
+    char input[INPUT_MAX_LENGTH] = {0};
 
     reset_parser();
 
@@ -26,13 +26,13 @@ void parse_input(const char* raw_input)
 #ifdef CLI
 void get_and_parse_cli_input(void)
 {
-    char input[MAX_SIZE] = {0};
+    char input[INPUT_MAX_LENGTH] = {0};
     char c = 'A';
 
     /* Get input from stdin */
     f_write_line(stdout, "\n");
     f_write_line(stdout, "> ");
-    if (fgets(input, MAX_SIZE, stdin))
+    if (fgets(input, INPUT_MAX_LENGTH, stdin))
     {
         if (input[0] == '\n')
             return;
@@ -79,7 +79,7 @@ static void reset_parser(void)
 static void str_to_lowercase(char dest[], const char* src)
 {
     int i;
-    for (i = 0; i < MAX_SIZE; ++i)
+    for (i = 0; i < INPUT_MAX_LENGTH; ++i)
     {
         if (src[i] == '\0')
             break;
@@ -90,11 +90,11 @@ static void str_to_lowercase(char dest[], const char* src)
 
 static void fill_parser(char input[])
 {
-    char *token = strtok(input, DELIMETERS);
+    char *token = strtok(input, INPUT_TOKEN_DELIMETERS);
     while (token)
     {
         strcpy(parser[nbr_words_in_parser++], token);
-        token = strtok(NULL, DELIMETERS);
+        token = strtok(NULL, INPUT_TOKEN_DELIMETERS);
     }
     return;
 }

@@ -14,11 +14,9 @@
 #include <string.h>
 #endif
 
-#include "main.h"
 #include "lexicon.h"
-#include "parser.h"
 
-void parse_game_command(void);
+#define BIG_LENGTH_WORD (LENGTH_WORD * 3 + 2)
 
 typedef struct command
 {
@@ -29,6 +27,8 @@ typedef struct command
 } Command;
 
 extern Command command;
+
+void parse_game_command(void);
 
 #endif
 
