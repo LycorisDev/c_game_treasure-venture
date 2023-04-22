@@ -9,10 +9,10 @@
 #define IF_NO_ACCESS(exit)          if (!exit->to || !exit->passage->access)\
                                     {\
                                         /* The player should never see this message */\
-                                        add_output("You cannot access this place. ");\
+                                        add_output("You cannot access this place.\n\n");\
                                     }
 
-#define PRINT_ACCESS_LOCKED(exit)   add_output("The %s %s locked. ", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
+#define PRINT_ACCESS_LOCKED(exit)   add_output("The %s %s locked.\n\n", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
 
 #define IF_ACCESS_LOCKED(exit)      if (exit->passage->access == ACCESS_LOCKED)\
                                     {\
@@ -21,7 +21,7 @@
 
 #define IF_LOCATION_FULL(exit)      if (exit->to->characters[NBR_CHARACTERS - 1])\
                                     {\
-                                        add_output("The destination is full. No more characters can access this place. ");\
+                                        add_output("The destination is full. No more characters can access this place.\n\n");\
                                     }
 
 static void cross_passage(Exit* exit);
@@ -37,7 +37,7 @@ void execute_go(void)
 
     if (!PLAYER->current_location->exits[0].to)
     {
-        add_output("\nThere is nowhere to go.\n\n");
+        add_output("There is nowhere to go.\n\n");
     }
     else
     {
@@ -48,7 +48,6 @@ void execute_go(void)
             {
                 if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
                 {
-                    add_output("\n");
                     if (!PLAYER->current_location->exits[0].to)
                         add_output("There is nowhere to go.\n\n");
                     else IF_NO_ACCESS((PLAYER->current_location->exits + 0))
@@ -56,7 +55,6 @@ void execute_go(void)
                     else IF_LOCATION_FULL((PLAYER->current_location->exits + 0))
                     else
                         cross_passage((PLAYER->current_location->exits + 0));
-                    add_output("\n\n");
                 }
                 else
                     memset(command.object, 0, sizeof(command.object));
@@ -75,13 +73,11 @@ void execute_go(void)
                         }
                         else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
                         {
-                            add_output("\n");
                             IF_NO_ACCESS((PLAYER->current_location->exits + i))
                             else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
                             else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
-                            add_output("\n\n");
                             break;
                         }
                     }
@@ -105,13 +101,11 @@ void execute_go(void)
                         }
                         else if (PLAYER->current_location->exits[i].to == PLAYER->previous_location) 
                         {
-                            add_output("\n");
                             IF_NO_ACCESS((PLAYER->current_location->exits + i))
                             else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
                             else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
-                            add_output("\n\n");
                             break;
                         }
                         else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
@@ -121,13 +115,11 @@ void execute_go(void)
                             {
                                 if (PLAYER->current_location->exits[i].to->exits[j].to == PLAYER->previous_location)
                                 {
-                                    add_output("\n");
                                     IF_NO_ACCESS((PLAYER->current_location->exits + i))
                                     else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
                                     else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
                                     else
                                         cross_passage((PLAYER->current_location->exits + i));
-                                    add_output("\n\n");
                                     break;
                                 }
                                 ++j;
@@ -142,7 +134,7 @@ void execute_go(void)
             {
                 if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
                 {
-                    add_output("\nYou are already outside.\n\n");
+                    add_output("You are already outside.\n\n");
                 }
                 else
                 {
@@ -163,26 +155,23 @@ void execute_go(void)
                     if (!j && !k)
                     {
                         /* The player should never see this message */
-                        add_output("\nYou cannot get out.\n\n");
+                        add_output("You cannot get out.\n\n");
                     }
                     /* Success: There is only one accessible exit */
                     else if (j == 1)
                     {
-                        add_output("\n");
                         cross_passage(accessible_exits[0]);
                         add_output("\n\n");
                     }
                     /* Almost success: There is only one exit but it is locked */
                     else if (!j && k == 1)
                     {
-                        add_output("\n");
                         PRINT_ACCESS_LOCKED(locked_exits[0])
-                            add_output("\n\n");
                     }
                     /* Several accessible and/or locked exits. Which one does the player want? */
                     else
                     {
-                        add_output("\nThere is more than one exit. Which one do you want?\n");
+                        add_output("There is more than one exit. Which one do you want?\n");
                         memset(command.object, 0, sizeof(command.object));
                     }
                 }
@@ -199,33 +188,35 @@ void execute_go(void)
                         memset(command.object, 0, sizeof(command.object));
                     else if (!locations_with_same_tag_from_passage_items_in_current_location[1])
                     {
-                        add_output("\n");
                         IF_NO_ACCESS(locations_with_same_tag_from_passage_items_in_current_location[0])
                         else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
                         else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
                         else
+                        {
                             cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                        add_output("\n\n");
+                            add_output("\n\n");
+                        }
                     }
                     else
                     {
-                        add_output("\nThere is more than one passage item in your vicinity for which this tag works.\n");
+                        add_output("There is more than one passage item in your vicinity for which this tag works.\n");
                         memset(command.object, 0, sizeof(command.object));
                     }
                 }
                 else if (!locations_with_same_tag_from_current_location[1])
                 {
-                    add_output("\n");
                     IF_NO_ACCESS(locations_with_same_tag_from_current_location[0])
                     else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
                     else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
                     else
+                    {
                         cross_passage(locations_with_same_tag_from_current_location[0]);
-                    add_output("\n\n");
+                        add_output("\n\n");
+                    }
                 }
                 else
                 {
-                    add_output("\nThere is more than one destination from your current location for which this tag works.\n");
+                    add_output("There is more than one destination from your current location for which this tag works.\n");
                     memset(command.object, 0, sizeof(command.object));
                 }
             }
@@ -238,16 +229,16 @@ void execute_go(void)
                 if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_BUILDING)
                 {
                     if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                        add_output("\n\t[Try 'go inside'.]\n\n");
+                        add_output("\t[Try 'go inside'.]\n\n");
                     else
-                        add_output("\n\t[Try 'go outside'.]\n\n");
+                        add_output("\t[Try 'go outside'.]\n\n");
                 }
                 else
-                    add_output("\n\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
+                    add_output("\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
             }
             else
             {
-                add_output("\n\t[Try:]\n");
+                add_output("\t[Try:]\n");
                 for (i = 0; i < NBR_LOCATIONS; ++i)
                 {
                     if (!PLAYER->current_location->exits[i].to)
@@ -367,6 +358,7 @@ static void cross_passage(Exit* exit)
 
     event_first_time_player_enters_mansion();
     describe_location(PLAYER->current_location);
+    add_output("\n\n");
     return;
 }
 

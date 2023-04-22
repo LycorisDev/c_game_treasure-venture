@@ -10,12 +10,12 @@ void execute_drop(void)
 
     if (PLAYER->current_location->items[NBR_ITEMS - 1])
     {
-        add_output("\nThis place cannot hold any more item.\n\n");
+        add_output("This place cannot hold any more item.\n\n");
         return;
     }
     else if (!PLAYER->inventory[0])
     {
-        add_output("\nYou have no item on you.\n\n");
+        add_output("You have no item on you.\n\n");
         return;
     }
     else if (*command.object)
@@ -28,8 +28,8 @@ void execute_drop(void)
         }
         else if (items_with_same_tag[1])
         {
-            add_output("\nThere is more than one item in your inventory for which this tag works.\n\n");
-            add_output("\n\t[Try:]\n");
+            add_output("There is more than one item in your inventory for which this tag works.\n\n");
+            add_output("\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!items_with_same_tag[i])
@@ -40,7 +40,7 @@ void execute_drop(void)
         }
         else if (PLAYER->current_location->items[NBR_ITEMS - 1])
         {
-            add_output("\nThe current location is full. No more items can be added.\n\n");
+            add_output("The current location is full. No more items can be added.\n\n");
         }
         else
         {
@@ -81,7 +81,7 @@ void execute_drop(void)
                     break;
                 }
             }
-            add_output("\n'%s' dropped.\n\n", items_with_same_tag[0]->name);
+            add_output("'%s' dropped.\n\n", items_with_same_tag[0]->name);
         }
     }
 
@@ -89,11 +89,11 @@ void execute_drop(void)
     {
         if (!PLAYER->inventory[1])
         {
-            add_output("\n\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
+            add_output("\t[Try 'drop %s'.]\n\n", PLAYER->inventory[0]->tags[0]);
         }
         else
         {
-            add_output("\n\t[Try:]\n");
+            add_output("\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!PLAYER->inventory[i])

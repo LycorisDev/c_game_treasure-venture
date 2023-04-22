@@ -3,7 +3,7 @@
 
 void execute_hold(void)
 {
-    add_output("\n\t[DEBUG - Hold command]\n\n");
+    add_output("\t[DEBUG - Hold command]\n\n");
     return;
 }
 

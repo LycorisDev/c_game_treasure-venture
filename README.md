@@ -1,6 +1,8 @@
 # Treasure Venture
 
-*Treasure Venture* is a text adventure game. It runs on PC and is cross-platform, meaning that it can run on Windows (64 and 32-bit), on Mac and on Linux. Written in the C programming language, it's available in two versions: CLI and GUI. "CLI" stands for "Command-Line Interface", and is the version which runs in the terminal, whereas "GUI" stands for "Graphics User Interface" and this version opens a window. The GUI is made with GTK4, a C library.  
+*Treasure Venture* is a PC text adventure game. Written in the C programming language, it's available in two versions: CLI and GUI. "CLI" stands for "Command-Line Interface", and is the version which runs in the terminal, whereas "GUI" stands for "Graphics User Interface" and this version opens a window. The GUI is made with GTK4, a C library.  
+
+Note that the GUI version can only be compiled for Unix-based systems, while the CLI version is cross-platform. GTK may be a cross-platform library, developing the GUI for Windows is not a straight-forward process, and it's not my priority at this time. Also, as I don't own a Mac, I cannot confirm whether the GUI works on MacOS, but once again GTK is meant to work on Mac as well.  
 
 ---
 

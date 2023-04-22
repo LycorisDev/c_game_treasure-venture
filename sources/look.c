@@ -25,7 +25,7 @@ void execute_look(void)
     }
     else if (COND_NO_ITEM_AT_CURRENT_LOCATION && COND_PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
     {
-        add_output("\n\t[Try 'look around'.]\n\n");
+        add_output("\t[Try 'look around'.]\n\n");
     }
     else
     {
@@ -47,35 +47,35 @@ void execute_look(void)
                     }
                     else
                     {
-                        add_output("\n%s\n\n", characters_with_same_tag[0]->description);
+                        add_output("%s\n\n", characters_with_same_tag[0]->description);
                     }
                 }
                 else
                 {
-                    add_output("\nThere is more than one character in your vicinity for which this tag works.\n");
+                    add_output("There is more than one character in your vicinity for which this tag works.\n");
                     memset(command.object, 0, sizeof(command.object));
                 }
             }
             else if (!items_with_same_tag[1])
             {
-                add_output("\n%s\n\n", items_with_same_tag[0]->description_detailed);
+                add_output("%s\n\n", items_with_same_tag[0]->description_detailed);
                 event_player_finds_entry_doors_key(items_with_same_tag[0]->id);
             }
             else if (!characters_with_same_tag || !characters_with_same_tag[0])
             {
-                add_output("\nThere is more than one item in your vicinity for which this tag works.\n");
+                add_output("There is more than one item in your vicinity for which this tag works.\n");
                 memset(command.object, 0, sizeof(command.object));
             }
             else
             {
-                add_output("\nThere is more than one item and character in your vicinity for which this tag works.\n");
+                add_output("There is more than one item and character in your vicinity for which this tag works.\n");
                 memset(command.object, 0, sizeof(command.object));
             }
         }
 
         if (!*command.object)
         {
-            add_output("\n\t[Try:]\n");
+            add_output("\t[Try:]\n");
             add_output("\t\t['Look around'.]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {

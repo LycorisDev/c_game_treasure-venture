@@ -48,7 +48,7 @@ void parse_game_command(void)
 
             if (!parser_matches_with_lexicon)
             {
-                add_output("\n\t['%s' was not recognized.]\n", parser[i]);
+                add_output("\t['%s' was not recognized.]\n\n", parser[i]);
                 index_stop_matching = i;
                 break;
             }
@@ -238,7 +238,6 @@ void parse_game_command(void)
 
 static void display_commands(void)
 {
-    add_output("\n");
     add_output("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
     add_output("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
     add_output("\n");

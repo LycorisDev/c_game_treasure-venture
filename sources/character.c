@@ -3,7 +3,7 @@
 
 void execute_character(void)
 {
-    add_output("\n\t[DEBUG - Character command]\n\n");
+    add_output("\t[DEBUG - Character command]\n\n");
     return;
 }
 

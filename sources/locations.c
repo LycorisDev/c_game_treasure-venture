@@ -153,9 +153,9 @@ void describe_location(const Location* location)
 void display_location_name(void)
 {
     if (!PLAYER->current_location->inside_of)
-        add_output("\nYou are outside. ");
+        add_output("You are outside. ");
     else
-        add_output("\nYou are in the %s. ", PLAYER->current_location->name);
+        add_output("You are in the %s. ", PLAYER->current_location->name);
     return;
 }
 

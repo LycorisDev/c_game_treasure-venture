@@ -19,13 +19,13 @@ void execute_take(void)
 
     if (!all_takeable_items[0])
     {
-        add_output("\nThere is nothing for you to take here.\n\n");
+        add_output("There is nothing for you to take here.\n\n");
         return;
     }
 
     if (PLAYER->inventory[NBR_ITEMS - 1])
     {
-        add_output("\nYour inventory is full.\n\n");
+        add_output("Your inventory is full.\n\n");
         return;
     }
 
@@ -78,11 +78,11 @@ void execute_take(void)
             }
 
             event_player_finds_entry_doors_key(takeable_items_with_same_tag[0]->id);
-            add_output("\n'%s' added to your inventory.\n\n", takeable_items_with_same_tag[0]->name);
+            add_output("'%s' added to your inventory.\n\n", takeable_items_with_same_tag[0]->name);
         }
         else
         {
-            add_output("\nThere is more than one takeable item in your vicinity for which this tag works.\n");
+            add_output("There is more than one takeable item in your vicinity for which this tag works.\n");
             memset(command.object, 0, sizeof(command.object));
         }
     }
@@ -91,11 +91,11 @@ void execute_take(void)
     {
         if (!all_takeable_items[1])
         {
-            add_output("\n\t[Try 'take %s'.]\n\n", all_takeable_items[0]->tags[0]);
+            add_output("\t[Try 'take %s'.]\n\n", all_takeable_items[0]->tags[0]);
         }
         else
         {
-            add_output("\n\t[Try:]\n");
+            add_output("\t[Try:]\n");
             for (i = 0; i < NBR_ITEMS; ++i)
             {
                 if (!all_takeable_items[i])

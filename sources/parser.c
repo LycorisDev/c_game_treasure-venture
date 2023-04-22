@@ -30,7 +30,6 @@ void get_and_parse_cli_input(void)
     char c = 'A';
 
     /* Get input from stdin */
-    f_write_line(stdout, "\n");
     f_write_line(stdout, "> ");
     if (fgets(input, INPUT_MAX_LENGTH, stdin))
     {

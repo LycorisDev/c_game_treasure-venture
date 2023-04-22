@@ -17,7 +17,7 @@
     #ifndef STANDARD_LIBRARY_WINDOWS
     #define STANDARD_LIBRARY_WINDOWS
         #ifdef _WIN32
-        #include <Windows.h>
+        #include <windows.h>
         #endif
     #endif
 #endif

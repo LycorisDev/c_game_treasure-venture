@@ -2,6 +2,8 @@ CC = gcc
 CFLAGS = -fPIC -MMD -Wall -Wextra
 CFLAGS_C89 = -ansi -pedantic
 INTERFACE_FLAG = -DGUI
+GTK_FLAG_START = `pkg-config --cflags gtk4`
+GTK_FLAG_END = `pkg-config --libs gtk4`
 TS_LIB = -lts
 
 DIR_BUILD = builds
@@ -16,12 +18,12 @@ all: $(EXECUTABLE)
 
 # Package: libgtk-4-dev
 $(EXECUTABLE): $(OBJ_FILES)
-	@$(CC) `pkg-config --cflags gtk4` $^ -o $@ -O2 -Lplugins/twenty-squares/static $(TS_LIB) `pkg-config --libs gtk4`
+	@$(CC) $(GTK_FLAG_START) $^ -o $@ -O2 -Lplugins/twenty-squares/static $(TS_LIB) $(GTK_FLAG_END)
 
 # File with GTK code
 $(DIR_OBJ)/main.o: sources/main.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) $(INTERFACE_FLAG) `pkg-config --cflags gtk4` -c $< -o $@ `pkg-config --libs gtk4`
+	@$(CC) $(CFLAGS) $(INTERFACE_FLAG) $(GTK_FLAG_START) -c $< -o $@ $(GTK_FLAG_END)
 -include $(DIR_OBJ)/main.d
 
 $(DIR_OBJ)/%.o: sources/%.c
@@ -31,19 +33,19 @@ $(DIR_OBJ)/%.o: sources/%.c
 
 .PHONY: cli
 cli:
-	@$(MAKE) -s all INTERFACE_FLAG=-DCLI
+	@$(MAKE) -s all INTERFACE_FLAG=-DCLI GTK_FLAG_START="" GTK_FLAG_END=""
 
 # Package: gcc-mingw-w64
 .PHONY: win64
 .PHONY: win32
 win64:
-	@$(MAKE) -s all \
+	@$(MAKE) -s cli \
 	CC=x86_64-w64-mingw32-gcc \
 	TS_LIB=-lts64 \
 	DIR_OBJ=$(DIR_BUILD)/win64/objects \
 	EXECUTABLE=$(DIR_BUILD)/win64/TreasureVenture-64bit.exe
 win32:
-	@$(MAKE) -s all \
+	@$(MAKE) -s cli \
 	CC=i686-w64-mingw32-gcc \
 	TS_LIB=-lts32 \
 	DIR_OBJ=$(DIR_BUILD)/win32/objects \

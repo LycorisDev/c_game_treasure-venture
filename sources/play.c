@@ -14,7 +14,7 @@ void execute_play(void)
     {
         if (!PLAYER->current_location->characters[i])
         {
-            add_output("\nYou see no one around you to play with.\n\n");
+            add_output("You see no one around you to play with.\n\n");
             return;
         }
 
@@ -24,7 +24,7 @@ void execute_play(void)
         break;
     }
 
-    add_output("\n\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n", PLAYER->current_location->characters[i]->tags[1]);
+    add_output("\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n", PLAYER->current_location->characters[i]->tags[1]);
     yes_no_callback = &static_mini_game;
     return;
 }
@@ -51,7 +51,7 @@ static void dynamic_mini_game(int yes_no)
         mini_game_obj = LOAD_LIB(LIB_PATH_TWENTY_SQUARES);
         if (!mini_game_obj)
         {
-            add_output("\n\t[Error: The Twenty Squares library can't be loaded -> %s]\n", LIB_ERROR);
+            add_output("\t[Error: The Twenty Squares library can't be loaded -> %s]\n", LIB_ERROR);
             return;
         }
 
@@ -65,7 +65,7 @@ static void dynamic_mini_game(int yes_no)
         #endif
         if (!mini_game_func)
         {
-            add_output("\n\t[Error: The pointer to the Twenty Squares library start function can't be obtained -> %s]\n", LIB_ERROR);
+            add_output("\t[Error: The pointer to the Twenty Squares library start function can't be obtained -> %s]\n", LIB_ERROR);
             UNLOAD_LIB(mini_game_obj);
             return;
         }

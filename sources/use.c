@@ -15,7 +15,7 @@ void execute_use(void)
 
     if (!PLAYER->inventory[0] && !PLAYER->current_location->items[0])
     {
-        add_output("\nThere is nothing for you to use.\n\n");
+        add_output("There is nothing for you to use.\n\n");
     }
     else
     {
@@ -34,7 +34,7 @@ void execute_use(void)
                 }
                 else
                 {
-                    add_output("\nThere is more than one item in your inventory for which this tag works.\n");
+                    add_output("There is more than one item in your inventory for which this tag works.\n");
                 }
             }
             else if (!items_with_same_tag_in_inventory[0] && items_with_same_tag_in_current_location[0])
@@ -45,12 +45,12 @@ void execute_use(void)
                 }
                 else
                 {
-                    add_output("\nThere is more than one item in your vicinity for which this tag works.\n");
+                    add_output("There is more than one item in your vicinity for which this tag works.\n");
                 }
             }
             else
             {
-                add_output("\nYour inventory and vicinity both included, there is more than one item for which this tag works.\n");
+                add_output("Your inventory and vicinity both included, there is more than one item for which this tag works.\n");
             }
 
             if (!used_item)
@@ -70,17 +70,17 @@ void execute_use(void)
                     {
                         if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
                         {
-                            add_output("\nThe %s %s locked.\n\n", used_item->is_singular ? "door" : "doors", used_item->is_singular ? "is" : "are");
+                            add_output("The %s %s locked.\n\n", used_item->is_singular ? "door" : "doors", used_item->is_singular ? "is" : "are");
                         }
                         else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
                         {
                             PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
-                            add_output("\nYou close the %s.\n\n", used_item->is_singular ? "door" : "doors");
+                            add_output("You close the %s.\n\n", used_item->is_singular ? "door" : "doors");
                         }
                         else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
                         {
                             PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
-                            add_output("\nYou open the %s.\n\n", used_item->is_singular ? "door" : "doors");
+                            add_output("You open the %s.\n\n", used_item->is_singular ? "door" : "doors");
                         }
                         else
                         {
@@ -94,7 +94,7 @@ void execute_use(void)
             {
                 if (strcmp(command.preposition, "on") || !*command.target)
                 {
-                    add_output("\n\t[The %s %s a target. Try specifying on who or what you want to use %s.]\n\n", 
+                    add_output("\t[The %s %s a target. Try specifying on who or what you want to use %s.]\n\n", 
                             command.object, used_item->is_singular ? "requires" : "require", used_item->is_singular ? "it" : "them");
                 }
                 else
@@ -104,7 +104,7 @@ void execute_use(void)
             }
             else
             {
-                add_output("\n%s ", used_item->description_brief);
+                add_output("%s ", used_item->description_brief);
                 add_output("The %s %s seem to be of much use.\n\n", used_item->tags[1], used_item->is_singular ? "doesn't" : "don't");
             }
         }
@@ -112,7 +112,7 @@ void execute_use(void)
 
     if (!*command.object)
     {
-        add_output("\n\t[Try:]\n");
+        add_output("\t[Try:]\n");
         for (i = 0; i < NBR_ITEMS; ++i)
         {
             if (!PLAYER->inventory[i])
@@ -154,7 +154,7 @@ static void use_item_on_target(const Item* used_item)
         }
         else
         {
-            add_output("\nThere is more than one item in your vicinity for which this tag works.\n\n");
+            add_output("There is more than one item in your vicinity for which this tag works.\n\n");
         }
     }
     else if (!items_with_same_tag_in_current_location[0] && characters_with_same_tag_in_current_location[0])
@@ -166,24 +166,24 @@ static void use_item_on_target(const Item* used_item)
         }
         else
         {
-            add_output("\nThere is more than one character in your vicinity for which this tag works.\n\n");
+            add_output("There is more than one character in your vicinity for which this tag works.\n\n");
         }
     }
     else
     {
-        add_output("\nThere is more than target in your vicinity for which this tag works.\n\n");
+        add_output("There is more than target in your vicinity for which this tag works.\n\n");
     }
 
     if (!target)
     {
-        add_output("\n\t[Use the %s on what?]\n\n", command.object);
+        add_output("\t[Use the %s on what?]\n\n", command.object);
     }
     else if (is_target_a_character)
     {
         if (target == PLAYER)
-            add_output("\nThe %s %s nothing to you.\n\n", used_item->tags[1], used_item->is_singular ? "does" : "do");
+            add_output("The %s %s nothing to you.\n\n", used_item->tags[1], used_item->is_singular ? "does" : "do");
         else
-            add_output("\nThe %s %s nothing to the %s.\n\n", used_item->tags[1], used_item->is_singular ? "does" : "do", ((Character*)target)->tags[1]);
+            add_output("The %s %s nothing to the %s.\n\n", used_item->tags[1], used_item->is_singular ? "does" : "do", ((Character*)target)->tags[1]);
     }
     else if (((Item*)target)->access && ((Item*)target)->unlocked_with == used_item)
     {
@@ -191,21 +191,21 @@ static void use_item_on_target(const Item* used_item)
         {
             case ACCESS_LOCKED:
                 ((Item*)target)->access = ACCESS_CLOSED;
-                add_output("\nYou unlock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
+                add_output("You unlock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
                 break;
             case ACCESS_OPEN:
                 ((Item*)target)->access = ACCESS_LOCKED;
-                add_output("\nYou close and lock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
+                add_output("You close and lock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
                 break;
             case ACCESS_CLOSED:
                 ((Item*)target)->access = ACCESS_LOCKED;
-                add_output("\nYou lock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
+                add_output("You lock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
                 break;
         }
     }
     else
     {
-        add_output("\nThe %s %s nothing to the %s.\n\n", used_item->tags[1], used_item->is_singular ? "does" : "do", ((Item*)target)->tags[1]);
+        add_output("The %s %s nothing to the %s.\n\n", used_item->tags[1], used_item->is_singular ? "does" : "do", ((Item*)target)->tags[1]);
     }
 
     free(items_with_same_tag_in_current_location);
