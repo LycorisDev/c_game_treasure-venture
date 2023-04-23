@@ -25,7 +25,7 @@ void event_first_time_player_enters_mansion(void)
     if (list_events[0] == FLAG_ON && PLAYER->current_location == LOCATION_MAIN_HALLWAY)
     {
         execute_event_first_time_player_enters_mansion();
-        add_output("A distinct noise lets you know the entry doors have locked, seemingly all by themselves. You hope this is no haunting place. ");
+        add_output("A distinct noise lets you know the entry doors have locked, seemingly all by themselves. You hope this is no haunting place.\n\n");
     }
     return;
 }

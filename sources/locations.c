@@ -133,6 +133,13 @@ void describe_location(const Location* location)
 {
     int i;
 
+    /* Display location name */
+    if (!PLAYER->current_location->inside_of)
+        add_output("You are outside. ");
+    else
+        add_output("You are in the %s. ", PLAYER->current_location->name);
+
+    /* TODO: Remove the need for this temporary fix */
     /* Temporary: If we are outside, print the description of the first location in "outside"'s location list. Turns out there's only one, the mansion. */
     if (location->type == LOCATION_TYPE_OUTSIDE)
         add_output("%s ", location->locations[0]->description);
@@ -148,14 +155,8 @@ void describe_location(const Location* location)
         if (!location->items[i]->access)
             add_output("%s ", location->items[i]->description_obvious);
     }
-}
 
-void display_location_name(void)
-{
-    if (!PLAYER->current_location->inside_of)
-        add_output("You are outside. ");
-    else
-        add_output("You are in the %s. ", PLAYER->current_location->name);
+    add_output("\n\n");
     return;
 }
 

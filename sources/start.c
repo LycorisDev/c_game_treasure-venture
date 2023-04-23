@@ -122,10 +122,7 @@ static void execute_submenu_newgame(void)
 
     game_state = STATE_GAME;
     is_game_ongoing = 1;
-
-    display_location_name();
     describe_location(PLAYER->current_location);
-    add_output("\n\n");
     return;
 }
 
@@ -155,10 +152,7 @@ static void execute_submenu_loadgame(void)
 
     game_state = STATE_GAME;
     is_game_ongoing = 1;
-
-    display_location_name();
     describe_location(PLAYER->current_location);
-    add_output("\n\n");
     return;
 }
 
@@ -176,11 +170,7 @@ static void execute_submenu_save(void)
         add_output("\t[Game saved!]\n\n");
 
         if (game_state == STATE_GAME)
-        {
-            display_location_name();
             describe_location(PLAYER->current_location);
-            add_output("\n\n");
-        }
     }
     return;
 }
@@ -193,11 +183,7 @@ static void execute_submenu_about(void)
     add_output("\t[For more information, visit my channel:]\n\thttps://www.youtube.com/@thelycorisradiata/\n\n");
 
     if (game_state == STATE_GAME)
-    {
-        display_location_name();
         describe_location(PLAYER->current_location);
-        add_output("\n\n");
-    }
     return;
 }
 

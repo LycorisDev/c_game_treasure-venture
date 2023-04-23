@@ -19,7 +19,6 @@
 
 void populate_list_locations(void);
 void describe_location(const Location* location);
-void display_location_name(void);
 Exit** retrieve_locations_by_parser_from_current_location(const char* parser);
 Exit** retrieve_locations_by_parser_from_passage_items_in_current_location(const char* parser);
 

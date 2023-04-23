@@ -34,9 +34,7 @@ static void static_mini_game(const int yes_no)
     if (yes_no)
         start_twenty_squares();
 
-    display_location_name();
     describe_location(PLAYER->current_location);
-    add_output("\n\n");
     return;
 }
 
@@ -75,9 +73,7 @@ static void dynamic_mini_game(int yes_no)
         UNLOAD_LIB(mini_game_obj);
     }
 
-    display_location_name();
     describe_location(PLAYER->current_location);
-    add_output("\n\n");
     return;
 }
 */

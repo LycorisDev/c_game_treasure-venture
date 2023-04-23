@@ -19,9 +19,7 @@ void execute_look(void)
 
     if (!strcmp(command.object, "around"))
     {
-        display_location_name();
         describe_location(PLAYER->current_location);
-        add_output("\n\n");
     }
     else if (COND_NO_ITEM_AT_CURRENT_LOCATION && COND_PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
     {

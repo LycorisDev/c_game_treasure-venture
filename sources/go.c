@@ -357,8 +357,6 @@ static void cross_passage(Exit* exit)
     }
 
     event_first_time_player_enters_mansion();
-    describe_location(PLAYER->current_location);
-    add_output("\n\n");
     return;
 }
 
