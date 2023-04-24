@@ -6,25 +6,13 @@
 #include "../headers/locations.h"
 #include "../headers/items.h"
 
-#define IF_NO_ACCESS(exit)          if (!exit->to || !exit->passage->access)\
-                                    {\
-                                        /* The player should never see this message */\
-                                        add_output("You cannot access this place.\n\n");\
-                                    }
-
-#define PRINT_ACCESS_LOCKED(exit)   add_output("The %s %s locked.\n\n", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
-
-#define IF_ACCESS_LOCKED(exit)      if (exit->passage->access == ACCESS_LOCKED)\
-                                    {\
-                                        PRINT_ACCESS_LOCKED(exit)\
-                                    }
-
-#define IF_LOCATION_FULL(exit)      if (exit->to->characters[NBR_CHARACTERS - 1])\
-                                    {\
-                                        add_output("The destination is full. No more characters can access this place.\n\n");\
-                                    }
-
 static void cross_passage(Exit* exit);
+static int bool_no_access(const Exit* exit);
+static void print_no_access(void);
+static int bool_access_locked(const Exit* exit);
+static void print_access_locked(const Exit* exit);
+static int bool_location_full(const Exit* exit);
+static void print_location_full(void);
 
 void execute_go(void)
 {
@@ -50,9 +38,12 @@ void execute_go(void)
                 {
                     if (!PLAYER->current_location->exits[0].to)
                         add_output("There is nowhere to go.\n\n");
-                    else IF_NO_ACCESS((PLAYER->current_location->exits + 0))
-                    else IF_ACCESS_LOCKED((PLAYER->current_location->exits + 0))
-                    else IF_LOCATION_FULL((PLAYER->current_location->exits + 0))
+                    else if (bool_no_access(PLAYER->current_location->exits + 0))
+                        print_no_access();
+                    else if (bool_access_locked(PLAYER->current_location->exits + 0))
+                        print_access_locked(PLAYER->current_location->exits + 0);
+                    else if (bool_location_full(PLAYER->current_location->exits + 0))
+                        print_location_full();
                     else
                         cross_passage((PLAYER->current_location->exits + 0));
                 }
@@ -73,9 +64,12 @@ void execute_go(void)
                         }
                         else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
                         {
-                            IF_NO_ACCESS((PLAYER->current_location->exits + i))
-                            else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
-                            else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
+                            if (bool_no_access(PLAYER->current_location->exits + i))
+                                print_no_access();
+                            else if (bool_access_locked(PLAYER->current_location->exits + i))
+                                print_access_locked(PLAYER->current_location->exits + i);
+                            else if (bool_location_full(PLAYER->current_location->exits + i))
+                                print_location_full();
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
                             break;
@@ -101,9 +95,12 @@ void execute_go(void)
                         }
                         else if (PLAYER->current_location->exits[i].to == PLAYER->previous_location) 
                         {
-                            IF_NO_ACCESS((PLAYER->current_location->exits + i))
-                            else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
-                            else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
+                            if (bool_no_access(PLAYER->current_location->exits + i))
+                                print_no_access();
+                            else if (bool_access_locked(PLAYER->current_location->exits + i))
+                                print_access_locked(PLAYER->current_location->exits + i);
+                            else if (bool_location_full(PLAYER->current_location->exits + i))
+                                print_location_full();
                             else
                                 cross_passage((PLAYER->current_location->exits + i));
                             break;
@@ -115,9 +112,12 @@ void execute_go(void)
                             {
                                 if (PLAYER->current_location->exits[i].to->exits[j].to == PLAYER->previous_location)
                                 {
-                                    IF_NO_ACCESS((PLAYER->current_location->exits + i))
-                                    else IF_ACCESS_LOCKED((PLAYER->current_location->exits + i))
-                                    else IF_LOCATION_FULL((PLAYER->current_location->exits + i))
+                                    if (bool_no_access(PLAYER->current_location->exits + i))
+                                        print_no_access();
+                                    else if (bool_access_locked(PLAYER->current_location->exits + i))
+                                        print_access_locked(PLAYER->current_location->exits + i);
+                                    else if (bool_location_full(PLAYER->current_location->exits + i))
+                                        print_location_full();
                                     else
                                         cross_passage((PLAYER->current_location->exits + i));
                                     break;
@@ -166,7 +166,7 @@ void execute_go(void)
                     /* Almost success: There is only one exit but it is locked */
                     else if (!j && k == 1)
                     {
-                        PRINT_ACCESS_LOCKED(locked_exits[0])
+                        print_access_locked(locked_exits[0]);
                     }
                     /* Several accessible and/or locked exits. Which one does the player want? */
                     else
@@ -188,9 +188,12 @@ void execute_go(void)
                         memset(command.object, 0, sizeof(command.object));
                     else if (!locations_with_same_tag_from_passage_items_in_current_location[1])
                     {
-                        IF_NO_ACCESS(locations_with_same_tag_from_passage_items_in_current_location[0])
-                        else IF_ACCESS_LOCKED(locations_with_same_tag_from_passage_items_in_current_location[0])
-                        else IF_LOCATION_FULL(locations_with_same_tag_from_passage_items_in_current_location[0])
+                        if (bool_no_access(locations_with_same_tag_from_passage_items_in_current_location[0]))
+                            print_no_access();
+                        else if (bool_access_locked(locations_with_same_tag_from_passage_items_in_current_location[0]))
+                            print_access_locked(locations_with_same_tag_from_passage_items_in_current_location[0]);
+                        else if (bool_location_full(locations_with_same_tag_from_passage_items_in_current_location[0]))
+                            print_location_full();
                         else
                         {
                             cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
@@ -205,9 +208,12 @@ void execute_go(void)
                 }
                 else if (!locations_with_same_tag_from_current_location[1])
                 {
-                    IF_NO_ACCESS(locations_with_same_tag_from_current_location[0])
-                    else IF_ACCESS_LOCKED(locations_with_same_tag_from_current_location[0])
-                    else IF_LOCATION_FULL(locations_with_same_tag_from_current_location[0])
+                    if (bool_no_access(locations_with_same_tag_from_current_location[0]))
+                        print_no_access();
+                    else if (bool_access_locked(locations_with_same_tag_from_current_location[0]))
+                        print_access_locked(locations_with_same_tag_from_current_location[0]);
+                    else if (bool_location_full(locations_with_same_tag_from_current_location[0]))
+                        print_location_full();
                     else
                     {
                         cross_passage(locations_with_same_tag_from_current_location[0]);
@@ -357,6 +363,40 @@ static void cross_passage(Exit* exit)
     }
 
     event_first_time_player_enters_mansion();
+    return;
+}
+
+static int bool_no_access(const Exit* exit)
+{
+    return !exit->to || !exit->passage->access;
+}
+
+static void print_no_access(void)
+{
+    /* The player should never see this message */
+    add_output("You cannot access this place.\n\n");
+    return;
+}
+
+static int bool_access_locked(const Exit* exit)
+{
+    return exit->passage->access == ACCESS_LOCKED;
+}
+
+static void print_access_locked(const Exit* exit)
+{
+    add_output("The %s %s locked.\n\n", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
+    return;
+}
+
+static int bool_location_full(const Exit* exit)
+{
+    return exit->to->characters[NBR_CHARACTERS - 1] != NULL;
+}
+
+static void print_location_full(void)
+{
+    add_output("The destination is full. No more characters can access this place.\n\n");
     return;
 }
 

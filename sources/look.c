@@ -7,9 +7,9 @@
 #include "../headers/events.h"
 #include "../headers/character.h"
 
-#define COND_NO_ITEM_AT_CURRENT_LOCATION                     (!PLAYER->current_location->items[0])
-#define COND_NO_CHARACTER_AT_CURRENT_LOCATION                (!PLAYER->current_location->characters[0])
-#define COND_PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION    (PLAYER->current_location->characters[0] == PLAYER && !PLAYER->current_location->characters[1])
+static int bool_no_item_at_current_location(void);
+/* static int bool_no_character_at_current_location(void); */
+static int bool_player_is_the_only_character_at_current_location(void);
 
 void execute_look(void)
 {
@@ -21,7 +21,7 @@ void execute_look(void)
     {
         describe_location(PLAYER->current_location);
     }
-    else if (COND_NO_ITEM_AT_CURRENT_LOCATION && COND_PLAYER_IS_ONLY_CHARACTER_AT_CURRENT_LOCATION)
+    else if (bool_no_item_at_current_location() && bool_player_is_the_only_character_at_current_location())
     {
         add_output("\t[Try 'look around'.]\n\n");
     }
@@ -96,5 +96,22 @@ void execute_look(void)
     free(items_with_same_tag);
     free(characters_with_same_tag);
     return;
+}
+
+static int bool_no_item_at_current_location(void)
+{
+    return !PLAYER->current_location->items[0];
+}
+
+/*
+static int bool_no_character_at_current_location(void)
+{
+    return !PLAYER->current_location->characters[0];
+}
+*/
+
+static int bool_player_is_the_only_character_at_current_location(void)
+{
+    return PLAYER->current_location->characters[0] == PLAYER && !PLAYER->current_location->characters[1];
 }
 
