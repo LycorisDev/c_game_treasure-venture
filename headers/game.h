@@ -8,6 +8,12 @@
 #define NBR_ITEMS             100
 #define NBR_CHARACTERS        5
 
+typedef struct
+{
+    const char* key;
+    void (*func)(void);
+} KeyFunc;
+
 typedef struct location Location;
 typedef struct item Item;
 typedef struct character Character;

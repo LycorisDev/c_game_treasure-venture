@@ -5,16 +5,29 @@
 #include "../headers/save.h"
 #include "../headers/locations.h"
 
+#include "../headers/output.h"
+
 #define STATE_MENU 0
 #define STATE_GAME 1
 static int game_state = STATE_MENU;
 static int is_game_ongoing = 0;
 
 static void execute_menu_command(const char* command);
-static void execute_submenu_newgame(void);
-static void execute_submenu_loadgame(void);
+static void execute_submenu_new(void);
+static void execute_submenu_load(void);
 static void execute_submenu_save(void);
 static void execute_submenu_about(void);
+static void execute_submenu_quit(void);
+
+static const KeyFunc command_list[] = 
+{
+    {"about", &execute_submenu_about},
+    {"load", &execute_submenu_load},
+    {"new", &execute_submenu_new},
+    {"quit", &execute_submenu_quit},
+    {"save", &execute_submenu_save},
+    {NULL, &access_main_menu}
+};
 
 void interact(void)
 {
@@ -40,35 +53,25 @@ void interact(void)
 
 static void execute_menu_command(const char* command)
 {
-    if (!command)
+    int i = 0;
+
+    if (!*command)
     {
         access_main_menu();
-    }
-    else if (!strcmp(command, "new"))
-    {
-        execute_submenu_newgame();
-    }
-    else if (!strcmp(command, "load"))
-    {
-        execute_submenu_loadgame();
-    }
-    else if (!strcmp(command, "save"))
-    {
-        execute_submenu_save();
-    }
-    else if (!strcmp(command, "about"))
-    {
-        execute_submenu_about();
-    }
-    else if (!strcmp(command, "quit"))
-    {
-        close_window();
         return;
     }
-    else
+
+    while (command_list[i].key != NULL)
     {
-        access_main_menu();
+        if (!strcmp(command, command_list[i].key))
+        {
+            command_list[i].func();
+            return;
+        }
+        ++i;
     }
+
+    command_list[i].func();
     return;
 }
 
@@ -82,7 +85,7 @@ void access_main_menu(void)
     return;
 }
 
-static void execute_submenu_newgame(void)
+static void execute_submenu_new(void)
 {
     FILE* save_file = NULL;
 
@@ -102,7 +105,7 @@ static void execute_submenu_newgame(void)
     return;
 }
 
-static void execute_submenu_loadgame(void)
+static void execute_submenu_load(void)
 {
     FILE* save_file = NULL;
 
@@ -161,6 +164,12 @@ static void execute_submenu_about(void)
 
     if (game_state == STATE_GAME)
         describe_location(PLAYER->current_location);
+    return;
+}
+
+static void execute_submenu_quit(void)
+{
+    close_window();
     return;
 }
 

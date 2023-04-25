@@ -1,6 +1,5 @@
 #include "../headers/commands.h"
 #include "../headers/parser.h"
-
 #include "../headers/play.h"
 #include "../headers/inventory.h"
 #include "../headers/character.h"
@@ -13,6 +12,20 @@
 
 /* Declared as extern in ../headers/commands.h */
 Command command;
+
+static const KeyFunc command_list[] = 
+{
+    {"character", &execute_character},
+    {"drop", &execute_drop},
+    {"go", &execute_go},
+    {"hold", &execute_hold},
+    {"inventory", &execute_inventory},
+    {"look", &execute_look},
+    {"play", &execute_play},
+    {"take", &execute_take},
+    {"use", &execute_use},
+    {NULL, &display_game_commands}
+};
 
 static void reset_command_elements(void);
 static void set_command_element(void* element, const int element_size, const int parser_start_index, const int parser_end_index);
@@ -97,45 +110,18 @@ static void set_command_element(void* element, const int element_size, const int
 
 static void execute_action(void)
 {
-    if (!strcmp(command.verb, "play"))
+    int i = 0;
+    while (command_list[i].key != NULL)
     {
-        execute_play();
+        if (!strcmp(command.verb, command_list[i].key))
+        {
+            command_list[i].func();
+            return;
+        }
+        ++i;
     }
-    else if (!strcmp(command.verb, "inventory"))
-    {
-        execute_inventory();
-    }
-    else if (!strcmp(command.verb, "character"))
-    {
-        execute_character();
-    }
-    else if (!strcmp(command.verb, "go"))
-    {
-        execute_go();
-    }
-    else if (!strcmp(command.verb, "look"))
-    {
-        execute_look();
-    }
-    else if (!strcmp(command.verb, "take"))
-    {
-        execute_take();
-    }
-    else if (!strcmp(command.verb, "drop"))
-    {
-        execute_drop();
-    }
-    else if (!strcmp(command.verb, "use"))
-    {
-        execute_use();
-    }
-    else if (!strcmp(command.verb, "hold"))
-    {
-        execute_hold();
-    }
-    else
-    {
-        display_game_commands();
-    }
+
+    command_list[i].func();
+    return;
 }
 
