@@ -7,6 +7,8 @@
 #endif
 
 void populate_list_lexicon(void);
+int bool_word_is_in_lexicon(const char* word);
+int bool_word_is_preposition(const char* word);
 
 #define NBR_WORDS 		100
 #define LENGTH_WORD 	20

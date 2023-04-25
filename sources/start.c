@@ -10,6 +10,7 @@
 static int game_state = STATE_MENU;
 static int is_game_ongoing = 0;
 
+static void execute_menu_command(const char* command);
 static void execute_submenu_newgame(void);
 static void execute_submenu_loadgame(void);
 static void execute_submenu_save(void);
@@ -23,76 +24,51 @@ void interact(void)
     }
     else if (game_state == STATE_MENU)
     {
-        if (!parser[0])
-        {
-            access_main_menu();
-        }
-        else if (!strcmp(parser[0], "new"))
-        {
-            execute_submenu_newgame();
-        }
-        else if (!strcmp(parser[0], "load"))
-        {
-            execute_submenu_loadgame();
-        }
-        else if (!strcmp(parser[0], "save"))
-        {
-            execute_submenu_save();
-        }
-        else if (!strcmp(parser[0], "about"))
-        {
-            execute_submenu_about();
-        }
-        else if (!strcmp(parser[0], "quit"))
-        {
-            close_window();
-            return;
-        }
-        else
-        {
-            access_main_menu();
-        }
+        execute_menu_command(parser[0]);
     }
     else
     {
-        if (!parser[0] || strcmp(parser[0], "menu"))
-        {
-            parse_game_command();
-        }
+        if (!parser[0])
+            display_game_commands();
+        else if (strcmp(parser[0], "menu"))
+            execute_game_command();
         else
-        {
-            if (!parser[1])
-            {
-                access_main_menu();
-            }
-            else if (!strcmp(parser[1], "new"))
-            {
-                execute_submenu_newgame();
-            }
-            else if (!strcmp(parser[1], "load"))
-            {
-                execute_submenu_loadgame();
-            }
-            else if (!strcmp(parser[1], "save"))
-            {
-                execute_submenu_save();
-            }
-            else if (!strcmp(parser[1], "about"))
-            {
-                execute_submenu_about();
-            }
-            else if (!strcmp(parser[1], "quit"))
-            {
-                close_window();
-                return;
-            }
-            else
-            {
-                access_main_menu();
-            }
-        }
+            execute_menu_command(parser[1]);
     }
+    return;
+}
 
+static void execute_menu_command(const char* command)
+{
+    if (!command)
+    {
+        access_main_menu();
+    }
+    else if (!strcmp(command, "new"))
+    {
+        execute_submenu_newgame();
+    }
+    else if (!strcmp(command, "load"))
+    {
+        execute_submenu_loadgame();
+    }
+    else if (!strcmp(command, "save"))
+    {
+        execute_submenu_save();
+    }
+    else if (!strcmp(command, "about"))
+    {
+        execute_submenu_about();
+    }
+    else if (!strcmp(command, "quit"))
+    {
+        close_window();
+        return;
+    }
+    else
+    {
+        access_main_menu();
+    }
     return;
 }
 
@@ -161,17 +137,18 @@ static void execute_submenu_save(void)
     FILE* save_file = NULL;
 
     if (!is_game_ongoing)
-        add_output("\t[A game needs to be started for it to be saved.]\n\n");
-    else
     {
-        save_file = fopen("save.txt", "w+");
-        save_game(save_file);
-        fclose(save_file);
-        add_output("\t[Game saved!]\n\n");
-
-        if (game_state == STATE_GAME)
-            describe_location(PLAYER->current_location);
+        add_output("\t[A game needs to be started for it to be saved.]\n\n");
+        return;
     }
+
+    save_file = fopen("save.txt", "w+");
+    save_game(save_file);
+    fclose(save_file);
+    add_output("\t[Game saved!]\n\n");
+
+    if (game_state == STATE_GAME)
+        describe_location(PLAYER->current_location);
     return;
 }
 

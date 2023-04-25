@@ -161,7 +161,6 @@ void execute_go(void)
                     else if (j == 1)
                     {
                         cross_passage(accessible_exits[0]);
-                        add_output("\n\n");
                     }
                     /* Almost success: There is only one exit but it is locked */
                     else if (!j && k == 1)
@@ -195,10 +194,7 @@ void execute_go(void)
                         else if (bool_location_full(locations_with_same_tag_from_passage_items_in_current_location[0]))
                             print_location_full();
                         else
-                        {
                             cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                            add_output("\n\n");
-                        }
                     }
                     else
                     {
@@ -215,10 +211,7 @@ void execute_go(void)
                     else if (bool_location_full(locations_with_same_tag_from_current_location[0]))
                         print_location_full();
                     else
-                    {
                         cross_passage(locations_with_same_tag_from_current_location[0]);
-                        add_output("\n\n");
-                    }
                 }
                 else
                 {
@@ -362,6 +355,7 @@ static void cross_passage(Exit* exit)
         }
     }
 
+    add_output("\n\n");
     event_first_time_player_enters_mansion();
     return;
 }

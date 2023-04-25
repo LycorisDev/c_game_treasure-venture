@@ -32,6 +32,7 @@ void parse_input(const char* raw_input);
 void get_and_parse_cli_input(void);
 #endif
 void parse_yes_no(void);
+int get_available_length_in_string(const int max_length, const char* str);
 
 #endif
 

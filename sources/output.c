@@ -2,7 +2,6 @@
 
 static void f_write_int(FILE* stream, int num);
 
-/* Needed format: %d and %s + '%' */
 void f_write_line(FILE* stream, const char* format, ...)
 {
     int i = 0;
@@ -12,24 +11,31 @@ void f_write_line(FILE* stream, const char* format, ...)
 
     while (format[i] != '\0')
     {
+        /* Non-formatted */
+        if (format[i] != '%')
+        {
+            fputc(format[i], stream);
+            ++i;
+            continue;
+        }
+
+        ++i;
+
+        /* Percentage sign */
         if (format[i] == '%')
         {
-            ++i;
-            if (format[i] == 'd')
-            {
-                f_write_int(stream, va_arg(args, int));
-            }
-            else if (format[i] == 's')
-            {
-                fputs(va_arg(args, const char*), stream);
-            }
-            else if (format[i] == '%')
-            {
-                fputc(format[i], stream);
-            }
-        }
-        else
             fputc(format[i], stream);
+        }
+        /* String */
+        else if (format[i] == 's')
+        {
+            fputs(va_arg(args, const char*), stream);
+        }
+        /* Integer */
+        else if (format[i] == 'd')
+        {
+            f_write_int(stream, va_arg(args, int));
+        }
 
         ++i;
     }

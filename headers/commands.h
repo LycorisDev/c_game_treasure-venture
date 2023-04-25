@@ -28,7 +28,8 @@ typedef struct command
 
 extern Command command;
 
-void parse_game_command(void);
+void execute_game_command(void);
+void display_game_commands(void);
 
 #endif
 

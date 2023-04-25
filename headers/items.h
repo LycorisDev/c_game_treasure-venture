@@ -21,6 +21,7 @@ void populate_list_items(void);
 Item** retrieve_items_by_parser_from_current_location(const char* parser);
 Item** retrieve_items_by_parser_from_inventory(const char* parser);
 Item** retrieve_takeable_items_by_parser_from_current_location(const char* parser);
+int bool_item_matches_parser(const Item* item, const char* parser);
 
 #endif
 

@@ -1,8 +1,11 @@
 #include "../headers/locations.h"
 #include "../headers/main.h"
+#include "../headers/items.h"
 
 /* Declared as extern in ../headers/game.h, included in ../headers/locations.h */
 Location list_locations[NBR_LOCATIONS];
+
+static int bool_location_matches_parser(const Location* location, const char* parser);
 
 void populate_list_locations(void)
 {
@@ -162,35 +165,18 @@ void describe_location(const Location* location)
 
 Exit** retrieve_locations_by_parser_from_current_location(const char* parser)
 {
-    int i, j, k;
+    int i, j;
     Exit** locations_with_same_tag = calloc(NBR_LOCATIONS, sizeof(Exit*));
     if (!locations_with_same_tag)
         return NULL;
 
-    for (i = 0, k = 0; i < NBR_LOCATIONS; ++i)
+    for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
     {
         if (!PLAYER->current_location->exits[i].to)
             break;
 
-        for (j = 1; j < NBR_TAGS; ++j)
-        {
-            if (!PLAYER->current_location->exits[i].to->tags[j])
-                break;
-
-            /* If you exit the building */
-            if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
-            {
-                /* You must not use "go [current building]" but you can use the tag of the outside location (which is the first of the building's exits) */
-                if (!strcmp(parser, PLAYER->current_location->exits[i].to->exits[0].to->tags[1]))
-                    locations_with_same_tag[k++] = &(PLAYER->current_location->exits[i]);
-                break;
-            }
-            else if (!strcmp(parser, PLAYER->current_location->exits[i].to->tags[j]))
-            {
-                locations_with_same_tag[k++] = &(PLAYER->current_location->exits[i]);
-                break;
-            }
-        }
+        if (bool_location_matches_parser(PLAYER->current_location->exits[i].to, parser))
+            locations_with_same_tag[j++] = &(PLAYER->current_location->exits[i]);
     }
 
     return locations_with_same_tag;
@@ -198,29 +184,42 @@ Exit** retrieve_locations_by_parser_from_current_location(const char* parser)
 
 Exit** retrieve_locations_by_parser_from_passage_items_in_current_location(const char* parser)
 {
-    int i, j, k;
+    int i, j;
     Exit** locations_with_same_tag = calloc(NBR_LOCATIONS, sizeof(Exit*));
     if (!locations_with_same_tag)
         return NULL;
 
-    for (i = 0, k = 0; i < NBR_LOCATIONS; ++i)
+    for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
     {
         if (!PLAYER->current_location->exits[i].to || !PLAYER->current_location->exits[i].passage->access)
             break;
 
-        for (j = 1; j < NBR_TAGS; ++j)
-        {
-            if (!PLAYER->current_location->exits[i].passage->tags[j])
-                break;
-
-            if (!strcmp(parser, PLAYER->current_location->exits[i].passage->tags[j]))
-            {
-                locations_with_same_tag[k++] = &(PLAYER->current_location->exits[i]);
-                break;
-            }
-        }
+        if (bool_item_matches_parser(PLAYER->current_location->exits[i].passage, parser))
+            locations_with_same_tag[j++] = &(PLAYER->current_location->exits[i]);
     }
 
     return locations_with_same_tag;
+}
+
+static int bool_location_matches_parser(const Location* location, const char* parser)
+{
+    int i;
+    for (i = 0; i < NBR_TAGS; ++i)
+    {
+        if (!location->tags[i])
+            return 0;
+
+        /* TODO: Make so there's no need for this trick, maybe with a get_exit() function instead of directly looking at the exit variable */
+        /* If you exit the building */
+        if (location->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+        {
+            /* You must not use "go [current building]" but you can use the tag of the outside location (which is the first of the building's exits) */
+            if (!strcmp(parser, location->exits[0].to->tags[1]))
+                return 1;
+        }
+        else if (!strcmp(parser, location->tags[i]))
+            return 1;
+    }
+    return 0;
 }
 

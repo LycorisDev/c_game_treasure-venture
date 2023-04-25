@@ -3,6 +3,8 @@
 /* Declared as extern in ../headers/game.h, included in ../headers/characters.h */
 Character list_characters[NBR_CHARACTERS];
 
+static int bool_character_matches_parser(const Character* character, const char* parser);
+
 void populate_list_characters(void)
 {
     memset(list_characters, 0, NBR_CHARACTERS * sizeof(Character));
@@ -29,29 +31,34 @@ void populate_list_characters(void)
 
 Character** retrieve_characters_by_parser_from_current_location(const char* parser)
 {
-    int i, j, k;
+    int i, j;
     Character** characters_with_same_tag = calloc(NBR_CHARACTERS, sizeof(Character*));
     if (!characters_with_same_tag)
         return NULL;
 
-    for (i = 0, k = 0; i < NBR_CHARACTERS; ++i)
+    for (i = 0, j = 0; i < NBR_CHARACTERS; ++i)
     {
         if (!PLAYER->current_location->characters[i])
             break;
 
-        for (j = 1; j < NBR_TAGS; ++j)
-        {
-            if (!PLAYER->current_location->characters[i]->tags[j])
-                break;
-
-            if (!strcmp(parser, PLAYER->current_location->characters[i]->tags[j]))
-            {
-                characters_with_same_tag[k++] = PLAYER->current_location->characters[i];
-                break;
-            }
-        }
+        if (bool_character_matches_parser(PLAYER->current_location->characters[i], parser))
+            characters_with_same_tag[j++] = PLAYER->current_location->characters[i];
     }
 
     return characters_with_same_tag;
+}
+
+static int bool_character_matches_parser(const Character* character, const char* parser)
+{
+    int i;
+    for (i = 0; i < NBR_TAGS; ++i)
+    {
+        if (!character->tags[i])
+            return 0;
+
+        if (!strcmp(parser, character->tags[i]))
+            return 1;
+    }
+    return 0;
 }
 

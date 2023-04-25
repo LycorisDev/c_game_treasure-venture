@@ -68,6 +68,12 @@ void parse_yes_no(void)
     return;
 }
 
+int get_available_length_in_string(const int max_length, const char* str)
+{
+    int len_cat = max_length - strlen(str);
+    return len_cat < 0 ? 0 : len_cat;
+}
+
 static void reset_parser(void)
 {
     memset(parser, 0, sizeof(parser));

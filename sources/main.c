@@ -74,26 +74,31 @@ void add_output(const char* format, ...)
         if (format[i] == '\0')
             break;
 
+        /* Non-formatted */
         if (format[i] != '%')
-            text[j++] = format[i];
-        else
         {
-            ++i;
+            text[j++] = format[i];
+            continue;
+        }
 
-            if (format[i] == '%')
-            {
-                text[j++] = format[i];
-            }
-            else if (format[i] == 's')
-            {
-                tmp = va_arg(args, const char*);
-                strcat(text, tmp);
-                j += strlen(tmp);
-            }
-            else if (format[i] == 'd')
-            {
-               j = output_int(va_arg(args, int), text, j);
-            }
+        ++i;
+
+        /* Percentage sign */
+        if (format[i] == '%')
+        {
+            text[j++] = format[i];
+        }
+        /* String */
+        else if (format[i] == 's')
+        {
+            tmp = va_arg(args, const char*);
+            strncat(text, tmp, get_available_length_in_string(max_len, text));
+            j += strlen(tmp);
+        }
+        /* Integer */
+        else if (format[i] == 'd')
+        {
+            j = output_int(va_arg(args, int), text, j);
         }
     }
 

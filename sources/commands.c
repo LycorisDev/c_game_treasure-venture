@@ -14,186 +14,90 @@
 /* Declared as extern in ../headers/commands.h */
 Command command;
 
-static void display_commands(void);
+static void reset_command_elements(void);
+static void set_command_element(void* element, const int element_size, const int parser_start_index, const int parser_end_index);
+static void execute_action(void);
 
-void parse_game_command(void)
+void execute_game_command(void)
 {
-    int i, j, parser_matches_with_lexicon = 1, index_preposition = 0, index_stop_matching = -1, max = nbr_words_in_parser;
-    char object_1[LENGTH_WORD] = {0}, object_2[LENGTH_WORD] = {0}, object_3[LENGTH_WORD] = {0};
-    char target_1[LENGTH_WORD] = {0}, target_2[LENGTH_WORD] = {0}, target_3[LENGTH_WORD] = {0};
-    memset(command.verb, 0, sizeof(command.verb));
-    memset(command.object, 0, sizeof(command.object));
-    memset(command.preposition, 0, sizeof(command.preposition));
-    memset(command.target, 0, sizeof(command.target));
+    int i;
+    int command_word_length = nbr_words_in_parser;
+    int verb_index = 0, object_end_index = -1, preposition_index = -1, target_start_index = -1;
 
-    if (parser[0])
+    reset_command_elements();
+
+    for (i = 0; i < nbr_words_in_parser; ++i)
     {
-        for (i = 0; i < nbr_words_in_parser; ++i)
+        if (!bool_word_is_in_lexicon(parser[i]))
         {
-            for (j = 0; j < NBR_WORDS; ++j)
-            {
-                if (!list_lexicon[j][0])
-                {
-                    parser_matches_with_lexicon = 0;
-                    break;
-                }
-
-                if (!strcmp(parser[i], list_lexicon[j]))
-                {
-                    if (index_preposition == 0 && !strcmp(parser[i], "on"))
-                        index_preposition = i >= 2 && i <= 4 ? i : -1;
-                    break;
-                }
-            }
-
-            if (!parser_matches_with_lexicon)
-            {
-                add_output("\t['%s' was not recognized.]\n\n", parser[i]);
-                index_stop_matching = i;
-                break;
-            }
+            add_output("\t['%s' was not recognized.]\n\n", parser[i]);
+            command_word_length = i;
+            break;
         }
 
-        max = index_stop_matching == -1 ? (nbr_words_in_parser - 1) : index_stop_matching;
+        if (preposition_index != -1)
+            continue;
 
-        if (index_preposition == 2)
-        {
-            if (max >= 0)
-            {
-                memcpy(command.verb, parser[0], LENGTH_WORD);
-                if (max >= 1)
-                {
-                    memcpy(object_1, parser[1], LENGTH_WORD);
-                    if (max >= 2)
-                    {
-                        memcpy(command.preposition, parser[2], LENGTH_WORD);
-                        if (max >= 3)
-                        {
-                            memcpy(target_1, parser[3], LENGTH_WORD);
-                            if (max >= 4)
-                            {
-                                memcpy(target_2, parser[4], LENGTH_WORD);
-                                if (max >= 5)
-                                    memcpy(target_3, parser[5], LENGTH_WORD);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else if (index_preposition == 3)
-        {
-            if (max >= 0)
-            {
-                memcpy(command.verb, parser[0], LENGTH_WORD);
-                if (max >= 1)
-                {
-                    memcpy(object_1, parser[1], LENGTH_WORD);
-                    if (max >= 2)
-                    {
-                        memcpy(object_2, parser[2], LENGTH_WORD);
-                        if (max >= 3)
-                        {
-                            memcpy(command.preposition, parser[3], LENGTH_WORD);
-                            if (max >= 4)
-                            {
-                                memcpy(target_1, parser[4], LENGTH_WORD);
-                                if (max >= 5)
-                                {
-                                    memcpy(target_2, parser[5], LENGTH_WORD);
-                                    if (max >= 6)
-                                        memcpy(target_3, parser[6], LENGTH_WORD);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (max >= 0)
-            {
-                memcpy(command.verb, parser[0], LENGTH_WORD);
-                if (max >= 1)
-                {
-                    memcpy(object_1, parser[1], LENGTH_WORD);
-                    if (max >= 2)
-                    {
-                        memcpy(object_2, parser[2], LENGTH_WORD);
-                        if (max >= 3)
-                        {
-                            memcpy(object_3, parser[3], LENGTH_WORD);
-                            if (max >= 4)
-                            {
-                                memcpy(command.preposition, parser[4], LENGTH_WORD);
-                                if (max >= 5)
-                                {
-                                    memcpy(target_1, parser[5], LENGTH_WORD);
-                                    if (max >= 6)
-                                    {
-                                        memcpy(target_2, parser[6], LENGTH_WORD);
-                                        if (max >= 7)
-                                            memcpy(target_3, parser[7], LENGTH_WORD);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        object_end_index = i;
 
-        if (*object_1)
+        if (bool_word_is_preposition(parser[i]))
         {
-            if (!*object_2)
-            {
-                memcpy(command.object, object_1, BIG_LENGTH_WORD);
-            }
-            else if (!*object_3)
-            {
-                memcpy(command.object, object_1, BIG_LENGTH_WORD);
-                strcat(command.object, " ");
-                strcat(command.object, object_2);
-            }
-            else
-            {
-                memcpy(command.object, object_1, BIG_LENGTH_WORD);
-                strcat(command.object, " ");
-                strcat(command.object, object_2);
-                strcat(command.object, " ");
-                strcat(command.object, object_3);
-            }
-        }
-
-        if (*target_1)
-        {
-            if (!*target_2)
-            {
-                memcpy(command.target, target_1, BIG_LENGTH_WORD);
-            }
-            else if (!*target_3)
-            {
-                memcpy(command.target, target_1, BIG_LENGTH_WORD);
-                strcat(command.target, " ");
-                strcat(command.target, target_2);
-            }
-            else
-            {
-                memcpy(command.target, target_1, BIG_LENGTH_WORD);
-                strcat(command.target, " ");
-                strcat(command.target, target_2);
-                strcat(command.target, " ");
-                strcat(command.target, target_3);
-            }
+            object_end_index = i - 1;
+            preposition_index = i;
+            target_start_index = i + 1;
         }
     }
 
-    if (!parser[0])
+    if (!command_word_length)
     {
-        display_commands();
+        display_game_commands();
+        return;
     }
-    else if (!strcmp(command.verb, "play"))
+
+    set_command_element(command.verb, sizeof(command.verb), verb_index, verb_index);
+    set_command_element(command.object, sizeof(command.object), verb_index + 1, object_end_index);
+    set_command_element(command.preposition, sizeof(command.preposition), preposition_index, preposition_index);
+    set_command_element(command.target, sizeof(command.target), target_start_index, command_word_length - 1);
+
+    execute_action();
+    return;
+}
+
+void display_game_commands(void)
+{
+    add_output("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
+    add_output("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
+    add_output("\n");
+    return;
+}
+
+static void reset_command_elements(void)
+{
+    memset(&command, 0, sizeof(command));
+    return;
+}
+
+static void set_command_element(void* element, const int element_size, const int parser_start_index, const int parser_end_index)
+{
+    int i = parser_start_index;
+    const int max_len = element_size - 1;
+
+    if (parser_start_index > parser_end_index || parser_start_index == -1 || parser_end_index == -1)
+        return;
+
+    memcpy(element, parser[i++], max_len);
+
+    while (i <= parser_end_index)
+    {
+        strncat(element, " ", get_available_length_in_string(max_len, element));
+        strncat(element, parser[i++], get_available_length_in_string(max_len, element));
+    }
+    return;
+}
+
+static void execute_action(void)
+{
+    if (!strcmp(command.verb, "play"))
     {
         execute_play();
     }
@@ -231,16 +135,7 @@ void parse_game_command(void)
     }
     else
     {
-        display_commands();
+        display_game_commands();
     }
-    return;
-}
-
-static void display_commands(void)
-{
-    add_output("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
-    add_output("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
-    add_output("\n");
-    return;
 }
 

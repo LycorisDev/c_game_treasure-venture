@@ -57,3 +57,22 @@ void populate_list_lexicon(void)
     return;
 }
 
+int bool_word_is_in_lexicon(const char* word)
+{
+    int i;
+    for (i = 0; i < NBR_WORDS; ++i)
+    {
+        if (!list_lexicon[i][0])
+            return 0;
+
+        if (!strcmp(word, list_lexicon[i]))
+            return 1;
+    }
+    return 0;
+}
+
+int bool_word_is_preposition(const char* word)
+{
+    return !strcmp(word, "on");
+}
+

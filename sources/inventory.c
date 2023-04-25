@@ -4,9 +4,10 @@
 #include "../headers/characters.h"
 #include "../headers/items.h"
 
+static void display_inventory(void);
+
 void execute_inventory(void)
 {
-    int i;
     Item** items_with_same_tag = NULL;
 
     if (!PLAYER->inventory[0])
@@ -15,16 +16,7 @@ void execute_inventory(void)
     }
     else if (!*command.object)
     {
-        add_output("--------------------\n");
-        add_output("INVENTORY\n\n");
-        add_output("\t['Inventory [item]' to see the detailed description of an item.]\n\n");
-        for (i = 0; i < NBR_ITEMS; ++i)
-        {
-            if (!PLAYER->inventory[i])
-                break;
-            add_output("- [%s]\n\t%s\n", PLAYER->inventory[i]->tags[0], PLAYER->inventory[i]->description_brief);
-        }
-        add_output("--------------------\n\n");
+        display_inventory();
     }
     else
     {
@@ -39,6 +31,22 @@ void execute_inventory(void)
     }
 
     free(items_with_same_tag);
+    return;
+}
+
+static void display_inventory(void)
+{
+    int i;
+    add_output("--------------------\n");
+    add_output("INVENTORY\n\n");
+    add_output("\t['Inventory [item]' to see the detailed description of an item.]\n\n");
+    for (i = 0; i < NBR_ITEMS; ++i)
+    {
+        if (!PLAYER->inventory[i])
+            break;
+        add_output("- [%s]\n\t%s\n", PLAYER->inventory[i]->tags[0], PLAYER->inventory[i]->description_brief);
+    }
+    add_output("--------------------\n\n");
     return;
 }
 
