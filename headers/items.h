@@ -18,9 +18,9 @@
 #include "events.h"
 
 void populate_list_items(void);
-Item** retrieve_items_by_parser_from_current_location(const char* parser);
-Item** retrieve_items_by_parser_from_inventory(const char* parser);
-Item** retrieve_takeable_items_by_parser_from_current_location(const char* parser);
+void display_item_suggestions(Item** item_collection, const char* command);
+Item** retrieve_items(Item** item_collection, const char* parser);
+Item** retrieve_takeable_items(Item** item_collection, const char* parser);
 int bool_item_matches_parser(const Item* item, const char* parser);
 
 #endif

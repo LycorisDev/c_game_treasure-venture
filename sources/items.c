@@ -1,9 +1,8 @@
 #include "../headers/items.h"
+#include "../headers/main.h"
 
 /* Declared as extern in ../headers/game.h, included in ../headers/items.h */
 Item list_items[NBR_ITEMS];
-
-int bool_item_matches_parser(const Item* item, const char* parser);
 
 void populate_list_items(void)
 {
@@ -131,64 +130,66 @@ void populate_list_items(void)
     return;
 }
 
-Item** retrieve_items_by_parser_from_current_location(const char* parser)
+void display_item_suggestions(Item** item_collection, const char* command)
 {
-    int i, j;
-    Item** items_with_same_tag = calloc(NBR_ITEMS, sizeof(Item*));
-    if (!items_with_same_tag)
-        return NULL;
+    int i;
 
-    for (i = 0, j = 0; i < NBR_ITEMS; ++i)
+    if (!strcmp(command, "look"))
+        add_output("\t[Try 'look around']\n\n");
+
+    if (!item_collection[0])
+        return;
+
+    add_output("\t[Try:]\n");
+    for (i = 0; i < NBR_ITEMS; ++i)
     {
-        if (!PLAYER->current_location->items[i])
+        if (!item_collection[i])
             break;
-
-        if (bool_item_matches_parser(PLAYER->current_location->items[i], parser))
-            items_with_same_tag[j++] = PLAYER->current_location->items[i];
+        add_output("\t\t['%s %s'.]\n", command, item_collection[i]->tags[0]);
     }
-
-    return items_with_same_tag;
+    add_output("\n");
+    return;
 }
 
-Item** retrieve_items_by_parser_from_inventory(const char* parser)
+Item** retrieve_items(Item** item_collection, const char* parser)
 {
     int i, j;
-    Item** items_with_same_tag = calloc(NBR_ITEMS, sizeof(Item*));
-    if (!items_with_same_tag)
+    Item** items = calloc(NBR_ITEMS, sizeof(Item*));
+    if (!items)
         return NULL;
 
     for (i = 0, j = 0; i < NBR_ITEMS; ++i)
     {
-        if (!PLAYER->inventory[i])
+        if (!item_collection[i])
             break;
 
-        if (bool_item_matches_parser(PLAYER->inventory[i], parser))
-            items_with_same_tag[j++] = PLAYER->inventory[i];
+        if (!parser || bool_item_matches_parser(item_collection[i], parser))
+            items[j++] = item_collection[i];
     }
 
-    return items_with_same_tag;
+    return items;
 }
 
-Item** retrieve_takeable_items_by_parser_from_current_location(const char* parser)
+Item** retrieve_takeable_items(Item** item_collection, const char* parser)
 {
     int i, j;
-    Item** items_with_same_tag = calloc(NBR_ITEMS, sizeof(Item*));
-    if (!items_with_same_tag)
+    Item** takeable_items = calloc(NBR_ITEMS, sizeof(Item*));
+    if (!takeable_items)
         return NULL;
 
     for (i = 0, j = 0; i < NBR_ITEMS; ++i)
     {
-        if (!PLAYER->current_location->items[i])
+        if (!item_collection[i])
             break;
 
-        if (!PLAYER->current_location->items[i]->can_be_taken)
+        if (!item_collection[i]->can_be_taken)
             continue;
 
-        if (bool_item_matches_parser(PLAYER->current_location->items[i], parser))
-            items_with_same_tag[j++] = PLAYER->current_location->items[i];
+        if (!parser || bool_item_matches_parser(item_collection[i], parser))
+            takeable_items[j++] = item_collection[i];
     }
 
-    return items_with_same_tag;
+    return takeable_items;
 }
 
 int bool_item_matches_parser(const Item* item, const char* parser)

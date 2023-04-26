@@ -163,42 +163,42 @@ void describe_location(const Location* location)
     return;
 }
 
-Exit** retrieve_locations_by_parser_from_current_location(const char* parser)
+Exit** retrieve_locations(Location* location, const char* parser)
 {
     int i, j;
-    Exit** locations_with_same_tag = calloc(NBR_LOCATIONS, sizeof(Exit*));
-    if (!locations_with_same_tag)
+    Exit** locations = calloc(NBR_LOCATIONS, sizeof(Exit*));
+    if (!locations)
         return NULL;
 
     for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
     {
-        if (!PLAYER->current_location->exits[i].to)
+        if (!location->exits[i].to)
             break;
 
-        if (bool_location_matches_parser(PLAYER->current_location->exits[i].to, parser))
-            locations_with_same_tag[j++] = &(PLAYER->current_location->exits[i]);
+        if (bool_location_matches_parser(location->exits[i].to, parser))
+            locations[j++] = &(location->exits[i]);
     }
 
-    return locations_with_same_tag;
+    return locations;
 }
 
-Exit** retrieve_locations_by_parser_from_passage_items_in_current_location(const char* parser)
+Exit** retrieve_locations_with_passage_item(Location* location, const char* parser)
 {
     int i, j;
-    Exit** locations_with_same_tag = calloc(NBR_LOCATIONS, sizeof(Exit*));
-    if (!locations_with_same_tag)
+    Exit** exits = calloc(NBR_LOCATIONS, sizeof(Exit*));
+    if (!exits)
         return NULL;
 
     for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
     {
-        if (!PLAYER->current_location->exits[i].to || !PLAYER->current_location->exits[i].passage->access)
+        if (!location->exits[i].to || !location->exits[i].passage->access)
             break;
 
-        if (bool_item_matches_parser(PLAYER->current_location->exits[i].passage, parser))
-            locations_with_same_tag[j++] = &(PLAYER->current_location->exits[i]);
+        if (bool_item_matches_parser(location->exits[i].passage, parser))
+            exits[j++] = &(location->exits[i]);
     }
 
-    return locations_with_same_tag;
+    return exits;
 }
 
 static int bool_location_matches_parser(const Location* location, const char* parser)

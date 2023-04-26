@@ -16,116 +16,103 @@ void execute_use(void)
     if (!PLAYER->inventory[0] && !PLAYER->current_location->items[0])
     {
         add_output("There is nothing for you to use.\n\n");
+        return;
     }
-    else
-    {
-        if (*command.object)
-        {
-            items_with_same_tag_in_inventory = retrieve_items_by_parser_from_inventory(command.object);
-            items_with_same_tag_in_current_location = retrieve_items_by_parser_from_current_location(command.object);
 
-            if (!items_with_same_tag_in_inventory[0] && !items_with_same_tag_in_current_location[0])
-                memset(command.object, 0, sizeof(command.object));
-            else if (items_with_same_tag_in_inventory[0] && !items_with_same_tag_in_current_location[0])
+    if (*command.object)
+    {
+        items_with_same_tag_in_inventory = retrieve_items(PLAYER->inventory, command.object);
+        items_with_same_tag_in_current_location = retrieve_items(PLAYER->current_location->items, command.object);
+
+        if (!items_with_same_tag_in_inventory[0] && !items_with_same_tag_in_current_location[0])
+            memset(command.object, 0, sizeof(command.object));
+        else if (items_with_same_tag_in_inventory[0] && !items_with_same_tag_in_current_location[0])
+        {
+            if (!items_with_same_tag_in_inventory[1])
             {
-                if (!items_with_same_tag_in_inventory[1])
-                {
-                    used_item = items_with_same_tag_in_inventory[0];
-                }
-                else
-                {
-                    add_output("There is more than one item in your inventory for which this tag works.\n");
-                }
-            }
-            else if (!items_with_same_tag_in_inventory[0] && items_with_same_tag_in_current_location[0])
-            {
-                if (!items_with_same_tag_in_current_location[1])
-                {
-                    used_item = items_with_same_tag_in_current_location[0];
-                }
-                else
-                {
-                    add_output("There is more than one item in your vicinity for which this tag works.\n");
-                }
+                used_item = items_with_same_tag_in_inventory[0];
             }
             else
             {
-                add_output("Your inventory and vicinity both included, there is more than one item for which this tag works.\n");
+                add_output("There is more than one item in your inventory for which this tag works.\n");
             }
+        }
+        else if (!items_with_same_tag_in_inventory[0] && items_with_same_tag_in_current_location[0])
+        {
+            if (!items_with_same_tag_in_current_location[1])
+            {
+                used_item = items_with_same_tag_in_current_location[0];
+            }
+            else
+            {
+                add_output("There is more than one item in your vicinity for which this tag works.\n");
+            }
+        }
+        else
+        {
+            add_output("Your inventory and vicinity both included, there is more than one item for which this tag works.\n");
+        }
 
-            if (!used_item)
+        if (!used_item)
+        {
+            memset(command.object, 0, sizeof(command.object));
+        }
+        else if (used_item->access)
+        {
+            for (i = 0; i < NBR_LOCATIONS; ++i)
             {
-                memset(command.object, 0, sizeof(command.object));
-            }
-            else if (used_item->access)
-            {
-                for (i = 0; i < NBR_LOCATIONS; ++i)
+                if (!PLAYER->current_location->exits[i].to)
                 {
-                    if (!PLAYER->current_location->exits[i].to)
+                    memset(command.object, 0, sizeof(command.object));
+                    break;
+                }
+                else if (PLAYER->current_location->exits[i].passage == used_item)
+                {
+                    if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
+                    {
+                        add_output("The %s %s locked.\n\n", used_item->is_singular ? "door" : "doors", used_item->is_singular ? "is" : "are");
+                    }
+                    else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
+                    {
+                        PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
+                        add_output("You close the %s.\n\n", used_item->is_singular ? "door" : "doors");
+                    }
+                    else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
+                    {
+                        PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
+                        add_output("You open the %s.\n\n", used_item->is_singular ? "door" : "doors");
+                    }
+                    else
                     {
                         memset(command.object, 0, sizeof(command.object));
-                        break;
                     }
-                    else if (PLAYER->current_location->exits[i].passage == used_item)
-                    {
-                        if (PLAYER->current_location->exits[i].passage->access == ACCESS_LOCKED)
-                        {
-                            add_output("The %s %s locked.\n\n", used_item->is_singular ? "door" : "doors", used_item->is_singular ? "is" : "are");
-                        }
-                        else if (PLAYER->current_location->exits[i].passage->access == ACCESS_OPEN)
-                        {
-                            PLAYER->current_location->exits[i].passage->access = ACCESS_CLOSED;
-                            add_output("You close the %s.\n\n", used_item->is_singular ? "door" : "doors");
-                        }
-                        else if (PLAYER->current_location->exits[i].passage->access == ACCESS_CLOSED)
-                        {
-                            PLAYER->current_location->exits[i].passage->access = ACCESS_OPEN;
-                            add_output("You open the %s.\n\n", used_item->is_singular ? "door" : "doors");
-                        }
-                        else
-                        {
-                            memset(command.object, 0, sizeof(command.object));
-                        }
-                        break;
-                    }
+                    break;
                 }
             }
-            else if (used_item->requires_target_for_use)
+        }
+        else if (used_item->requires_target_for_use)
+        {
+            if (strcmp(command.preposition, "on") || !*command.target)
             {
-                if (strcmp(command.preposition, "on") || !*command.target)
-                {
-                    add_output("\t[The %s %s a target. Try specifying on who or what you want to use %s.]\n\n", 
-                            command.object, used_item->is_singular ? "requires" : "require", used_item->is_singular ? "it" : "them");
-                }
-                else
-                {
-                    use_item_on_target(used_item);
-                }
+                add_output("\t[The %s %s a target. Try specifying on who or what you want to use %s.]\n\n", 
+                        command.object, used_item->is_singular ? "requires" : "require", used_item->is_singular ? "it" : "them");
             }
             else
             {
-                add_output("%s ", used_item->description_brief);
-                add_output("The %s %s seem to be of much use.\n\n", used_item->tags[1], used_item->is_singular ? "doesn't" : "don't");
+                use_item_on_target(used_item);
             }
+        }
+        else
+        {
+            add_output("%s ", used_item->description_brief);
+            add_output("The %s %s seem to be of much use.\n\n", used_item->tags[1], used_item->is_singular ? "doesn't" : "don't");
         }
     }
 
     if (!*command.object)
     {
-        add_output("\t[Try:]\n");
-        for (i = 0; i < NBR_ITEMS; ++i)
-        {
-            if (!PLAYER->inventory[i])
-                break;
-            add_output("\t\t['Use %s'.]\n", PLAYER->inventory[i]->tags[0]);
-        }
-        for (i = 0; i < NBR_ITEMS; ++i)
-        {
-            if (!PLAYER->current_location->items[i])
-                break;
-            add_output("\t\t['Use %s'.]\n", PLAYER->current_location->items[i]->tags[0]);
-        }
-        add_output("\n");
+        display_item_suggestions(PLAYER->inventory, "use");
+        display_item_suggestions(PLAYER->current_location->items, "use");
     }
 
     free(items_with_same_tag_in_inventory);
@@ -136,8 +123,8 @@ void execute_use(void)
 static void use_item_on_target(const Item* used_item)
 {
     int is_target_a_character = 0;
-    Item** items_with_same_tag_in_current_location = retrieve_items_by_parser_from_current_location(command.target);
-    Character** characters_with_same_tag_in_current_location = retrieve_characters_by_parser_from_current_location(command.target);
+    Item** items_with_same_tag_in_current_location = retrieve_items(PLAYER->current_location->items, command.target);
+    Character** characters_with_same_tag_in_current_location = retrieve_characters(PLAYER->current_location->characters, command.target);
     /* Can be either "Item*" or "Character*": */
     void* target = NULL;
 

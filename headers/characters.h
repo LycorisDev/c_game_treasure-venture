@@ -17,7 +17,8 @@
 #include "game.h"
 
 void populate_list_characters(void);
-Character** retrieve_characters_by_parser_from_current_location(const char* parser);
+void display_character_suggestions(Character** character_collection, const char* command);
+Character** retrieve_characters(Character** character_collection, const char* parser);
 
 #endif
 

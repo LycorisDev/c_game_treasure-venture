@@ -4,11 +4,11 @@
 #include "../headers/characters.h"
 #include "../headers/items.h"
 
-static void display_inventory(void);
+static void display_inventory(Item** inventory);
 
 void execute_inventory(void)
 {
-    Item** items_with_same_tag = NULL;
+    Item** items = NULL;
 
     if (!PLAYER->inventory[0])
     {
@@ -16,25 +16,25 @@ void execute_inventory(void)
     }
     else if (!*command.object)
     {
-        display_inventory();
+        display_inventory(PLAYER->inventory);
     }
     else
     {
-        items_with_same_tag = retrieve_items_by_parser_from_inventory(command.object);
+        items = retrieve_items(PLAYER->inventory, command.object);
 
-        if (!items_with_same_tag || !items_with_same_tag[0])
+        if (!items || !items[0])
             add_output("You have no such item on you. Type 'inventory' to see your items.\n\n");
-        else if (!items_with_same_tag[1])
-            add_output("%s\n\n", items_with_same_tag[0]->description_detailed);
+        else if (!items[1])
+            add_output("%s\n\n", items[0]->description_detailed);
         else
             add_output("There is more than one item in your inventory for which this tag works.\n\n");
     }
 
-    free(items_with_same_tag);
+    free(items);
     return;
 }
 
-static void display_inventory(void)
+static void display_inventory(Item** inventory)
 {
     int i;
     add_output("--------------------\n");
@@ -42,9 +42,9 @@ static void display_inventory(void)
     add_output("\t['Inventory [item]' to see the detailed description of an item.]\n\n");
     for (i = 0; i < NBR_ITEMS; ++i)
     {
-        if (!PLAYER->inventory[i])
+        if (!inventory[i])
             break;
-        add_output("- [%s]\n\t%s\n", PLAYER->inventory[i]->tags[0], PLAYER->inventory[i]->description_brief);
+        add_output("- [%s]\n\t%s\n", inventory[i]->tags[0], inventory[i]->description_brief);
     }
     add_output("--------------------\n\n");
     return;

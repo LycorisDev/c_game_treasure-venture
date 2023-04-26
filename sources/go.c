@@ -177,11 +177,11 @@ void execute_go(void)
             }
             else
             {
-                locations_with_same_tag_from_current_location = retrieve_locations_by_parser_from_current_location(command.object);
+                locations_with_same_tag_from_current_location = retrieve_locations(PLAYER->current_location, command.object);
 
                 if (!locations_with_same_tag_from_current_location || !locations_with_same_tag_from_current_location[0])
                 {
-                    locations_with_same_tag_from_passage_items_in_current_location = retrieve_locations_by_parser_from_passage_items_in_current_location(command.object);
+                    locations_with_same_tag_from_passage_items_in_current_location = retrieve_locations_with_passage_item(PLAYER->current_location, command.object);
 
                     if (!locations_with_same_tag_from_passage_items_in_current_location || !locations_with_same_tag_from_passage_items_in_current_location[0])
                         memset(command.object, 0, sizeof(command.object));

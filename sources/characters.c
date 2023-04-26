@@ -1,4 +1,5 @@
 #include "../headers/characters.h"
+#include "../headers/main.h"
 
 /* Declared as extern in ../headers/game.h, included in ../headers/characters.h */
 Character list_characters[NBR_CHARACTERS];
@@ -29,7 +30,28 @@ void populate_list_characters(void)
     return;
 }
 
-Character** retrieve_characters_by_parser_from_current_location(const char* parser)
+void display_character_suggestions(Character** character_collection, const char* command)
+{
+    int i;
+
+    if (!character_collection[0] || character_collection[0] == PLAYER)
+        return;
+
+    add_output("\t[Try:]\n");
+
+    for (i = 0; i < NBR_CHARACTERS; ++i)
+    {
+        if (!character_collection[i])
+            break;
+        if (character_collection[i] == PLAYER)
+            continue;
+        add_output("\t\t['%s %s'.]\n", command, character_collection[i]->tags[0]);
+    }
+    add_output("\n");
+    return;
+}
+
+Character** retrieve_characters(Character** character_collection, const char* parser)
 {
     int i, j;
     Character** characters_with_same_tag = calloc(NBR_CHARACTERS, sizeof(Character*));
@@ -38,11 +60,11 @@ Character** retrieve_characters_by_parser_from_current_location(const char* pars
 
     for (i = 0, j = 0; i < NBR_CHARACTERS; ++i)
     {
-        if (!PLAYER->current_location->characters[i])
+        if (!character_collection[i])
             break;
 
-        if (bool_character_matches_parser(PLAYER->current_location->characters[i], parser))
-            characters_with_same_tag[j++] = PLAYER->current_location->characters[i];
+        if (!parser || bool_character_matches_parser(character_collection[i], parser))
+            characters_with_same_tag[j++] = character_collection[i];
     }
 
     return characters_with_same_tag;
