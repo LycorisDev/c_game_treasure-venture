@@ -54,8 +54,8 @@ void display_character_suggestions(Character** character_collection, const char*
 Character** retrieve_characters(Character** character_collection, const char* parser)
 {
     int i, j;
-    Character** characters_with_same_tag = calloc(NBR_CHARACTERS, sizeof(Character*));
-    if (!characters_with_same_tag)
+    Character** characters = calloc(NBR_CHARACTERS, sizeof(Character*));
+    if (!characters)
         return NULL;
 
     for (i = 0, j = 0; i < NBR_CHARACTERS; ++i)
@@ -64,10 +64,10 @@ Character** retrieve_characters(Character** character_collection, const char* pa
             break;
 
         if (!parser || bool_character_matches_parser(character_collection[i], parser))
-            characters_with_same_tag[j++] = character_collection[i];
+            characters[j++] = character_collection[i];
     }
 
-    return characters_with_same_tag;
+    return characters;
 }
 
 static int bool_character_matches_parser(const Character* character, const char* parser)

@@ -163,7 +163,40 @@ void describe_location(const Location* location)
     return;
 }
 
-Exit** retrieve_locations(Location* location, const char* parser)
+void display_location_suggestions(Location* origin)
+{
+    int i;
+    int bool_ins_out_already_printed = 0;
+
+    if (!origin->exits[0].to)
+        return;
+
+    add_output("\t[Try:]\n");
+
+    for (i = 0; i < NBR_LOCATIONS; ++i)
+    {
+        if (!origin->exits[i].to)
+            break;
+
+        if (origin->exits[i].to->type != LOCATION_TYPE_BUILDING)
+        {
+            add_output("\t\t['Go %s'.]\n", origin->exits[i].to->tags[0]);
+            continue;
+        }
+        else if (bool_ins_out_already_printed)
+            continue;
+
+        bool_ins_out_already_printed = 1;
+        if (origin->type == LOCATION_TYPE_OUTSIDE)
+            add_output("\t\t['Go inside'.]\n");
+        else
+            add_output("\t\t['Go outside'.]\n");
+    }
+    add_output("\n");
+    return;
+}
+
+Exit** retrieve_locations(Location* origin, const char* parser)
 {
     int i, j;
     Exit** locations = calloc(NBR_LOCATIONS, sizeof(Exit*));
@@ -172,17 +205,17 @@ Exit** retrieve_locations(Location* location, const char* parser)
 
     for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
     {
-        if (!location->exits[i].to)
+        if (!origin->exits[i].to)
             break;
 
-        if (bool_location_matches_parser(location->exits[i].to, parser))
-            locations[j++] = &(location->exits[i]);
+        if (bool_location_matches_parser(origin->exits[i].to, parser))
+            locations[j++] = &(origin->exits[i]);
     }
 
     return locations;
 }
 
-Exit** retrieve_locations_with_passage_item(Location* location, const char* parser)
+Exit** retrieve_locations_with_passage_item(Location* origin, const char* parser)
 {
     int i, j;
     Exit** exits = calloc(NBR_LOCATIONS, sizeof(Exit*));
@@ -191,33 +224,33 @@ Exit** retrieve_locations_with_passage_item(Location* location, const char* pars
 
     for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
     {
-        if (!location->exits[i].to || !location->exits[i].passage->access)
+        if (!origin->exits[i].to || !origin->exits[i].passage->access)
             break;
 
-        if (bool_item_matches_parser(location->exits[i].passage, parser))
-            exits[j++] = &(location->exits[i]);
+        if (bool_item_matches_parser(origin->exits[i].passage, parser))
+            exits[j++] = &(origin->exits[i]);
     }
 
     return exits;
 }
 
-static int bool_location_matches_parser(const Location* location, const char* parser)
+static int bool_location_matches_parser(const Location* origin, const char* parser)
 {
     int i;
     for (i = 0; i < NBR_TAGS; ++i)
     {
-        if (!location->tags[i])
+        if (!origin->tags[i])
             return 0;
 
         /* TODO: Make so there's no need for this trick, maybe with a get_exit() function instead of directly looking at the exit variable */
         /* If you exit the building */
-        if (location->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+        if (origin->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
         {
             /* You must not use "go [current building]" but you can use the tag of the outside location (which is the first of the building's exits) */
-            if (!strcmp(parser, location->exits[0].to->tags[1]))
+            if (!strcmp(parser, origin->exits[0].to->tags[1]))
                 return 1;
         }
-        else if (!strcmp(parser, location->tags[i]))
+        else if (!strcmp(parser, origin->tags[i]))
             return 1;
     }
     return 0;

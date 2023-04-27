@@ -6,263 +6,238 @@
 #include "../headers/locations.h"
 #include "../headers/items.h"
 
+/* TODO: This was for debugging purposes, remove it now */
+#include "../headers/output.h"
+
+static void go_inside(void);
+static void go_outside(void);
+static void go_back(void);
+static void go_out(void);
+static void go_tag(void);
+
 static void cross_passage(Exit* exit);
-static int bool_no_access(const Exit* exit);
-static void print_no_access(void);
+
 static int bool_access_locked(const Exit* exit);
 static void print_access_locked(const Exit* exit);
-static int bool_location_full(const Exit* exit);
-static void print_location_full(void);
+static int bool_location_is_full(const Location* location);
+static void print_location_is_full(void);
 
 void execute_go(void)
 {
-    int i, j, k;
-    Exit** locations_with_same_tag_from_current_location = NULL;
-    Exit** locations_with_same_tag_from_passage_items_in_current_location = NULL;
-    /* For "go out": */
-    Exit* accessible_exits[NBR_LOCATIONS] = {0};
-    Exit* locked_exits[NBR_LOCATIONS] = {0};
-
     if (!PLAYER->current_location->exits[0].to)
     {
         add_output("There is nowhere to go.\n\n");
+        return;
     }
-    else
+
+    if (*command.object)
     {
-        if (*command.object)
-        {
-            /* "go inside" if outside of any building */
-            if (!strcmp(command.object, "inside"))
-            {
-                if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                {
-                    if (!PLAYER->current_location->exits[0].to)
-                        add_output("There is nowhere to go.\n\n");
-                    else if (bool_no_access(PLAYER->current_location->exits + 0))
-                        print_no_access();
-                    else if (bool_access_locked(PLAYER->current_location->exits + 0))
-                        print_access_locked(PLAYER->current_location->exits + 0);
-                    else if (bool_location_full(PLAYER->current_location->exits + 0))
-                        print_location_full();
-                    else
-                        cross_passage((PLAYER->current_location->exits + 0));
-                }
-                else
-                    memset(command.object, 0, sizeof(command.object));
-            }
-            /* "go outside" to leave the building */
-            else if (!strcmp(command.object, "outside"))
-            {
-                if (PLAYER->current_location->type == LOCATION_TYPE_ROOM)
-                {
-                    for (i = 0; i < NBR_LOCATIONS; ++i)
-                    {
-                        if (!PLAYER->current_location->exits[i].to)
-                        {
-                            memset(command.object, 0, sizeof(command.object));
-                            break;
-                        }
-                        else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
-                        {
-                            if (bool_no_access(PLAYER->current_location->exits + i))
-                                print_no_access();
-                            else if (bool_access_locked(PLAYER->current_location->exits + i))
-                                print_access_locked(PLAYER->current_location->exits + i);
-                            else if (bool_location_full(PLAYER->current_location->exits + i))
-                                print_location_full();
-                            else
-                                cross_passage((PLAYER->current_location->exits + i));
-                            break;
-                        }
-                    }
-                }
-                else
-                    memset(command.object, 0, sizeof(command.object));
-            }
-            /* "go back" to go to your previous location if possible */
-            else if (!strcmp(command.object, "back"))
-            {
-                if (!PLAYER->previous_location)
-                    memset(command.object, 0, sizeof(command.object));
-                else
-                {
-                    for (i = 0; i < NBR_LOCATIONS; ++i)
-                    {
-                        if (!PLAYER->current_location->exits[i].to)
-                        {
-                            memset(command.object, 0, sizeof(command.object));
-                            break;
-                        }
-                        else if (PLAYER->current_location->exits[i].to == PLAYER->previous_location) 
-                        {
-                            if (bool_no_access(PLAYER->current_location->exits + i))
-                                print_no_access();
-                            else if (bool_access_locked(PLAYER->current_location->exits + i))
-                                print_access_locked(PLAYER->current_location->exits + i);
-                            else if (bool_location_full(PLAYER->current_location->exits + i))
-                                print_location_full();
-                            else
-                                cross_passage((PLAYER->current_location->exits + i));
-                            break;
-                        }
-                        else if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
-                        {
-                            j = 0;
-                            while (PLAYER->current_location->exits[i].to->exits[j].to)
-                            {
-                                if (PLAYER->current_location->exits[i].to->exits[j].to == PLAYER->previous_location)
-                                {
-                                    if (bool_no_access(PLAYER->current_location->exits + i))
-                                        print_no_access();
-                                    else if (bool_access_locked(PLAYER->current_location->exits + i))
-                                        print_access_locked(PLAYER->current_location->exits + i);
-                                    else if (bool_location_full(PLAYER->current_location->exits + i))
-                                        print_location_full();
-                                    else
-                                        cross_passage((PLAYER->current_location->exits + i));
-                                    break;
-                                }
-                                ++j;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            /* "go out" to go to the only exit (if inside of a building) */
-            else if (!strcmp(command.object, "out"))
-            {
-                if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                {
-                    add_output("You are already outside.\n\n");
-                }
-                else
-                {
-                    for (i = 0, j = 0, k = 0; i < NBR_LOCATIONS; ++i)
-                    {
-                        if (!PLAYER->current_location->exits[i].to)
-                            break;
-                        else if (PLAYER->current_location->exits[i].passage->access)
-                        {
-                            if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
-                                accessible_exits[j++] = &(PLAYER->current_location->exits[i]);
-                            else
-                                locked_exits[k++] = &(PLAYER->current_location->exits[i]);
-                        }
-                    }
-
-                    /* There's not even one exit */
-                    if (!j && !k)
-                    {
-                        /* The player should never see this message */
-                        add_output("You cannot get out.\n\n");
-                    }
-                    /* Success: There is only one accessible exit */
-                    else if (j == 1)
-                    {
-                        cross_passage(accessible_exits[0]);
-                    }
-                    /* Almost success: There is only one exit but it is locked */
-                    else if (!j && k == 1)
-                    {
-                        print_access_locked(locked_exits[0]);
-                    }
-                    /* Several accessible and/or locked exits. Which one does the player want? */
-                    else
-                    {
-                        add_output("There is more than one exit. Which one do you want?\n");
-                        memset(command.object, 0, sizeof(command.object));
-                    }
-                }
-            }
-            else
-            {
-                locations_with_same_tag_from_current_location = retrieve_locations(PLAYER->current_location, command.object);
-
-                if (!locations_with_same_tag_from_current_location || !locations_with_same_tag_from_current_location[0])
-                {
-                    locations_with_same_tag_from_passage_items_in_current_location = retrieve_locations_with_passage_item(PLAYER->current_location, command.object);
-
-                    if (!locations_with_same_tag_from_passage_items_in_current_location || !locations_with_same_tag_from_passage_items_in_current_location[0])
-                        memset(command.object, 0, sizeof(command.object));
-                    else if (!locations_with_same_tag_from_passage_items_in_current_location[1])
-                    {
-                        if (bool_no_access(locations_with_same_tag_from_passage_items_in_current_location[0]))
-                            print_no_access();
-                        else if (bool_access_locked(locations_with_same_tag_from_passage_items_in_current_location[0]))
-                            print_access_locked(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                        else if (bool_location_full(locations_with_same_tag_from_passage_items_in_current_location[0]))
-                            print_location_full();
-                        else
-                            cross_passage(locations_with_same_tag_from_passage_items_in_current_location[0]);
-                    }
-                    else
-                    {
-                        add_output("There is more than one passage item in your vicinity for which this tag works.\n");
-                        memset(command.object, 0, sizeof(command.object));
-                    }
-                }
-                else if (!locations_with_same_tag_from_current_location[1])
-                {
-                    if (bool_no_access(locations_with_same_tag_from_current_location[0]))
-                        print_no_access();
-                    else if (bool_access_locked(locations_with_same_tag_from_current_location[0]))
-                        print_access_locked(locations_with_same_tag_from_current_location[0]);
-                    else if (bool_location_full(locations_with_same_tag_from_current_location[0]))
-                        print_location_full();
-                    else
-                        cross_passage(locations_with_same_tag_from_current_location[0]);
-                }
-                else
-                {
-                    add_output("There is more than one destination from your current location for which this tag works.\n");
-                    memset(command.object, 0, sizeof(command.object));
-                }
-            }
-        }
-
-        if (!*command.object)
-        {
-            if (!PLAYER->current_location->exits[1].to)
-            {
-                if (PLAYER->current_location->exits[0].to->type == LOCATION_TYPE_BUILDING)
-                {
-                    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                        add_output("\t[Try 'go inside'.]\n\n");
-                    else
-                        add_output("\t[Try 'go outside'.]\n\n");
-                }
-                else
-                    add_output("\t[Try 'go %s'.]\n\n", PLAYER->current_location->exits[0].to->tags[0]);
-            }
-            else
-            {
-                add_output("\t[Try:]\n");
-                for (i = 0; i < NBR_LOCATIONS; ++i)
-                {
-                    if (!PLAYER->current_location->exits[i].to)
-                        break;
-
-                    if (PLAYER->current_location->exits[i].to->type == LOCATION_TYPE_BUILDING)
-                    {
-                        if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
-                            add_output("\t\t['Go inside'.]\n");
-                        else
-                            add_output("\t\t['Go outside'.]\n");
-                    }
-                    else
-                        add_output("\t\t['Go %s'.]\n", PLAYER->current_location->exits[i].to->tags[0]);
-                }
-                add_output("\n");
-            }
-        }
+        if (!strcmp(command.object, "inside"))
+            go_inside();
+        else if (!strcmp(command.object, "outside"))
+            go_outside();
+        else if (!strcmp(command.object, "back"))
+            go_back();
+        else if (!strcmp(command.object, "out"))
+            go_out();
+        else
+            go_tag();
     }
 
-    free(locations_with_same_tag_from_current_location);
-    free(locations_with_same_tag_from_passage_items_in_current_location);
+    if (!*command.object)
+        display_location_suggestions(PLAYER->current_location);
     return;
 }
 
+static void go_inside(void)
+{
+    if (PLAYER->current_location->type != LOCATION_TYPE_OUTSIDE)
+    {
+        add_output("You're already inside of a building.\n\n");
+        memset(command.object, 0, sizeof(command.object));
+        return;
+    }
+
+    if (bool_access_locked(PLAYER->current_location->exits + 0))
+        print_access_locked(PLAYER->current_location->exits + 0);
+    else if (bool_location_is_full(PLAYER->current_location->exits[0].to))
+        print_location_is_full();
+    else
+        cross_passage(PLAYER->current_location->exits + 0);
+    return;
+}
+
+static void go_outside(void)
+{
+    int i, j;
+    int outside_indexes[NBR_LOCATIONS];
+
+    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+    {
+        add_output("You're already outside.\n\n");
+        memset(command.object, 0, sizeof(command.object));
+        return;
+    }
+
+    memset(outside_indexes, -1, sizeof(outside_indexes));
+    for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
+    {
+        if (!PLAYER->current_location->exits[i].to)
+        {
+            memset(command.object, 0, sizeof(command.object));
+            break;
+        }
+
+        if (PLAYER->current_location->exits[i].to->type != LOCATION_TYPE_BUILDING)
+            continue;
+
+        outside_indexes[j++] = i;
+    }
+
+    if (outside_indexes[0] == -1)
+    {
+        add_output("No immediate exit leads outside of the building.\n\n");
+        memset(command.object, 0, sizeof(command.object));
+        return;
+    }
+    else if (outside_indexes[1] == -1)
+    {
+        if (bool_access_locked(PLAYER->current_location->exits + outside_indexes[0]))
+            print_access_locked(PLAYER->current_location->exits + outside_indexes[0]);
+        else if (bool_location_is_full(PLAYER->current_location->exits[outside_indexes[0]].to))
+            print_location_is_full();
+        else
+            cross_passage(PLAYER->current_location->exits + outside_indexes[0]);
+    }
+    else
+    {
+        add_output("Different exits lead outside. Specify the one you want.\n\n");
+        memset(command.object, 0, sizeof(command.object));
+        return;
+    }
+    return;
+}
+
+static void go_back(void)
+{
+    int i;
+
+    if (!PLAYER->previous_location)
+    {
+        add_output("You do not have a previous location.\n\n");
+        memset(command.object, 0, sizeof(command.object));
+        return;
+    }
+
+    for (i = 0; i < NBR_LOCATIONS; ++i)
+    {
+        if (!PLAYER->previous_location->exits[i].to)
+        {
+            add_output("Your previous location cannot be accessed.\n\n");
+            memset(command.object, 0, sizeof(command.object));
+            return;
+        }
+        else if (PLAYER->current_location == PLAYER->previous_location->exits[i].to)
+            break;
+        else if (PLAYER->current_location->inside_of == PLAYER->previous_location->exits[i].to)
+            break;
+    }
+
+    if (bool_access_locked(PLAYER->previous_location->exits + i))
+        print_access_locked(PLAYER->previous_location->exits + i);
+    else if (bool_location_is_full(PLAYER->previous_location))
+        print_location_is_full();
+    /*
+    TODO: This is not right, because cross_passage() will lead us back to our current location, aka no movement.
+            But, if I try to rework the code so that it works, then it will be very complex with the shenanigans 
+            going on with the buildings. So I need to refactor the building thing first.
+
+    else
+        cross_passage(PLAYER->previous_location->exits + i);
+    */
+    return;
+}
+
+static void go_out(void)
+{
+    int i, j, k;
+    Exit* accessible_exits[NBR_LOCATIONS] = {0};
+    Exit* locked_exits[NBR_LOCATIONS] = {0};
+
+    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+    {
+        add_output("You are already outside.\n\n");
+        memset(command.object, 0, sizeof(command.object));
+        return;
+    }
+
+    for (i = 0, j = 0, k = 0; i < NBR_LOCATIONS; ++i)
+    {
+        if (!PLAYER->current_location->exits[i].to)
+            break;
+        else if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
+            accessible_exits[j++] = &(PLAYER->current_location->exits[i]);
+        else
+            locked_exits[k++] = &(PLAYER->current_location->exits[i]);
+    }
+
+    if (j == 1)
+        cross_passage(accessible_exits[0]);
+    else if (k == 1)
+        print_access_locked(locked_exits[0]);
+    else
+    {
+        add_output("There is more than one exit. Which one do you want?\n");
+        memset(command.object, 0, sizeof(command.object));
+    }
+
+    return;
+}
+
+static void go_tag(void)
+{
+    int bool_tag_is_passage_item = 0;
+    Exit** locations = NULL;
+
+    locations = retrieve_locations(PLAYER->current_location, command.object);
+    if (!locations || !locations[0])
+    {
+        locations = retrieve_locations_with_passage_item(PLAYER->current_location, command.object);
+        if (!locations || !locations[0])
+        {
+            memset(command.object, 0, sizeof(command.object));
+            free(locations);
+            return;
+        }
+        else
+            bool_tag_is_passage_item = 1;
+    }
+
+    if (!locations[1])
+    {
+        if (bool_access_locked(locations[0]))
+            print_access_locked(locations[0]);
+        else if (bool_location_is_full(locations[0]->to))
+            print_location_is_full();
+        else
+            cross_passage(locations[0]);
+    }
+    else if (bool_tag_is_passage_item)
+    {
+        add_output("There is more than one passage item in your vicinity for which this tag works.\n");
+        memset(command.object, 0, sizeof(command.object));
+    }
+    else
+    {
+        add_output("There is more than one destination from your current location for which this tag works.\n");
+        memset(command.object, 0, sizeof(command.object));
+    }
+
+    free(locations);
+    return;
+}
+
+/* TODO: Can't de-nest without a building/location refactoring */
 static void cross_passage(Exit* exit)
 {
     int i, j;
@@ -360,18 +335,6 @@ static void cross_passage(Exit* exit)
     return;
 }
 
-static int bool_no_access(const Exit* exit)
-{
-    return !exit->to || !exit->passage->access;
-}
-
-static void print_no_access(void)
-{
-    /* The player should never see this message */
-    add_output("You cannot access this place.\n\n");
-    return;
-}
-
 static int bool_access_locked(const Exit* exit)
 {
     return exit->passage->access == ACCESS_LOCKED;
@@ -383,12 +346,12 @@ static void print_access_locked(const Exit* exit)
     return;
 }
 
-static int bool_location_full(const Exit* exit)
+static int bool_location_is_full(const Location* location)
 {
-    return exit->to->characters[NBR_CHARACTERS - 1] != NULL;
+    return location->characters[NBR_CHARACTERS - 1] != NULL;
 }
 
-static void print_location_full(void)
+static void print_location_is_full(void)
 {
     add_output("The destination is full. No more characters can access this place.\n\n");
     return;
