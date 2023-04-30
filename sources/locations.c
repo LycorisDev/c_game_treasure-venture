@@ -37,9 +37,7 @@ void populate_list_locations(void)
 
     LOCATION_OUTSIDE->id = ID_LOCATION_OUTSIDE;
     LOCATION_OUTSIDE->type = LOCATION_TYPE_OUTSIDE;
-    memcpy(LOCATION_OUTSIDE->name, "world", LENGTH_NAME);
-    memcpy(LOCATION_OUTSIDE->tags[0], "world", LENGTH_NAME);
-    memcpy(LOCATION_OUTSIDE->tags[1], "world", LENGTH_NAME);
+    memcpy(LOCATION_OUTSIDE->tags[0], "world", LENGTH_TAG);
     memcpy(LOCATION_OUTSIDE->description, "", LENGTH_DESCRIPTION);
     LOCATION_OUTSIDE->exits[0] = exit_objects[0];
     LOCATION_OUTSIDE->locations[0] = LOCATION_MANSION;
@@ -49,9 +47,7 @@ void populate_list_locations(void)
     LOCATION_MANSION->id = ID_LOCATION_MANSION;
     LOCATION_MANSION->type = LOCATION_TYPE_BUILDING;
     LOCATION_MANSION->inside_of = LOCATION_OUTSIDE;
-    memcpy(LOCATION_MANSION->name, "mansion", LENGTH_NAME);
-    memcpy(LOCATION_MANSION->tags[0], "mansion", LENGTH_NAME);
-    memcpy(LOCATION_MANSION->tags[1], "mansion", LENGTH_NAME);
+    memcpy(LOCATION_MANSION->tags[0], "mansion", LENGTH_TAG);
     memcpy(LOCATION_MANSION->description, "The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.", LENGTH_DESCRIPTION);
     LOCATION_MANSION->exits[0] = exit_objects[1];
     LOCATION_MANSION->exits[1] = exit_objects[2];
@@ -65,10 +61,8 @@ void populate_list_locations(void)
     LOCATION_MAIN_HALLWAY->id = ID_LOCATION_MAIN_HALLWAY;
     LOCATION_MAIN_HALLWAY->type = LOCATION_TYPE_ROOM;
     LOCATION_MAIN_HALLWAY->inside_of = LOCATION_MANSION;
-    memcpy(LOCATION_MAIN_HALLWAY->name, "main hallway", LENGTH_NAME);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[0], "hallway / main hallway", LENGTH_NAME);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", LENGTH_NAME);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[2], "main hallway", LENGTH_NAME);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", LENGTH_TAG);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", LENGTH_TAG);
     memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", LENGTH_DESCRIPTION);
     LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[0];
     LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
@@ -80,10 +74,8 @@ void populate_list_locations(void)
     LOCATION_OLD_LIBRARY->id = ID_LOCATION_OLD_LIBRARY;
     LOCATION_OLD_LIBRARY->type = LOCATION_TYPE_ROOM;
     LOCATION_OLD_LIBRARY->inside_of = LOCATION_MANSION;
-    memcpy(LOCATION_OLD_LIBRARY->name, "old library", LENGTH_NAME);
-    memcpy(LOCATION_OLD_LIBRARY->tags[0], "library / old library", LENGTH_NAME);
-    memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", LENGTH_NAME);
-    memcpy(LOCATION_OLD_LIBRARY->tags[2], "old library", LENGTH_NAME);
+    memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", LENGTH_TAG);
+    memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", LENGTH_TAG);
     memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", LENGTH_DESCRIPTION);
     LOCATION_OLD_LIBRARY->exits[0] = exit_objects[4];
     LOCATION_OLD_LIBRARY->exits[1] = exit_objects[5];
@@ -99,10 +91,8 @@ void populate_list_locations(void)
     LOCATION_ROOM_1->id = ID_LOCATION_ROOM_1;
     LOCATION_ROOM_1->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_1->inside_of = LOCATION_MANSION;
-    memcpy(LOCATION_ROOM_1->name, "first room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_1->tags[0], "room 1 / first room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_1->tags[1], "room 1", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_1->tags[2], "first room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_1->tags[0], "first room", LENGTH_TAG);
+    memcpy(LOCATION_ROOM_1->tags[1], "room 1", LENGTH_TAG);
     memcpy(LOCATION_ROOM_1->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_1->exits[0] = exit_objects[8];
     LOCATION_ROOM_1->items[0] = ITEM_DOOR_ROOM_1;
@@ -110,10 +100,8 @@ void populate_list_locations(void)
     LOCATION_ROOM_2->id = ID_LOCATION_ROOM_2;
     LOCATION_ROOM_2->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_2->inside_of = LOCATION_MANSION;
-    memcpy(LOCATION_ROOM_2->name, "second room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_2->tags[0], "room 2 / second room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_2->tags[1], "room 2", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_2->tags[2], "second room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_2->tags[0], "second room", LENGTH_TAG);
+    memcpy(LOCATION_ROOM_2->tags[1], "room 2", LENGTH_TAG);
     memcpy(LOCATION_ROOM_2->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_2->exits[0] = exit_objects[9];
     LOCATION_ROOM_2->items[0] = ITEM_DOOR_ROOM_2;
@@ -122,10 +110,8 @@ void populate_list_locations(void)
     LOCATION_ROOM_3->id = ID_LOCATION_ROOM_3;
     LOCATION_ROOM_3->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_3->inside_of = LOCATION_MANSION;
-    memcpy(LOCATION_ROOM_3->name, "third room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_3->tags[0], "room 3 / third room", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_3->tags[1], "room 3", LENGTH_NAME);
-    memcpy(LOCATION_ROOM_3->tags[2], "third room", LENGTH_NAME);
+    memcpy(LOCATION_ROOM_3->tags[0], "third room", LENGTH_TAG);
+    memcpy(LOCATION_ROOM_3->tags[1], "room 3", LENGTH_TAG);
     memcpy(LOCATION_ROOM_3->description, "The room seems empty.", LENGTH_DESCRIPTION);
     LOCATION_ROOM_3->exits[0] = exit_objects[10];
     LOCATION_ROOM_3->items[0] = ITEM_DOOR_ROOM_3;
@@ -140,7 +126,7 @@ void describe_location(const Location* location)
     if (!PLAYER->current_location->inside_of)
         add_output("You are outside. ");
     else
-        add_output("You are in the %s. ", PLAYER->current_location->name);
+        add_output("You are in the %s. ", PLAYER->current_location->tags[0]);
 
     /* TODO: Remove the need for this temporary fix */
     /* Temporary: If we are outside, print the description of the first location in "outside"'s location list. Turns out there's only one, the mansion. */

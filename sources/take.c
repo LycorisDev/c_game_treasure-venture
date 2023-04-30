@@ -91,7 +91,7 @@ static void take_item(Item* item_to_take)
     }
 
     event_player_finds_entry_doors_key(item_to_take->id);
-    add_output("'%s' added to your inventory.\n\n", item_to_take->name);
+    add_output("'%s' added to your inventory.\n\n", item_to_take->tags[0]);
     return;
 }
 

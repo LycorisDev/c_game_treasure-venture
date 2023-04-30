@@ -92,7 +92,7 @@ static void drop_item(Item* item_to_drop)
         memset((PLAYER->inventory + index_of_last_inventory_item), 0, sizeof(Item*));
     }
 
-    add_output("'%s' dropped.\n\n", item_to_drop->name);
+    add_output("'%s' dropped.\n\n", item_to_drop->tags[0]);
     return;
 }
 

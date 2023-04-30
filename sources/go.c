@@ -269,7 +269,7 @@ static void cross_passage(Exit* exit)
             }
         }
 
-        add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->name, exit->to->name);
+        add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->tags[0], exit->to->tags[0]);
     }
     /* Exit a building */
     else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_BUILDING)
@@ -288,10 +288,10 @@ static void cross_passage(Exit* exit)
             }
         }
 
-        add_output("leave the %s. ", PLAYER->current_location->inside_of->name);
+        add_output("leave the %s. ", PLAYER->current_location->inside_of->tags[0]);
     }
     else
-        add_output("enter the %s. ", exit->to->name);
+        add_output("enter the %s. ", exit->to->tags[0]);
 
     /* Update the player's previous and current locations */
     PLAYER->previous_location = PLAYER->current_location;

@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define LENGTH_NAME           120
+#define LENGTH_TAG            120
 #define LENGTH_DESCRIPTION    512
 #define NBR_TAGS              7
 #define NBR_LOCATIONS         16
@@ -29,8 +29,7 @@ struct location
     int id;
     int type;
     Location* inside_of;
-    char name[LENGTH_NAME];
-    char tags[NBR_TAGS][LENGTH_NAME];
+    char tags[NBR_TAGS][LENGTH_TAG];
     char description[LENGTH_DESCRIPTION];
     Exit exits[NBR_LOCATIONS];
     Location* locations[NBR_LOCATIONS];
@@ -46,8 +45,7 @@ struct item
     Item* unlocked_with;
     int can_be_taken;
     int requires_target_for_use;
-    char name[LENGTH_NAME];
-    char tags[NBR_TAGS][LENGTH_NAME];
+    char tags[NBR_TAGS][LENGTH_TAG];
     char description_brief[LENGTH_DESCRIPTION];
     char description_obvious[LENGTH_DESCRIPTION];
     char description_detailed[LENGTH_DESCRIPTION];
@@ -56,8 +54,7 @@ struct item
 struct character
 {
     int id;
-    char tags[NBR_TAGS][LENGTH_NAME];
-    char name[LENGTH_NAME];
+    char tags[NBR_TAGS][LENGTH_TAG];
     char description[LENGTH_DESCRIPTION];
     Location* previous_location;
     Location* current_location;
