@@ -4,6 +4,8 @@
 /* Declared as extern in ../headers/game.h, included in ../headers/items.h */
 Item list_items[NBR_ITEMS];
 
+static void get_all_tags(char* p_str, const int word_length, Item* object);
+
 void populate_list_items(void)
 {
     memset(list_items, 0, NBR_ITEMS * sizeof(Item));
@@ -115,6 +117,8 @@ void populate_list_items(void)
 void display_item_suggestions(Item** item_collection, const char* command)
 {
     int i;
+    char* str_tags = NULL;
+    int word_length = 0;
 
     if (!strcmp(command, "look"))
         add_output("\t[Try 'look around']\n\n");
@@ -122,14 +126,21 @@ void display_item_suggestions(Item** item_collection, const char* command)
     if (!item_collection[0])
         return;
 
+    word_length = sizeof(item_collection[0]->tags[0]) + 3;
+    str_tags = calloc(NBR_TAGS, word_length);
+
     add_output("\t[Try:]\n");
     for (i = 0; i < NBR_ITEMS; ++i)
     {
         if (!item_collection[i])
             break;
-        add_output("\t\t['%s %s'.]\n", command, item_collection[i]->tags[0]);
+
+        get_all_tags(str_tags, word_length, item_collection[i]);
+        add_output("\t\t['%s %s'.]\n", command, str_tags);
     }
     add_output("\n");
+
+    free(str_tags);
     return;
 }
 
@@ -186,5 +197,21 @@ int bool_item_matches_parser(const Item* item, const char* parser)
             return 1;
     }
     return 0;
+}
+
+static void get_all_tags(char* p_str, const int word_length, Item* object)
+{
+    int i;
+
+    strncpy(p_str, object->tags[0], word_length);
+
+    for (i = 1; i < NBR_TAGS; ++i)
+    {
+        if (!object->tags[i][0])
+            break;
+        strcat(p_str, " / ");
+        strncat(p_str, object->tags[i], word_length);
+    }
+    return;
 }
 

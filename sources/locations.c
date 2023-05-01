@@ -5,6 +5,7 @@
 /* Declared as extern in ../headers/game.h, included in ../headers/locations.h */
 Location list_locations[NBR_LOCATIONS];
 
+static void get_all_tags(char* p_str, const int word_length, Location* object);
 static int bool_location_matches_parser(const Location* location, const char* parser);
 
 void populate_list_locations(void)
@@ -152,13 +153,17 @@ void describe_location(const Location* location)
 void display_location_suggestions(Location* origin)
 {
     int i;
+    char* str_tags = NULL;
+    int word_length = 0;
     int bool_ins_out_already_printed = 0;
 
-    if (!origin->exits[0].to)
+    if (!origin || !origin->exits[0].to)
         return;
 
-    add_output("\t[Try:]\n");
+    word_length = sizeof(origin->exits[0].to->tags[0]) + 3;
+    str_tags = calloc(NBR_TAGS, word_length);
 
+    add_output("\t[Try:]\n");
     for (i = 0; i < NBR_LOCATIONS; ++i)
     {
         if (!origin->exits[i].to)
@@ -166,7 +171,8 @@ void display_location_suggestions(Location* origin)
 
         if (origin->exits[i].to->type != LOCATION_TYPE_BUILDING)
         {
-            add_output("\t\t['Go %s'.]\n", origin->exits[i].to->tags[0]);
+            get_all_tags(str_tags, word_length, origin->exits[i].to);
+            add_output("\t\t['Go %s'.]\n", str_tags);
             continue;
         }
         else if (bool_ins_out_already_printed)
@@ -179,6 +185,8 @@ void display_location_suggestions(Location* origin)
             add_output("\t\t['Go outside'.]\n");
     }
     add_output("\n");
+
+    free(str_tags);
     return;
 }
 
@@ -218,6 +226,22 @@ Exit** retrieve_locations_with_passage_item(Location* origin, const char* parser
     }
 
     return exits;
+}
+
+static void get_all_tags(char* p_str, const int word_length, Location* object)
+{
+    int i;
+
+    strncpy(p_str, object->tags[0], word_length);
+
+    for (i = 1; i < NBR_TAGS; ++i)
+    {
+        if (!object->tags[i][0])
+            break;
+        strcat(p_str, " / ");
+        strncat(p_str, object->tags[i], word_length);
+    }
+    return;
 }
 
 static int bool_location_matches_parser(const Location* origin, const char* parser)

@@ -4,7 +4,7 @@
 /* Declared as extern in ../headers/game.h, included in ../headers/characters.h */
 Character list_characters[NBR_CHARACTERS];
 
-static void get_all_tags(char* p_str, const int word_length, const Character* character);
+static void get_all_tags(char* p_str, const int word_length, Character* object);
 static int bool_character_matches_parser(const Character* character, const char* parser);
 
 void populate_list_characters(void)
@@ -76,18 +76,18 @@ Character** retrieve_characters(Character** character_collection, const char* pa
     return characters;
 }
 
-static void get_all_tags(char* p_str, const int word_length, const Character* character)
+static void get_all_tags(char* p_str, const int word_length, Character* object)
 {
     int i;
 
-    strncpy(p_str, character->tags[0], word_length);
+    strncpy(p_str, object->tags[0], word_length);
 
     for (i = 1; i < NBR_TAGS; ++i)
     {
-        if (!character->tags[i][0])
+        if (!object->tags[i][0])
             break;
         strcat(p_str, " / ");
-        strncat(p_str, character->tags[i], word_length);
+        strncat(p_str, object->tags[i], word_length);
     }
     return;
 }
