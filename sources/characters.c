@@ -80,16 +80,11 @@ static void get_all_tags(char* p_str, const int word_length, const Character* ch
 {
     int i;
 
-    if (!character->tags || !character->tags[0])
-    {
-        strncpy(p_str, "NO_TAG", word_length);
-        return;
-    }
-
     strncpy(p_str, character->tags[0], word_length);
+
     for (i = 1; i < NBR_TAGS; ++i)
     {
-        if (!character->tags[i])
+        if (!character->tags[i][0])
             break;
         strcat(p_str, " / ");
         strncat(p_str, character->tags[i], word_length);

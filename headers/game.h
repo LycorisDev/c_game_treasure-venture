@@ -27,10 +27,11 @@ typedef struct exit
 struct location
 {
     int id;
-    int type;
-    Location* inside_of;
     char tags[NBR_TAGS][LENGTH_TAG];
     char description[LENGTH_DESCRIPTION];
+
+    int type;
+    Location* inside_of;
     Exit exits[NBR_LOCATIONS];
     Location* locations[NBR_LOCATIONS];
     Item* items[NBR_ITEMS];
@@ -40,15 +41,16 @@ struct location
 struct item
 {
     int id;
+    char tags[NBR_TAGS][LENGTH_TAG];
+    char description[LENGTH_DESCRIPTION];
+
+    char desc_look_around[LENGTH_DESCRIPTION];
+    char desc_look_item[LENGTH_DESCRIPTION];
     int is_singular;
     int access;
     Item* unlocked_with;
     int can_be_taken;
     int requires_target_for_use;
-    char tags[NBR_TAGS][LENGTH_TAG];
-    char description_brief[LENGTH_DESCRIPTION];
-    char description_obvious[LENGTH_DESCRIPTION];
-    char description_detailed[LENGTH_DESCRIPTION];
 };
 
 struct character
@@ -56,6 +58,7 @@ struct character
     int id;
     char tags[NBR_TAGS][LENGTH_TAG];
     char description[LENGTH_DESCRIPTION];
+
     Location* previous_location;
     Location* current_location;
     Item* inventory[NBR_ITEMS];

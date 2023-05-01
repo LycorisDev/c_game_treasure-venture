@@ -25,7 +25,7 @@ void execute_inventory(void)
         if (!items || !items[0])
             add_output("You have no such item on you. Type 'inventory' to see your items.\n\n");
         else if (!items[1])
-            add_output("%s\n\n", items[0]->description_detailed);
+            add_output("%s\n\n", items[0]->desc_look_item);
         else
             add_output("There is more than one item in your inventory for which this tag works.\n\n");
     }
@@ -44,7 +44,7 @@ static void display_inventory(Item** inventory)
     {
         if (!inventory[i])
             break;
-        add_output("- [%s]\n\t%s\n", inventory[i]->tags[0], inventory[i]->description_brief);
+        add_output("- [%s]\n\t%s\n", inventory[i]->tags[0], inventory[i]->description);
     }
     add_output("--------------------\n\n");
     return;

@@ -142,7 +142,7 @@ void describe_location(const Location* location)
 
         /* Only mention items which are not an access to an exit, such as a door */
         if (!location->items[i]->access)
-            add_output("%s ", location->items[i]->description_obvious);
+            add_output("%s ", location->items[i]->desc_look_around);
     }
 
     add_output("\n\n");

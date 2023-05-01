@@ -20,9 +20,9 @@ void populate_list_items(void)
     memcpy(ITEM_ENTRY_DOORS->tags[3], "entry doors", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS->tags[4], "double doors", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS->tags[5], "doors", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS->description_brief, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS->description_obvious, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS->description_detailed, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS->description, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS->desc_look_around, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS->desc_look_item, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
 
     ITEM_GRANDFATHER_CLOCK->id = ID_ITEM_GRANDFATHER_CLOCK;
     ITEM_GRANDFATHER_CLOCK->is_singular = 1;
@@ -30,9 +30,9 @@ void populate_list_items(void)
     ITEM_GRANDFATHER_CLOCK->requires_target_for_use = 0;
     memcpy(ITEM_GRANDFATHER_CLOCK->tags[0], "grandfather clock", LENGTH_TAG);
     memcpy(ITEM_GRANDFATHER_CLOCK->tags[1], "clock", LENGTH_TAG);
-    memcpy(ITEM_GRANDFATHER_CLOCK->description_brief, "A grandfather clock.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_GRANDFATHER_CLOCK->description_obvious, "The loud ticks of the grandfather clock is nerve-wracking. You've always hated those.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_GRANDFATHER_CLOCK->description_detailed, "The clock doesn't seem to hide any secret.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_GRANDFATHER_CLOCK->description, "A grandfather clock.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_GRANDFATHER_CLOCK->desc_look_around, "The loud ticks of the grandfather clock is nerve-wracking. You've always hated those.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_GRANDFATHER_CLOCK->desc_look_item, "The clock doesn't seem to hide any secret.", LENGTH_DESCRIPTION);
 
     ITEM_LIBRARY_DOOR->id = ID_ITEM_LIBRARY_DOOR;
     ITEM_LIBRARY_DOOR->is_singular = 1;
@@ -42,9 +42,9 @@ void populate_list_items(void)
     memcpy(ITEM_LIBRARY_DOOR->tags[0], "old library door", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_DOOR->tags[1], "library door", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_DOOR->tags[2], "door", LENGTH_TAG);
-    memcpy(ITEM_LIBRARY_DOOR->description_brief, "The door to the old library.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_LIBRARY_DOOR->description_obvious, "The door to the old library.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_LIBRARY_DOOR->description_detailed, "The door to the old library.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_LIBRARY_DOOR->description, "The door to the old library.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_LIBRARY_DOOR->desc_look_around, "The door to the old library.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_LIBRARY_DOOR->desc_look_item, "The door to the old library.", LENGTH_DESCRIPTION);
 
     ITEM_LIBRARY_SIGN->id = ID_ITEM_LIBRARY_SIGN;
     ITEM_LIBRARY_SIGN->is_singular = 1;
@@ -52,18 +52,18 @@ void populate_list_items(void)
     ITEM_LIBRARY_SIGN->requires_target_for_use = 0;
     memcpy(ITEM_LIBRARY_SIGN->tags[0], "library sign", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_SIGN->tags[1], "sign", LENGTH_TAG);
-    memcpy(ITEM_LIBRARY_SIGN->description_brief, "A sign that reads 'Library'.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_LIBRARY_SIGN->description_obvious, "", LENGTH_DESCRIPTION);
-    memcpy(ITEM_LIBRARY_SIGN->description_detailed, "A sign that reads 'Library'.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_LIBRARY_SIGN->description, "A sign that reads 'Library'.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_LIBRARY_SIGN->desc_look_around, "", LENGTH_DESCRIPTION);
+    memcpy(ITEM_LIBRARY_SIGN->desc_look_item, "A sign that reads 'Library'.", LENGTH_DESCRIPTION);
 
     ITEM_BOOKS->id = ID_ITEM_BOOKS;
     ITEM_BOOKS->is_singular = 0;
     ITEM_BOOKS->can_be_taken = 0;
     ITEM_BOOKS->requires_target_for_use = 0;
     memcpy(ITEM_BOOKS->tags[0], "books", LENGTH_TAG);
-    memcpy(ITEM_BOOKS->description_brief, "Books from the mansion's old library.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_BOOKS->description_obvious, "The library walls are lined with old, dusty books.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_BOOKS->description_detailed, "Let's not focus on the books.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_BOOKS->description, "Books from the mansion's old library.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_BOOKS->desc_look_around, "The library walls are lined with old, dusty books.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_BOOKS->desc_look_item, "Let's not focus on the books.", LENGTH_DESCRIPTION);
 
     ITEM_DOOR_ROOM_1->id = ID_ITEM_DOOR_ROOM_1;
     ITEM_DOOR_ROOM_1->is_singular = 1;
@@ -73,9 +73,9 @@ void populate_list_items(void)
     memcpy(ITEM_DOOR_ROOM_1->tags[0], "first room door", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_1->tags[1], "door room 1", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_1->tags[2], "door", LENGTH_TAG);
-    memcpy(ITEM_DOOR_ROOM_1->description_brief, "The door to the first room.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_DOOR_ROOM_1->description_obvious, "The door to the first room.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_DOOR_ROOM_1->description_detailed, "The door to the first room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_1->description, "The door to the first room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_1->desc_look_around, "The door to the first room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_1->desc_look_item, "The door to the first room.", LENGTH_DESCRIPTION);
 
     ITEM_DOOR_ROOM_2->id = ID_ITEM_DOOR_ROOM_2;
     ITEM_DOOR_ROOM_2->is_singular = 1;
@@ -85,9 +85,9 @@ void populate_list_items(void)
     memcpy(ITEM_DOOR_ROOM_2->tags[0], "second room door", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_2->tags[1], "door room 2", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_2->tags[2], "door", LENGTH_TAG);
-    memcpy(ITEM_DOOR_ROOM_2->description_brief, "The door to the second room.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_DOOR_ROOM_2->description_obvious, "The door to the second room.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_DOOR_ROOM_2->description_detailed, "The door to the second room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_2->description, "The door to the second room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_2->desc_look_around, "The door to the second room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_2->desc_look_item, "The door to the second room.", LENGTH_DESCRIPTION);
 
     ITEM_DOOR_ROOM_3->id = ID_ITEM_DOOR_ROOM_3;
     ITEM_DOOR_ROOM_3->is_singular = 1;
@@ -97,18 +97,18 @@ void populate_list_items(void)
     memcpy(ITEM_DOOR_ROOM_3->tags[0], "third room door", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_3->tags[1], "door room 3", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_3->tags[2], "door", LENGTH_TAG);
-    memcpy(ITEM_DOOR_ROOM_3->description_brief, "The door to the third room.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_DOOR_ROOM_3->description_obvious, "The door to the third room.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_DOOR_ROOM_3->description_detailed, "The door to the third room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_3->description, "The door to the third room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_3->desc_look_around, "The door to the third room.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_DOOR_ROOM_3->desc_look_item, "The door to the third room.", LENGTH_DESCRIPTION);
 
     ITEM_ENTRY_DOORS_KEY->id = ID_ITEM_ENTRY_DOORS_KEY;
     ITEM_ENTRY_DOORS_KEY->is_singular = 1;
     ITEM_ENTRY_DOORS_KEY->can_be_taken = 1;
     ITEM_ENTRY_DOORS_KEY->requires_target_for_use = 1;
     memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "shiny thing", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS_KEY->description_brief, "The key to the mansion's entry doors.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS_KEY->description_obvious, "Something shiny, left unattended on the ground, catches your attention.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS_KEY->description_detailed, "It's a key. It shines in a golden color, and a small note attached to it with a string reads \"Entry\".", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry doors.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "Something shiny, left unattended on the ground, catches your attention.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_item, "It's a key. It shines in a golden color, and a small note attached to it with a string reads \"Entry\".", LENGTH_DESCRIPTION);
     return;
 }
 

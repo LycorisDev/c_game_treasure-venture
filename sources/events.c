@@ -34,8 +34,9 @@ void event_first_time_player_enters_mansion(void)
 
 void execute_event_player_finds_entry_doors_key(void)
 {
-    memcpy(ITEM_ENTRY_DOORS_KEY->description_obvious, "A key is left unattended on the ground.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS_KEY->description_detailed, "The key shines in a golden color, and a small note attached to it with a string reads \"Entry\".", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry doors.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "A key is left unattended on the ground.", LENGTH_DESCRIPTION);
+    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_item, "The key shines in a golden color, and a small note attached to it with a string reads \"Entry\".", LENGTH_DESCRIPTION);
     memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "main entry doors key", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS_KEY->tags[1], "main double doors key", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS_KEY->tags[2], "main doors key", LENGTH_TAG);

@@ -6,9 +6,6 @@
 #include "../headers/locations.h"
 #include "../headers/items.h"
 
-/* TODO: This was for debugging purposes, remove it now */
-#include "../headers/output.h"
-
 static void go_inside(void);
 static void go_outside(void);
 static void go_back(void);

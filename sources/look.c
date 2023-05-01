@@ -61,7 +61,7 @@ void execute_look(void)
         }
         else if (bool_item_match)
         {
-            add_output("%s\n\n", items_with_same_tag[0]->description_detailed);
+            add_output("%s\n\n", items_with_same_tag[0]->desc_look_item);
             event_player_finds_entry_doors_key(items_with_same_tag[0]->id);
         }
         else if (bool_character_match && characters_with_same_tag[0] == PLAYER)

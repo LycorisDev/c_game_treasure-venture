@@ -30,7 +30,7 @@ void execute_use(void)
             bool_issue_is_target = use_item_on_target(item_to_use);
         else
         {
-            add_output("%s ", item_to_use->description_brief);
+            add_output("%s ", item_to_use->description);
             add_output("The %s %s seem to be of much use.\n\n", item_to_use->tags[1], item_to_use->is_singular ? "doesn't" : "don't");
         }
     }
