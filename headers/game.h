@@ -23,7 +23,7 @@ typedef struct character Character;
 typedef struct
 {
     int id;
-    char tags[NBR_TAGS][LENGTH_TAG];
+    char name[LENGTH_TAG];
 } GeoAff;
 
 typedef struct exit
@@ -39,12 +39,9 @@ struct location
     char description[LENGTH_DESCRIPTION];
 
     int bool_is_indoors;
-    /*r*/int type;
     GeoAff* geo_aff;
-
-    Location* inside_of;
     Exit exits[NBR_LOCATIONS];
-    Location* locations[NBR_LOCATIONS];
+
     Item* items[NBR_ITEMS];
     Character* characters[NBR_CHARACTERS];
 };
@@ -85,18 +82,14 @@ extern Character list_characters[NBR_CHARACTERS];
 #define ACCESS_OPEN                  2
 #define ACCESS_CLOSED                3
 /* -------------------------------------------------------------------------------- */
-#define LOCATION_TYPE_BUILDING       1
-
 #define ID_LOCATION_OUTSIDE          1
-#define ID_LOCATION_MANSION          2
-#define ID_LOCATION_MAIN_HALLWAY     3
-#define ID_LOCATION_OLD_LIBRARY      4
-#define ID_LOCATION_ROOM_1           5
-#define ID_LOCATION_ROOM_2           6
-#define ID_LOCATION_ROOM_3           7
+#define ID_LOCATION_MAIN_HALLWAY     2
+#define ID_LOCATION_OLD_LIBRARY      3
+#define ID_LOCATION_ROOM_1           4
+#define ID_LOCATION_ROOM_2           5
+#define ID_LOCATION_ROOM_3           6
 
 #define LOCATION_OUTSIDE             (list_locations + (ID_LOCATION_OUTSIDE - 1))
-#define LOCATION_MANSION             (list_locations + (ID_LOCATION_MANSION - 1))
 #define LOCATION_MAIN_HALLWAY        (list_locations + (ID_LOCATION_MAIN_HALLWAY - 1))
 #define LOCATION_OLD_LIBRARY         (list_locations + (ID_LOCATION_OLD_LIBRARY - 1))
 #define LOCATION_ROOM_1              (list_locations + (ID_LOCATION_ROOM_1 - 1))

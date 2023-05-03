@@ -7,23 +7,19 @@ Location list_locations[NBR_LOCATIONS];
 GeoAff list_geo_aff[NBR_GEO_AFF];
 
 static void get_all_tags(char* p_str, const int word_length, Location* object);
-static int bool_location_matches_parser(const Location* location, const char* parser);
+static int bool_location_matches_parser(const Location* destination, const char* parser);
 
 /*
     TODO:
     - Use the ID to check if an element exists (e.g.: !list_locations[i].id) 
     because now an ID of 0 means the element hasn't been initialized, since 
     all structs are set to 0 before values start to be entered.
-    - Use "geo_aff" and "bool_is_indoors" and remove "type".
-    - Remove the use for a mansion location: replaced by the geo affiliation.
     - Refactor the exits.
 */
 
 void populate_list_locations(void)
 {
     Exit exit_objects[NBR_LOCATIONS];
-    exit_objects[0].to = LOCATION_MANSION;
-    exit_objects[0].passage = ITEM_ENTRY_DOORS;
     exit_objects[1].to = LOCATION_OUTSIDE;
     exit_objects[1].passage = ITEM_ENTRY_DOORS;
     exit_objects[2].to = LOCATION_MAIN_HALLWAY;
@@ -49,46 +45,26 @@ void populate_list_locations(void)
     memset(list_locations, 0, NBR_LOCATIONS * sizeof(Location));
 
     list_geo_aff[0].id = 1;
-    memcpy(list_geo_aff[0].tags[0], "world", LENGTH_TAG);
+    memcpy(list_geo_aff[0].name, "world", LENGTH_TAG);
     list_geo_aff[1].id = 2;
-    memcpy(list_geo_aff[1].tags[0], "mansion", LENGTH_TAG);
+    memcpy(list_geo_aff[1].name, "mansion", LENGTH_TAG);
 
     LOCATION_OUTSIDE->id = ID_LOCATION_OUTSIDE;
     LOCATION_OUTSIDE->bool_is_indoors = 0;
     LOCATION_OUTSIDE->geo_aff = &(list_geo_aff[0]);
     memcpy(LOCATION_OUTSIDE->tags[0], "world", LENGTH_TAG);
     memcpy(LOCATION_OUTSIDE->description, "", LENGTH_DESCRIPTION);
-    LOCATION_OUTSIDE->exits[0] = exit_objects[0];
-    LOCATION_OUTSIDE->locations[0] = LOCATION_MANSION;
+    LOCATION_OUTSIDE->exits[0] = exit_objects[2];
     LOCATION_OUTSIDE->items[0] = ITEM_ENTRY_DOORS;
     LOCATION_OUTSIDE->characters[0] = PLAYER;
-
-    /*r*/
-    LOCATION_MANSION->id = ID_LOCATION_MANSION;
-    LOCATION_MANSION->bool_is_indoors = 1;
-    LOCATION_MANSION->type = LOCATION_TYPE_BUILDING;
-    LOCATION_MANSION->geo_aff = &(list_geo_aff[1]);
-    LOCATION_MANSION->inside_of = LOCATION_OUTSIDE;
-    memcpy(LOCATION_MANSION->tags[0], "mansion", LENGTH_TAG);
-    memcpy(LOCATION_MANSION->description, "The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.", LENGTH_DESCRIPTION);
-    LOCATION_MANSION->exits[0] = exit_objects[1];
-    LOCATION_MANSION->exits[1] = exit_objects[2];
-    LOCATION_MANSION->locations[0] = LOCATION_MAIN_HALLWAY;
-    LOCATION_MANSION->locations[1] = LOCATION_OLD_LIBRARY;
-    LOCATION_MANSION->locations[2] = LOCATION_ROOM_1;
-    LOCATION_MANSION->locations[3] = LOCATION_ROOM_2;
-    LOCATION_MANSION->locations[4] = LOCATION_ROOM_3;
-    LOCATION_MANSION->items[0] = ITEM_ENTRY_DOORS;
-    /*r*/
 
     LOCATION_MAIN_HALLWAY->id = ID_LOCATION_MAIN_HALLWAY;
     LOCATION_MAIN_HALLWAY->bool_is_indoors = 1;
     LOCATION_MAIN_HALLWAY->geo_aff = &(list_geo_aff[1]);
-    LOCATION_MAIN_HALLWAY->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", LENGTH_TAG);
     memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", LENGTH_TAG);
     memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", LENGTH_DESCRIPTION);
-    LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[0];
+    LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[1];
     LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
     LOCATION_MAIN_HALLWAY->items[0] = ITEM_ENTRY_DOORS;
     LOCATION_MAIN_HALLWAY->items[1] = ITEM_GRANDFATHER_CLOCK;
@@ -98,7 +74,6 @@ void populate_list_locations(void)
     LOCATION_OLD_LIBRARY->id = ID_LOCATION_OLD_LIBRARY;
     LOCATION_OLD_LIBRARY->bool_is_indoors = 1;
     LOCATION_OLD_LIBRARY->geo_aff = &(list_geo_aff[1]);
-    LOCATION_OLD_LIBRARY->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", LENGTH_TAG);
     memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", LENGTH_TAG);
     memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", LENGTH_DESCRIPTION);
@@ -116,7 +91,6 @@ void populate_list_locations(void)
     LOCATION_ROOM_1->id = ID_LOCATION_ROOM_1;
     LOCATION_ROOM_1->bool_is_indoors = 1;
     LOCATION_ROOM_1->geo_aff = &(list_geo_aff[1]);
-    LOCATION_ROOM_1->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_1->tags[0], "first room", LENGTH_TAG);
     memcpy(LOCATION_ROOM_1->tags[1], "room 1", LENGTH_TAG);
     memcpy(LOCATION_ROOM_1->description, "The room seems empty.", LENGTH_DESCRIPTION);
@@ -126,7 +100,6 @@ void populate_list_locations(void)
     LOCATION_ROOM_2->id = ID_LOCATION_ROOM_2;
     LOCATION_ROOM_2->bool_is_indoors = 1;
     LOCATION_ROOM_2->geo_aff = &(list_geo_aff[1]);
-    LOCATION_ROOM_2->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_2->tags[0], "second room", LENGTH_TAG);
     memcpy(LOCATION_ROOM_2->tags[1], "room 2", LENGTH_TAG);
     memcpy(LOCATION_ROOM_2->description, "The room seems empty.", LENGTH_DESCRIPTION);
@@ -137,7 +110,6 @@ void populate_list_locations(void)
     LOCATION_ROOM_3->id = ID_LOCATION_ROOM_3;
     LOCATION_ROOM_3->bool_is_indoors = 1;
     LOCATION_ROOM_3->geo_aff = &(list_geo_aff[1]);
-    LOCATION_ROOM_3->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_3->tags[0], "third room", LENGTH_TAG);
     memcpy(LOCATION_ROOM_3->tags[1], "room 3", LENGTH_TAG);
     memcpy(LOCATION_ROOM_3->description, "The room seems empty.", LENGTH_DESCRIPTION);
@@ -151,17 +123,16 @@ void describe_location(const Location* location)
     int i;
 
     /* Display location name */
-    if (!PLAYER->current_location->inside_of)
+    if (!PLAYER->current_location->bool_is_indoors)
         add_output("You are outside. ");
     else
         add_output("You are in the %s. ", PLAYER->current_location->tags[0]);
 
-    /* TODO: Remove the need for this temporary fix */
-    /* Temporary: If we are outside, print the description of the first location in "outside"'s location list. Turns out there's only one, the mansion. */
+    /* TODO: Remove the need for this temporary fix. The geo_aff should be described without being hardcoded, a bit like an event. */
     if (location->bool_is_indoors)
         add_output("%s ", location->description);
     else
-        add_output("%s ", location->locations[0]->description);
+        add_output("The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.");
 
     for (i = 0; i < NBR_ITEMS; ++i)
     {
@@ -196,7 +167,7 @@ void display_location_suggestions(Location* origin)
         if (!origin->exits[i].to)
             break;
 
-        if (origin->exits[i].to->type != LOCATION_TYPE_BUILDING)
+        if (origin->geo_aff->id == origin->exits[i].to->geo_aff->id)
         {
             get_all_tags(str_tags, word_length, origin->exits[i].to);
             add_output("\t\t['Go %s'.]\n", str_tags);
@@ -229,6 +200,15 @@ Exit** retrieve_locations(Location* origin, const char* parser)
         if (!origin->exits[i].to)
             break;
 
+        /* "go [building]" */
+        if (origin->geo_aff->id != origin->exits[i].to->geo_aff->id) 
+        {
+            if (!strcmp(parser, origin->exits[i].to->geo_aff->name))
+                locations[j++] = &(origin->exits[i]);
+            continue;
+        }
+
+        /* "go [room]" */
         if (bool_location_matches_parser(origin->exits[i].to, parser))
             locations[j++] = &(origin->exits[i]);
     }
@@ -271,23 +251,15 @@ static void get_all_tags(char* p_str, const int word_length, Location* object)
     return;
 }
 
-static int bool_location_matches_parser(const Location* origin, const char* parser)
+static int bool_location_matches_parser(const Location* destination, const char* parser)
 {
     int i;
     for (i = 0; i < NBR_TAGS; ++i)
     {
-        if (!origin->tags[i])
+        if (!destination->tags[i])
             return 0;
 
-        /* TODO: Make so there's no need for this trick, maybe with a get_exit() function instead of directly looking at the exit variable */
-        /* If you exit the building */
-        if (origin->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->bool_is_indoors)
-        {
-            /* You must not use "go [current building]" but you can use the tag of the outside location (which is the first of the building's exits) */
-            if (!strcmp(parser, origin->exits[0].to->tags[1]))
-                return 1;
-        }
-        else if (!strcmp(parser, origin->tags[i]))
+        if (!strcmp(parser, destination->tags[i]))
             return 1;
     }
     return 0;

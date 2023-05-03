@@ -85,10 +85,8 @@ static void go_outside(void)
             break;
         }
 
-        if (PLAYER->current_location->exits[i].to->type != LOCATION_TYPE_BUILDING)
-            continue;
-
-        outside_indexes[j++] = i;
+        if (!PLAYER->current_location->exits[i].to->bool_is_indoors)
+            outside_indexes[j++] = i;
     }
 
     if (outside_indexes[0] == -1)
@@ -135,8 +133,6 @@ static void go_back(void)
             return;
         }
         else if (PLAYER->current_location == PLAYER->previous_location->exits[i].to)
-            break;
-        else if (PLAYER->current_location->inside_of == PLAYER->previous_location->exits[i].to)
             break;
     }
 
@@ -257,7 +253,7 @@ static void cross_passage(Exit* exit)
     }
 
     /* Enter a building */
-    if (!PLAYER->current_location->bool_is_indoors && exit->to->type == LOCATION_TYPE_BUILDING)
+    if (!PLAYER->current_location->bool_is_indoors && exit->to->bool_is_indoors)
     {
         for (i = 0; i < NBR_LOCATIONS; ++i)
         {
@@ -273,10 +269,10 @@ static void cross_passage(Exit* exit)
             }
         }
 
-        add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->tags[0], exit->to->tags[0]);
+        add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->geo_aff->name, exit->to->tags[0]);
     }
     /* Exit a building */
-    else if (PLAYER->current_location->bool_is_indoors && exit->to->type == LOCATION_TYPE_BUILDING)
+    else if (PLAYER->current_location->bool_is_indoors && !exit->to->bool_is_indoors)
     {
         for (i = 0; i < NBR_LOCATIONS; ++i)
         {
@@ -292,7 +288,7 @@ static void cross_passage(Exit* exit)
             }
         }
 
-        add_output("leave the %s. ", PLAYER->current_location->inside_of->tags[0]);
+        add_output("leave the %s. ", PLAYER->current_location->geo_aff->name);
     }
     else
         add_output("enter the %s. ", exit->to->tags[0]);
