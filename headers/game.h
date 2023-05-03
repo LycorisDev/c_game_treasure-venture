@@ -4,6 +4,7 @@
 #define LENGTH_TAG            120
 #define LENGTH_DESCRIPTION    512
 #define NBR_TAGS              7
+#define NBR_GEO_AFF           2
 #define NBR_LOCATIONS         16
 #define NBR_ITEMS             100
 #define NBR_CHARACTERS        5
@@ -18,6 +19,13 @@ typedef struct location Location;
 typedef struct item Item;
 typedef struct character Character;
 
+/* Geographical Affiliation */
+typedef struct
+{
+    int id;
+    char tags[NBR_TAGS][LENGTH_TAG];
+} GeoAff;
+
 typedef struct exit
 {
     Location* to;
@@ -30,7 +38,10 @@ struct location
     char tags[NBR_TAGS][LENGTH_TAG];
     char description[LENGTH_DESCRIPTION];
 
-    int type;
+    int bool_is_indoors;
+    /*r*/int type;
+    GeoAff* geo_aff;
+
     Location* inside_of;
     Exit exits[NBR_LOCATIONS];
     Location* locations[NBR_LOCATIONS];
@@ -46,11 +57,11 @@ struct item
 
     char desc_look_around[LENGTH_DESCRIPTION];
     char desc_look_item[LENGTH_DESCRIPTION];
-    int is_singular;
+    int bool_is_singular;
     int access;
     Item* unlocked_with;
-    int can_be_taken;
-    int requires_target_for_use;
+    int bool_can_be_taken;
+    int bool_requires_target_for_use;
 };
 
 struct character
@@ -64,6 +75,7 @@ struct character
     Item* inventory[NBR_ITEMS];
 };
 
+extern GeoAff list_geo_aff[NBR_GEO_AFF];
 extern Location list_locations[NBR_LOCATIONS];
 extern Item list_items[NBR_ITEMS];
 extern Character list_characters[NBR_CHARACTERS];
@@ -77,47 +89,47 @@ extern Character list_characters[NBR_CHARACTERS];
 #define LOCATION_TYPE_BUILDING       2
 #define LOCATION_TYPE_ROOM           3
 
-#define ID_LOCATION_OUTSIDE          0
-#define ID_LOCATION_MANSION          1
-#define ID_LOCATION_MAIN_HALLWAY     2
-#define ID_LOCATION_OLD_LIBRARY      3
-#define ID_LOCATION_ROOM_1           4
-#define ID_LOCATION_ROOM_2           5
-#define ID_LOCATION_ROOM_3           6
+#define ID_LOCATION_OUTSIDE          1
+#define ID_LOCATION_MANSION          2
+#define ID_LOCATION_MAIN_HALLWAY     3
+#define ID_LOCATION_OLD_LIBRARY      4
+#define ID_LOCATION_ROOM_1           5
+#define ID_LOCATION_ROOM_2           6
+#define ID_LOCATION_ROOM_3           7
 
-#define LOCATION_OUTSIDE             (list_locations + ID_LOCATION_OUTSIDE)
-#define LOCATION_MANSION             (list_locations + ID_LOCATION_MANSION)
-#define LOCATION_MAIN_HALLWAY        (list_locations + ID_LOCATION_MAIN_HALLWAY)
-#define LOCATION_OLD_LIBRARY         (list_locations + ID_LOCATION_OLD_LIBRARY)
-#define LOCATION_ROOM_1              (list_locations + ID_LOCATION_ROOM_1)
-#define LOCATION_ROOM_2              (list_locations + ID_LOCATION_ROOM_2)
-#define LOCATION_ROOM_3              (list_locations + ID_LOCATION_ROOM_3)
+#define LOCATION_OUTSIDE             (list_locations + (ID_LOCATION_OUTSIDE - 1))
+#define LOCATION_MANSION             (list_locations + (ID_LOCATION_MANSION - 1))
+#define LOCATION_MAIN_HALLWAY        (list_locations + (ID_LOCATION_MAIN_HALLWAY - 1))
+#define LOCATION_OLD_LIBRARY         (list_locations + (ID_LOCATION_OLD_LIBRARY - 1))
+#define LOCATION_ROOM_1              (list_locations + (ID_LOCATION_ROOM_1 - 1))
+#define LOCATION_ROOM_2              (list_locations + (ID_LOCATION_ROOM_2 - 1))
+#define LOCATION_ROOM_3              (list_locations + (ID_LOCATION_ROOM_3 - 1))
 /* -------------------------------------------------------------------------------- */
-#define ID_ITEM_ENTRY_DOORS          0
-#define ID_ITEM_GRANDFATHER_CLOCK    1
-#define ID_ITEM_LIBRARY_DOOR         2
-#define ID_ITEM_LIBRARY_SIGN         3
-#define ID_ITEM_BOOKS                4
-#define ID_ITEM_DOOR_ROOM_1          5
-#define ID_ITEM_DOOR_ROOM_2          6
-#define ID_ITEM_DOOR_ROOM_3          7
-#define ID_ITEM_ENTRY_DOORS_KEY      8
+#define ID_ITEM_ENTRY_DOORS          1
+#define ID_ITEM_GRANDFATHER_CLOCK    2
+#define ID_ITEM_LIBRARY_DOOR         3
+#define ID_ITEM_LIBRARY_SIGN         4
+#define ID_ITEM_BOOKS                5
+#define ID_ITEM_DOOR_ROOM_1          6
+#define ID_ITEM_DOOR_ROOM_2          7
+#define ID_ITEM_DOOR_ROOM_3          8
+#define ID_ITEM_ENTRY_DOORS_KEY      9
 
-#define ITEM_ENTRY_DOORS             (list_items + ID_ITEM_ENTRY_DOORS)
-#define ITEM_GRANDFATHER_CLOCK       (list_items + ID_ITEM_GRANDFATHER_CLOCK)
-#define ITEM_LIBRARY_DOOR            (list_items + ID_ITEM_LIBRARY_DOOR)
-#define ITEM_LIBRARY_SIGN            (list_items + ID_ITEM_LIBRARY_SIGN)
-#define ITEM_BOOKS                   (list_items + ID_ITEM_BOOKS)
-#define ITEM_DOOR_ROOM_1             (list_items + ID_ITEM_DOOR_ROOM_1)
-#define ITEM_DOOR_ROOM_2             (list_items + ID_ITEM_DOOR_ROOM_2)
-#define ITEM_DOOR_ROOM_3             (list_items + ID_ITEM_DOOR_ROOM_3)
-#define ITEM_ENTRY_DOORS_KEY         (list_items + ID_ITEM_ENTRY_DOORS_KEY)
+#define ITEM_ENTRY_DOORS             (list_items + (ID_ITEM_ENTRY_DOORS - 1))
+#define ITEM_GRANDFATHER_CLOCK       (list_items + (ID_ITEM_GRANDFATHER_CLOCK - 1))
+#define ITEM_LIBRARY_DOOR            (list_items + (ID_ITEM_LIBRARY_DOOR - 1))
+#define ITEM_LIBRARY_SIGN            (list_items + (ID_ITEM_LIBRARY_SIGN - 1))
+#define ITEM_BOOKS                   (list_items + (ID_ITEM_BOOKS - 1))
+#define ITEM_DOOR_ROOM_1             (list_items + (ID_ITEM_DOOR_ROOM_1 - 1))
+#define ITEM_DOOR_ROOM_2             (list_items + (ID_ITEM_DOOR_ROOM_2 - 1))
+#define ITEM_DOOR_ROOM_3             (list_items + (ID_ITEM_DOOR_ROOM_3 - 1))
+#define ITEM_ENTRY_DOORS_KEY         (list_items + (ID_ITEM_ENTRY_DOORS_KEY - 1))
 /* -------------------------------------------------------------------------------- */
-#define ID_CHARACTER_PLAYER          0
-#define ID_CHARACTER_LIBRARIAN       1
+#define ID_CHARACTER_PLAYER          1
+#define ID_CHARACTER_LIBRARIAN       2
 
-#define PLAYER                       (list_characters + ID_CHARACTER_PLAYER)
-#define CHARACTER_LIBRARIAN          (list_characters + ID_CHARACTER_LIBRARIAN)
+#define PLAYER                       (list_characters + (ID_CHARACTER_PLAYER - 1))
+#define CHARACTER_LIBRARIAN          (list_characters + (ID_CHARACTER_LIBRARIAN - 1))
 /* -------------------------------------------------------------------------------- */
 
 #endif

@@ -26,12 +26,12 @@ void execute_use(void)
     {
         if (item_to_use->access)
             use_access_item(item_to_use);
-        else if (item_to_use->requires_target_for_use)
+        else if (item_to_use->bool_requires_target_for_use)
             bool_issue_is_target = use_item_on_target(item_to_use);
         else
         {
             add_output("%s ", item_to_use->description);
-            add_output("The %s %s seem to be of much use.\n\n", item_to_use->tags[1], item_to_use->is_singular ? "doesn't" : "don't");
+            add_output("The %s %s seem to be of much use.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "doesn't" : "don't");
         }
     }
 
@@ -100,16 +100,16 @@ static void use_access_item(Item* item_to_use)
     if (item_to_use->access == ACCESS_OPEN)
     {
         item_to_use->access = ACCESS_CLOSED;
-        add_output("You close the %s.\n\n", item_to_use->is_singular ? "door" : "doors");
+        add_output("You close the %s.\n\n", item_to_use->bool_is_singular ? "door" : "doors");
     }
     else if (item_to_use->access == ACCESS_CLOSED)
     {
         item_to_use->access = ACCESS_OPEN;
-        add_output("You open the %s.\n\n", item_to_use->is_singular ? "door" : "doors");
+        add_output("You open the %s.\n\n", item_to_use->bool_is_singular ? "door" : "doors");
     }
     else
     {
-        add_output("The %s %s locked.\n\n", item_to_use->is_singular ? "door" : "doors", item_to_use->is_singular ? "is" : "are");
+        add_output("The %s %s locked.\n\n", item_to_use->bool_is_singular ? "door" : "doors", item_to_use->bool_is_singular ? "is" : "are");
     }
     return;
 }
@@ -170,28 +170,28 @@ static int use_item_on_target(const Item* item_to_use)
     if (bool_target_is_character)
     {
         if (target == PLAYER)
-            add_output("The %s %s nothing to you.\n\n", item_to_use->tags[1], item_to_use->is_singular ? "does" : "do");
+            add_output("The %s %s nothing to you.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "does" : "do");
         else
-            add_output("The %s %s nothing to the %s.\n\n", item_to_use->tags[1], item_to_use->is_singular ? "does" : "do", ((Character*)target)->tags[1]);
+            add_output("The %s %s nothing to the %s.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "does" : "do", ((Character*)target)->tags[1]);
     }
     else if (!((Item*)target)->access || ((Item*)target)->unlocked_with != item_to_use)
     {
-        add_output("The %s %s nothing to the %s.\n\n", item_to_use->tags[1], item_to_use->is_singular ? "does" : "do", ((Item*)target)->tags[1]);
+        add_output("The %s %s nothing to the %s.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "does" : "do", ((Item*)target)->tags[1]);
     }
     else if (((Item*)target)->access == ACCESS_OPEN)
     {
         ((Item*)target)->access = ACCESS_LOCKED;
-        add_output("You close and lock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
+        add_output("You close and lock the %s.\n\n", ((Item*)target)->bool_is_singular ? "door" : "doors");
     }
     else if (((Item*)target)->access == ACCESS_CLOSED)
     {
         ((Item*)target)->access = ACCESS_LOCKED;
-        add_output("You lock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
+        add_output("You lock the %s.\n\n", ((Item*)target)->bool_is_singular ? "door" : "doors");
     }
     else
     {
         ((Item*)target)->access = ACCESS_CLOSED;
-        add_output("You unlock the %s.\n\n", ((Item*)target)->is_singular ? "door" : "doors");
+        add_output("You unlock the %s.\n\n", ((Item*)target)->bool_is_singular ? "door" : "doors");
     }
 
     free(items);

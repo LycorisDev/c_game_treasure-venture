@@ -11,11 +11,11 @@ void populate_list_items(void)
     memset(list_items, 0, NBR_ITEMS * sizeof(Item));
 
     ITEM_ENTRY_DOORS->id = ID_ITEM_ENTRY_DOORS;
-    ITEM_ENTRY_DOORS->is_singular = 0;
+    ITEM_ENTRY_DOORS->bool_is_singular = 0;
     ITEM_ENTRY_DOORS->access = ACCESS_CLOSED;
     ITEM_ENTRY_DOORS->unlocked_with = ITEM_ENTRY_DOORS_KEY;
-    ITEM_ENTRY_DOORS->can_be_taken = 0;
-    ITEM_ENTRY_DOORS->requires_target_for_use = 0;
+    ITEM_ENTRY_DOORS->bool_can_be_taken = 0;
+    ITEM_ENTRY_DOORS->bool_requires_target_for_use = 0;
     memcpy(ITEM_ENTRY_DOORS->tags[0], "main entry doors", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS->tags[1], "main double doors", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS->tags[2], "main doors", LENGTH_TAG);
@@ -27,9 +27,9 @@ void populate_list_items(void)
     memcpy(ITEM_ENTRY_DOORS->desc_look_item, "The entry doors of the mansion.", LENGTH_DESCRIPTION);
 
     ITEM_GRANDFATHER_CLOCK->id = ID_ITEM_GRANDFATHER_CLOCK;
-    ITEM_GRANDFATHER_CLOCK->is_singular = 1;
-    ITEM_GRANDFATHER_CLOCK->can_be_taken = 0;
-    ITEM_GRANDFATHER_CLOCK->requires_target_for_use = 0;
+    ITEM_GRANDFATHER_CLOCK->bool_is_singular = 1;
+    ITEM_GRANDFATHER_CLOCK->bool_can_be_taken = 0;
+    ITEM_GRANDFATHER_CLOCK->bool_requires_target_for_use = 0;
     memcpy(ITEM_GRANDFATHER_CLOCK->tags[0], "grandfather clock", LENGTH_TAG);
     memcpy(ITEM_GRANDFATHER_CLOCK->tags[1], "clock", LENGTH_TAG);
     memcpy(ITEM_GRANDFATHER_CLOCK->description, "A grandfather clock.", LENGTH_DESCRIPTION);
@@ -37,10 +37,10 @@ void populate_list_items(void)
     memcpy(ITEM_GRANDFATHER_CLOCK->desc_look_item, "The clock doesn't seem to hide any secret.", LENGTH_DESCRIPTION);
 
     ITEM_LIBRARY_DOOR->id = ID_ITEM_LIBRARY_DOOR;
-    ITEM_LIBRARY_DOOR->is_singular = 1;
+    ITEM_LIBRARY_DOOR->bool_is_singular = 1;
     ITEM_LIBRARY_DOOR->access = ACCESS_CLOSED;
-    ITEM_LIBRARY_DOOR->can_be_taken = 0;
-    ITEM_LIBRARY_DOOR->requires_target_for_use = 0;
+    ITEM_LIBRARY_DOOR->bool_can_be_taken = 0;
+    ITEM_LIBRARY_DOOR->bool_requires_target_for_use = 0;
     memcpy(ITEM_LIBRARY_DOOR->tags[0], "old library door", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_DOOR->tags[1], "library door", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_DOOR->tags[2], "door", LENGTH_TAG);
@@ -49,9 +49,9 @@ void populate_list_items(void)
     memcpy(ITEM_LIBRARY_DOOR->desc_look_item, "The door to the old library.", LENGTH_DESCRIPTION);
 
     ITEM_LIBRARY_SIGN->id = ID_ITEM_LIBRARY_SIGN;
-    ITEM_LIBRARY_SIGN->is_singular = 1;
-    ITEM_LIBRARY_SIGN->can_be_taken = 0;
-    ITEM_LIBRARY_SIGN->requires_target_for_use = 0;
+    ITEM_LIBRARY_SIGN->bool_is_singular = 1;
+    ITEM_LIBRARY_SIGN->bool_can_be_taken = 0;
+    ITEM_LIBRARY_SIGN->bool_requires_target_for_use = 0;
     memcpy(ITEM_LIBRARY_SIGN->tags[0], "library sign", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_SIGN->tags[1], "sign", LENGTH_TAG);
     memcpy(ITEM_LIBRARY_SIGN->description, "A sign that reads 'Library'.", LENGTH_DESCRIPTION);
@@ -59,19 +59,19 @@ void populate_list_items(void)
     memcpy(ITEM_LIBRARY_SIGN->desc_look_item, "A sign that reads 'Library'.", LENGTH_DESCRIPTION);
 
     ITEM_BOOKS->id = ID_ITEM_BOOKS;
-    ITEM_BOOKS->is_singular = 0;
-    ITEM_BOOKS->can_be_taken = 0;
-    ITEM_BOOKS->requires_target_for_use = 0;
+    ITEM_BOOKS->bool_is_singular = 0;
+    ITEM_BOOKS->bool_can_be_taken = 0;
+    ITEM_BOOKS->bool_requires_target_for_use = 0;
     memcpy(ITEM_BOOKS->tags[0], "books", LENGTH_TAG);
     memcpy(ITEM_BOOKS->description, "Books from the mansion's old library.", LENGTH_DESCRIPTION);
     memcpy(ITEM_BOOKS->desc_look_around, "The library walls are lined with old, dusty books.", LENGTH_DESCRIPTION);
     memcpy(ITEM_BOOKS->desc_look_item, "Let's not focus on the books.", LENGTH_DESCRIPTION);
 
     ITEM_DOOR_ROOM_1->id = ID_ITEM_DOOR_ROOM_1;
-    ITEM_DOOR_ROOM_1->is_singular = 1;
+    ITEM_DOOR_ROOM_1->bool_is_singular = 1;
     ITEM_DOOR_ROOM_1->access = ACCESS_CLOSED;
-    ITEM_DOOR_ROOM_1->can_be_taken = 0;
-    ITEM_DOOR_ROOM_1->requires_target_for_use = 0;
+    ITEM_DOOR_ROOM_1->bool_can_be_taken = 0;
+    ITEM_DOOR_ROOM_1->bool_requires_target_for_use = 0;
     memcpy(ITEM_DOOR_ROOM_1->tags[0], "first room door", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_1->tags[1], "door room 1", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_1->tags[2], "door", LENGTH_TAG);
@@ -80,10 +80,10 @@ void populate_list_items(void)
     memcpy(ITEM_DOOR_ROOM_1->desc_look_item, "The door to the first room.", LENGTH_DESCRIPTION);
 
     ITEM_DOOR_ROOM_2->id = ID_ITEM_DOOR_ROOM_2;
-    ITEM_DOOR_ROOM_2->is_singular = 1;
+    ITEM_DOOR_ROOM_2->bool_is_singular = 1;
     ITEM_DOOR_ROOM_2->access = ACCESS_CLOSED;
-    ITEM_DOOR_ROOM_2->can_be_taken = 0;
-    ITEM_DOOR_ROOM_2->requires_target_for_use = 0;
+    ITEM_DOOR_ROOM_2->bool_can_be_taken = 0;
+    ITEM_DOOR_ROOM_2->bool_requires_target_for_use = 0;
     memcpy(ITEM_DOOR_ROOM_2->tags[0], "second room door", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_2->tags[1], "door room 2", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_2->tags[2], "door", LENGTH_TAG);
@@ -92,10 +92,10 @@ void populate_list_items(void)
     memcpy(ITEM_DOOR_ROOM_2->desc_look_item, "The door to the second room.", LENGTH_DESCRIPTION);
 
     ITEM_DOOR_ROOM_3->id = ID_ITEM_DOOR_ROOM_3;
-    ITEM_DOOR_ROOM_3->is_singular = 1;
+    ITEM_DOOR_ROOM_3->bool_is_singular = 1;
     ITEM_DOOR_ROOM_3->access = ACCESS_CLOSED;
-    ITEM_DOOR_ROOM_3->can_be_taken = 0;
-    ITEM_DOOR_ROOM_3->requires_target_for_use = 0;
+    ITEM_DOOR_ROOM_3->bool_can_be_taken = 0;
+    ITEM_DOOR_ROOM_3->bool_requires_target_for_use = 0;
     memcpy(ITEM_DOOR_ROOM_3->tags[0], "third room door", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_3->tags[1], "door room 3", LENGTH_TAG);
     memcpy(ITEM_DOOR_ROOM_3->tags[2], "door", LENGTH_TAG);
@@ -104,9 +104,9 @@ void populate_list_items(void)
     memcpy(ITEM_DOOR_ROOM_3->desc_look_item, "The door to the third room.", LENGTH_DESCRIPTION);
 
     ITEM_ENTRY_DOORS_KEY->id = ID_ITEM_ENTRY_DOORS_KEY;
-    ITEM_ENTRY_DOORS_KEY->is_singular = 1;
-    ITEM_ENTRY_DOORS_KEY->can_be_taken = 1;
-    ITEM_ENTRY_DOORS_KEY->requires_target_for_use = 1;
+    ITEM_ENTRY_DOORS_KEY->bool_is_singular = 1;
+    ITEM_ENTRY_DOORS_KEY->bool_can_be_taken = 1;
+    ITEM_ENTRY_DOORS_KEY->bool_requires_target_for_use = 1;
     memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "shiny thing", LENGTH_TAG);
     memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry doors.", LENGTH_DESCRIPTION);
     memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "Something shiny, left unattended on the ground, catches your attention.", LENGTH_DESCRIPTION);
@@ -175,7 +175,7 @@ Item** retrieve_takeable_items(Item** item_collection, const char* parser)
         if (!item_collection[i])
             break;
 
-        if (!item_collection[i]->can_be_taken)
+        if (!item_collection[i]->bool_can_be_taken)
             continue;
 
         if (!parser || bool_item_matches_parser(item_collection[i], parser))

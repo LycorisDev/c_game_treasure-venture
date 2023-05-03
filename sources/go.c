@@ -242,7 +242,7 @@ static void cross_passage(Exit* exit)
     if (exit->passage->access == ACCESS_CLOSED)
     {
         exit->passage->access = ACCESS_OPEN;
-        add_output("You open the %s and ", exit->passage->is_singular ? "door" : "doors");
+        add_output("You open the %s and ", exit->passage->bool_is_singular ? "door" : "doors");
     }
     else
     {
@@ -339,7 +339,7 @@ static int bool_access_locked(const Exit* exit)
 
 static void print_access_locked(const Exit* exit)
 {
-    add_output("The %s %s locked.\n\n", exit->passage->is_singular ? "door" : "doors", exit->passage->is_singular ? "is" : "are");
+    add_output("The %s %s locked.\n\n", exit->passage->bool_is_singular ? "door" : "doors", exit->passage->bool_is_singular ? "is" : "are");
     return;
 }
 
