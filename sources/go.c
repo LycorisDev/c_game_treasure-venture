@@ -48,7 +48,7 @@ void execute_go(void)
 
 static void go_inside(void)
 {
-    if (PLAYER->current_location->type != LOCATION_TYPE_OUTSIDE)
+    if (PLAYER->current_location->bool_is_indoors)
     {
         add_output("You're already inside of a building.\n\n");
         memset(command.object, 0, sizeof(command.object));
@@ -69,7 +69,7 @@ static void go_outside(void)
     int i, j;
     int outside_indexes[NBR_LOCATIONS];
 
-    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+    if (!PLAYER->current_location->bool_is_indoors)
     {
         add_output("You're already outside.\n\n");
         memset(command.object, 0, sizeof(command.object));
@@ -161,12 +161,19 @@ static void go_out(void)
     Exit* accessible_exits[NBR_LOCATIONS] = {0};
     Exit* locked_exits[NBR_LOCATIONS] = {0};
 
-    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE)
+    if (!PLAYER->current_location->bool_is_indoors)
     {
         add_output("You are already outside.\n\n");
         memset(command.object, 0, sizeof(command.object));
         return;
     }
+
+    /*
+        TODO:
+        "go out" should give the priority to the door which leads outside, even if it's locked. 
+        It's not normal to get the key, go to the hallway, and enter "go out" for the game to send us back to the library. 
+        It should say the same as if we're trying to go outside: that the doors are locked.
+    */
 
     for (i = 0, j = 0, k = 0; i < NBR_LOCATIONS; ++i)
     {
@@ -184,7 +191,7 @@ static void go_out(void)
         print_access_locked(locked_exits[0]);
     else
     {
-        add_output("There is more than one exit. Which one do you want?\n");
+        add_output("There is more than one exit. Which one do you want?\n\n");
         memset(command.object, 0, sizeof(command.object));
     }
 
@@ -250,7 +257,7 @@ static void cross_passage(Exit* exit)
     }
 
     /* Enter a building */
-    if (PLAYER->current_location->type == LOCATION_TYPE_OUTSIDE && exit->to->type == LOCATION_TYPE_BUILDING)
+    if (!PLAYER->current_location->bool_is_indoors && exit->to->type == LOCATION_TYPE_BUILDING)
     {
         for (i = 0; i < NBR_LOCATIONS; ++i)
         {
@@ -269,7 +276,7 @@ static void cross_passage(Exit* exit)
         add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->inside_of->tags[0], exit->to->tags[0]);
     }
     /* Exit a building */
-    else if (PLAYER->current_location->type == LOCATION_TYPE_ROOM && exit->to->type == LOCATION_TYPE_BUILDING)
+    else if (PLAYER->current_location->bool_is_indoors && exit->to->type == LOCATION_TYPE_BUILDING)
     {
         for (i = 0; i < NBR_LOCATIONS; ++i)
         {

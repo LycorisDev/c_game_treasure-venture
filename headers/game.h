@@ -85,9 +85,7 @@ extern Character list_characters[NBR_CHARACTERS];
 #define ACCESS_OPEN                  2
 #define ACCESS_CLOSED                3
 /* -------------------------------------------------------------------------------- */
-#define LOCATION_TYPE_OUTSIDE        1
-#define LOCATION_TYPE_BUILDING       2
-#define LOCATION_TYPE_ROOM           3
+#define LOCATION_TYPE_BUILDING       1
 
 #define ID_LOCATION_OUTSIDE          1
 #define ID_LOCATION_MANSION          2

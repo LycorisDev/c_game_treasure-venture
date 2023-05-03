@@ -55,7 +55,6 @@ void populate_list_locations(void)
 
     LOCATION_OUTSIDE->id = ID_LOCATION_OUTSIDE;
     LOCATION_OUTSIDE->bool_is_indoors = 0;
-    LOCATION_OUTSIDE->type = LOCATION_TYPE_OUTSIDE;
     LOCATION_OUTSIDE->geo_aff = &(list_geo_aff[0]);
     memcpy(LOCATION_OUTSIDE->tags[0], "world", LENGTH_TAG);
     memcpy(LOCATION_OUTSIDE->description, "", LENGTH_DESCRIPTION);
@@ -64,6 +63,7 @@ void populate_list_locations(void)
     LOCATION_OUTSIDE->items[0] = ITEM_ENTRY_DOORS;
     LOCATION_OUTSIDE->characters[0] = PLAYER;
 
+    /*r*/
     LOCATION_MANSION->id = ID_LOCATION_MANSION;
     LOCATION_MANSION->bool_is_indoors = 1;
     LOCATION_MANSION->type = LOCATION_TYPE_BUILDING;
@@ -79,10 +79,10 @@ void populate_list_locations(void)
     LOCATION_MANSION->locations[3] = LOCATION_ROOM_2;
     LOCATION_MANSION->locations[4] = LOCATION_ROOM_3;
     LOCATION_MANSION->items[0] = ITEM_ENTRY_DOORS;
+    /*r*/
 
     LOCATION_MAIN_HALLWAY->id = ID_LOCATION_MAIN_HALLWAY;
     LOCATION_MAIN_HALLWAY->bool_is_indoors = 1;
-    LOCATION_MAIN_HALLWAY->type = LOCATION_TYPE_ROOM;
     LOCATION_MAIN_HALLWAY->geo_aff = &(list_geo_aff[1]);
     LOCATION_MAIN_HALLWAY->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", LENGTH_TAG);
@@ -97,7 +97,6 @@ void populate_list_locations(void)
 
     LOCATION_OLD_LIBRARY->id = ID_LOCATION_OLD_LIBRARY;
     LOCATION_OLD_LIBRARY->bool_is_indoors = 1;
-    LOCATION_OLD_LIBRARY->type = LOCATION_TYPE_ROOM;
     LOCATION_OLD_LIBRARY->geo_aff = &(list_geo_aff[1]);
     LOCATION_OLD_LIBRARY->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", LENGTH_TAG);
@@ -116,7 +115,6 @@ void populate_list_locations(void)
 
     LOCATION_ROOM_1->id = ID_LOCATION_ROOM_1;
     LOCATION_ROOM_1->bool_is_indoors = 1;
-    LOCATION_ROOM_1->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_1->geo_aff = &(list_geo_aff[1]);
     LOCATION_ROOM_1->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_1->tags[0], "first room", LENGTH_TAG);
@@ -127,7 +125,6 @@ void populate_list_locations(void)
 
     LOCATION_ROOM_2->id = ID_LOCATION_ROOM_2;
     LOCATION_ROOM_2->bool_is_indoors = 1;
-    LOCATION_ROOM_2->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_2->geo_aff = &(list_geo_aff[1]);
     LOCATION_ROOM_2->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_2->tags[0], "second room", LENGTH_TAG);
@@ -139,7 +136,6 @@ void populate_list_locations(void)
 
     LOCATION_ROOM_3->id = ID_LOCATION_ROOM_3;
     LOCATION_ROOM_3->bool_is_indoors = 1;
-    LOCATION_ROOM_3->type = LOCATION_TYPE_ROOM;
     LOCATION_ROOM_3->geo_aff = &(list_geo_aff[1]);
     LOCATION_ROOM_3->inside_of = LOCATION_MANSION;
     memcpy(LOCATION_ROOM_3->tags[0], "third room", LENGTH_TAG);
@@ -162,10 +158,10 @@ void describe_location(const Location* location)
 
     /* TODO: Remove the need for this temporary fix */
     /* Temporary: If we are outside, print the description of the first location in "outside"'s location list. Turns out there's only one, the mansion. */
-    if (location->type == LOCATION_TYPE_OUTSIDE)
-        add_output("%s ", location->locations[0]->description);
-    else
+    if (location->bool_is_indoors)
         add_output("%s ", location->description);
+    else
+        add_output("%s ", location->locations[0]->description);
 
     for (i = 0; i < NBR_ITEMS; ++i)
     {
@@ -210,10 +206,10 @@ void display_location_suggestions(Location* origin)
             continue;
 
         bool_ins_out_already_printed = 1;
-        if (origin->type == LOCATION_TYPE_OUTSIDE)
-            add_output("\t\t['Go inside'.]\n");
-        else
+        if (origin->bool_is_indoors)
             add_output("\t\t['Go outside'.]\n");
+        else
+            add_output("\t\t['Go inside'.]\n");
     }
     add_output("\n");
 
@@ -285,7 +281,7 @@ static int bool_location_matches_parser(const Location* origin, const char* pars
 
         /* TODO: Make so there's no need for this trick, maybe with a get_exit() function instead of directly looking at the exit variable */
         /* If you exit the building */
-        if (origin->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->type == LOCATION_TYPE_ROOM)
+        if (origin->type == LOCATION_TYPE_BUILDING && PLAYER->current_location->bool_is_indoors)
         {
             /* You must not use "go [current building]" but you can use the tag of the outside location (which is the first of the building's exits) */
             if (!strcmp(parser, origin->exits[0].to->tags[1]))
