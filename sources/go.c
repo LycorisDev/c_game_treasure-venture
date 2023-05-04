@@ -127,28 +127,22 @@ static void go_back(void)
 
     for (i = 0; i < NBR_LOCATIONS; ++i)
     {
-        if (!PLAYER->previous_location->exits[i].to)
+        if (!PLAYER->current_location->exits[i].to)
         {
             add_output("Your previous location cannot be accessed.\n\n");
             memset(command.object, 0, sizeof(command.object));
             return;
         }
-        else if (PLAYER->current_location == PLAYER->previous_location->exits[i].to)
+        else if (PLAYER->previous_location == PLAYER->current_location->exits[i].to)
             break;
     }
 
-    if (bool_access_locked(PLAYER->previous_location->exits + i))
-        print_access_locked(PLAYER->previous_location->exits + i);
+    if (bool_access_locked(PLAYER->current_location->exits + i))
+        print_access_locked(PLAYER->current_location->exits + i);
     else if (bool_location_is_full(PLAYER->previous_location))
         print_location_is_full();
-    /*
-    TODO: This is not right, because cross_passage() will lead us back to our current location, aka no movement.
-            But, if I try to rework the code so that it works, then it will be very complex with the shenanigans 
-            going on with the buildings. So I need to refactor the building thing first.
-
     else
-        cross_passage(PLAYER->previous_location->exits + i);
-    */
+        cross_passage(PLAYER->current_location->exits + i);
     return;
 }
 
