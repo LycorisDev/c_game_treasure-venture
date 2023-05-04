@@ -9,14 +9,6 @@ GeoAff list_geo_aff[NBR_GEO_AFF];
 static void get_all_tags(char* p_str, const int word_length, Location* object);
 static int bool_location_matches_parser(const Location* destination, const char* parser);
 
-/*
-    TODO:
-    - Use the ID to check if an element exists (e.g.: !list_locations[i].id) 
-    because now an ID of 0 means the element hasn't been initialized, since 
-    all structs are set to 0 before values start to be entered.
-    - Refactor the exits.
-*/
-
 void populate_list_locations(void)
 {
     Exit exit_objects[NBR_LOCATIONS];
