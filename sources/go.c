@@ -148,9 +148,12 @@ static void go_back(void)
 
 static void go_out(void)
 {
-    int i, j, k;
-    Exit* accessible_exits[NBR_LOCATIONS] = {0};
-    Exit* locked_exits[NBR_LOCATIONS] = {0};
+    int i;
+    int j, k, l, m;
+    Exit* to_outside_and_accessible[NBR_LOCATIONS] = {0};
+    Exit* to_outside_but_locked[NBR_LOCATIONS] = {0};
+    Exit* other_and_accessible[NBR_LOCATIONS] = {0};
+    Exit* other_but_locked[NBR_LOCATIONS] = {0};
 
     if (!PLAYER->current_location->bool_is_indoors)
     {
@@ -159,33 +162,63 @@ static void go_out(void)
         return;
     }
 
-    /*
-        TODO:
-        "go out" should give the priority to the door which leads outside, even if it's locked. 
-        It's not normal to get the key, go to the hallway, and enter "go out" for the game to send us back to the library. 
-        It should say the same as if we're trying to go outside: that the doors are locked.
-    */
-
-    for (i = 0, j = 0, k = 0; i < NBR_LOCATIONS; ++i)
+    for (i = 0, j = 0, k = 0, l = 0, m = 0; i < NBR_LOCATIONS; ++i)
     {
         if (!PLAYER->current_location->exits[i].to)
             break;
-        else if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
-            accessible_exits[j++] = &(PLAYER->current_location->exits[i]);
+        else if (!PLAYER->current_location->exits[i].to->bool_is_indoors)
+        {
+            if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
+                to_outside_and_accessible[j++] = &(PLAYER->current_location->exits[i]);
+            else
+                to_outside_but_locked[k++] = &(PLAYER->current_location->exits[i]);
+        }
         else
-            locked_exits[k++] = &(PLAYER->current_location->exits[i]);
+        {
+            if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
+                other_and_accessible[l++] = &(PLAYER->current_location->exits[i]);
+            else
+                other_but_locked[m++] = &(PLAYER->current_location->exits[i]);
+        }
     }
 
-    if (j == 1)
-        cross_passage(accessible_exits[0]);
-    else if (k == 1)
-        print_access_locked(locked_exits[0]);
-    else
+    if (j)
     {
-        add_output("There is more than one exit. Which one do you want?\n\n");
-        memset(command.object, 0, sizeof(command.object));
+        if (j == 1)
+        {
+            cross_passage(to_outside_and_accessible[0]);
+            return;
+        }
+    }
+    else if (k)
+    {
+        if (k == 1)
+        {
+            print_access_locked(to_outside_but_locked[0]);
+            memset(command.object, 0, sizeof(command.object));
+            return;
+        }
+    }
+    else if (l)
+    {
+        if (l == 1)
+        {
+            cross_passage(other_and_accessible[0]);
+            return;
+        }
+    }
+    else if (m)
+    {
+        if (m == 1)
+        {
+            print_access_locked(other_but_locked[0]);
+            memset(command.object, 0, sizeof(command.object));
+            return;
+        }
     }
 
+    add_output("There is more than one exit. Which one do you want?\n\n");
+    memset(command.object, 0, sizeof(command.object));
     return;
 }
 
