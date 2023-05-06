@@ -62,7 +62,7 @@ void initialize_game(FILE* save_file)
         return;
     }
 
-    id = strtol(save_buffer[1], &end_ptr, 10);
+    id = strtol(save_buffer[1], &end_ptr, 10) - 1;
     /*
        save_buffer[1] is empty
        OR there was a non-digit character in there (could also be that the only character is non-digit)
@@ -82,7 +82,7 @@ void initialize_game(FILE* save_file)
         return;
     }
 
-    id = strtol(save_buffer[3], &end_ptr, 10);
+    id = strtol(save_buffer[3], &end_ptr, 10) - 1;
     if (save_buffer[3] == end_ptr || *end_ptr != '\0' || (id < 0 || id > (NBR_LOCATIONS - 1)))
     {
         exit_file_corrupted(save_file);
@@ -101,9 +101,12 @@ void initialize_game(FILE* save_file)
 
     /*
         TODO: Instead of having to move the player, or even other characters as well as items, 
-        only populate the elements which cannot move nor be modified.
+        only populate the elements which cannot move nor be modified (use the "can_be_taken" var).
         And only then, check if the save file has data about it, and use this data to SET the element.
         If there is no data, then you can use a default value.
+
+        Note that the item list of locations isn't saved, this needs to change, because this would 
+        duplicate the key for example if it's already in the player inventory.
 
         The current solution is only fine because this is the beginning of the game, when a lot of 
         movements occur, it's hell.
@@ -180,7 +183,7 @@ void initialize_game(FILE* save_file)
 
     for (i = 0; i < NBR_ITEMS; ++i)
     {
-        id = strtol(save_buffer[6 + NBR_EVENTS + i], &end_ptr, 10);
+        id = strtol(save_buffer[6 + NBR_EVENTS + i], &end_ptr, 10) - 1;
         if (save_buffer[6 + NBR_EVENTS + i] == end_ptr || *end_ptr != '\0' || (id < 1 || id > (NBR_ITEMS - 1)))
             break;
         else
