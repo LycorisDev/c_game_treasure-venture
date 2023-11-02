@@ -157,10 +157,7 @@ static void execute_submenu_save(void)
 
 static void execute_submenu_about(void)
 {
-    add_output("\t[\"Treasure Venture\" is a text adventure. A text adventure game is a game that is interacted with through written commands, and which only displays written text. There is no graphical element.]\n\n");
-    add_output("\t[This project differs from a classic text adventure in that \"Treasure Venture\" offers suggestions when the player is lost. Since this reveals the plot, it's usually considered as spoiling the player's enjoyment. Even so, I've allowed myself to make the handling of the game more accessible, which I hope will make for a bigger playerbase and therefore increase my chances of receiving critiques on my work.]\n\n");
-    add_output("\t[\"Treasure Venture\" understands several commands, can save the ongoing game, and has events. An event example is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled \"Twenty Squares\", that I leave you to discover as well as the game itself.]\n\n");
-    add_output("\t[For more information, visit my channel:]\n\thttps://www.youtube.com/@thelycorisradiata/\n\n");
+    add_output("\t[Visit the Itch.io page:]\n\thttps://mofumofustudios.itch.io/treasure-venture\n\n");
 
     if (game_state == STATE_GAME)
         describe_location(PLAYER->current_location);
