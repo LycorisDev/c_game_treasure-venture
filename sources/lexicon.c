@@ -14,7 +14,6 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_BACK, "back", LENGTH_WORD);
     memcpy(LEXICON_BOOK, "book", LENGTH_WORD);
     memcpy(LEXICON_BOOKS, "books", LENGTH_WORD);
-    memcpy(LEXICON_CHARACTER, "character", LENGTH_WORD);
     memcpy(LEXICON_CLOCK, "clock", LENGTH_WORD);
     memcpy(LEXICON_DOOR, "door", LENGTH_WORD);
     memcpy(LEXICON_DOORS, "doors", LENGTH_WORD);
@@ -25,7 +24,6 @@ void populate_list_lexicon(void)
     memcpy(LEXICON_GO, "go", LENGTH_WORD);
     memcpy(LEXICON_GRANDFATHER, "grandfather", LENGTH_WORD);
     memcpy(LEXICON_HALLWAY, "hallway", LENGTH_WORD);
-    memcpy(LEXICON_HOLD, "hold", LENGTH_WORD);
     memcpy(LEXICON_INSIDE, "inside", LENGTH_WORD);
     memcpy(LEXICON_INVENTORY, "inventory", LENGTH_WORD);
     memcpy(LEXICON_KEY, "key", LENGTH_WORD);

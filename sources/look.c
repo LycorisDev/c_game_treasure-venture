@@ -5,7 +5,6 @@
 #include "../headers/characters.h"
 #include "../headers/locations.h"
 #include "../headers/events.h"
-#include "../headers/character.h"
 
 static int bool_no_item_at_current_location(void);
 /* static int bool_no_character_at_current_location(void); */
@@ -63,11 +62,6 @@ void execute_look(void)
         {
             add_output("%s\n\n", items_with_same_tag[0]->desc_look_item);
             event_player_finds_entry_doors_key(items_with_same_tag[0]->id);
-        }
-        else if (bool_character_match && characters_with_same_tag[0] == PLAYER)
-        {
-            /* 'look [player]' is the same as the 'character' command */
-            execute_character();
         }
         else
         {

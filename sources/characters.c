@@ -16,7 +16,7 @@ void populate_list_characters(void)
     memcpy(PLAYER->tags[1], "self", LENGTH_TAG);
     memcpy(PLAYER->tags[2], "me", LENGTH_TAG);
     memcpy(PLAYER->tags[3], "myself", LENGTH_TAG);
-    memcpy(PLAYER->description, "NO_DESCRIPTION.", LENGTH_DESCRIPTION);
+    memcpy(PLAYER->description, "You're a quite handsome fellow.", LENGTH_DESCRIPTION);
     PLAYER->current_location = LOCATION_OUTSIDE;
 
     CHARACTER_LIBRARIAN->id = ID_CHARACTER_LIBRARIAN;

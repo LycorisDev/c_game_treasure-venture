@@ -2,23 +2,19 @@
 #include "../headers/parser.h"
 #include "../headers/play.h"
 #include "../headers/inventory.h"
-#include "../headers/character.h"
 #include "../headers/go.h"
 #include "../headers/look.h"
 #include "../headers/take.h"
 #include "../headers/drop.h"
 #include "../headers/use.h"
-#include "../headers/hold.h"
 
 /* Declared as extern in ../headers/commands.h */
 Command command;
 
 static const KeyFunc command_list[] = 
 {
-    {"character", &execute_character},
     {"drop", &execute_drop},
     {"go", &execute_go},
-    {"hold", &execute_hold},
     {"inventory", &execute_inventory},
     {"look", &execute_look},
     {"play", &execute_play},
@@ -78,8 +74,8 @@ void execute_game_command(void)
 
 void display_game_commands(void)
 {
-    add_output("\t['Menu']    ['Inventory']    ['Go']      ['Take']    ['Use']\n");
-    add_output("\t['Play']    ['Character']    ['Look']    ['Drop']    ['Hold']\n");
+    add_output("\t['Menu']    ['Inventory']    ['Look']    ['Take']\n");
+    add_output("\t['Play']       ['Use']        ['Go']     ['Drop']\n");
     add_output("\n");
     return;
 }
