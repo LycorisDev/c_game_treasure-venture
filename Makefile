@@ -55,10 +55,7 @@ win32:
 .PHONY: clean-unix
 .PHONY: clean-win64
 .PHONY: clean-win32
-clean:
-	@make -s clean-unix
-	@make -s clean-win64
-	@make -s clean-win32
+clean: clean-unix clean-win64 clean-win32
 clean-unix:
 	@rm -rf builds/unix/
 clean-win64:
