@@ -34,15 +34,15 @@ void event_first_time_player_enters_mansion(void)
 
 void execute_event_player_finds_entry_doors_key(void)
 {
-    memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry doors.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "A key is left unattended on the ground.", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_item, "The key shines in a golden color, and a small note attached to it with a string reads \"Entry\".", LENGTH_DESCRIPTION);
-    memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "main entry doors key", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS_KEY->tags[1], "main double doors key", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS_KEY->tags[2], "main doors key", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS_KEY->tags[3], "entry doors key", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS_KEY->tags[4], "double doors key", LENGTH_TAG);
-    memcpy(ITEM_ENTRY_DOORS_KEY->tags[5], "key", LENGTH_TAG);
+    memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry doors.", 37);
+    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "A key is left unattended on the ground.", 39);
+    memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_item, "The key shines in a golden color, and a small note attached to it with a string reads \"Entry\".", 94);
+    memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "main entry doors key", 20);
+    memcpy(ITEM_ENTRY_DOORS_KEY->tags[1], "main double doors key", 21);
+    memcpy(ITEM_ENTRY_DOORS_KEY->tags[2], "main doors key", 14);
+    memcpy(ITEM_ENTRY_DOORS_KEY->tags[3], "entry doors key", 15);
+    memcpy(ITEM_ENTRY_DOORS_KEY->tags[4], "double doors key", 16);
+    memcpy(ITEM_ENTRY_DOORS_KEY->tags[5], "key", 3);
     list_events[1] = FLAG_OFF;
     return;
 }

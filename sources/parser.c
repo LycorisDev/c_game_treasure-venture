@@ -29,6 +29,8 @@ void get_and_parse_cli_input(void)
     char input[INPUT_MAX_LENGTH] = {0};
     char c = 'A';
 
+    reset_parser();
+
     /* Get input from stdin */
     f_write_line(stdout, "> ");
     if (fgets(input, INPUT_MAX_LENGTH, stdin))

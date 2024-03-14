@@ -37,15 +37,15 @@ void populate_list_locations(void)
     memset(list_locations, 0, NBR_LOCATIONS * sizeof(Location));
 
     list_geo_aff[0].id = 1;
-    memcpy(list_geo_aff[0].name, "world", LENGTH_TAG);
+    memcpy(list_geo_aff[0].name, "world", 5);
     list_geo_aff[1].id = 2;
-    memcpy(list_geo_aff[1].name, "mansion", LENGTH_TAG);
+    memcpy(list_geo_aff[1].name, "mansion", 7);
 
     LOCATION_OUTSIDE->id = ID_LOCATION_OUTSIDE;
     LOCATION_OUTSIDE->bool_is_indoors = 0;
     LOCATION_OUTSIDE->geo_aff = &(list_geo_aff[0]);
-    memcpy(LOCATION_OUTSIDE->tags[0], "world", LENGTH_TAG);
-    memcpy(LOCATION_OUTSIDE->description, "", LENGTH_DESCRIPTION);
+    memcpy(LOCATION_OUTSIDE->tags[0], "world", 5);
+    memcpy(LOCATION_OUTSIDE->description, "", 1);
     LOCATION_OUTSIDE->exits[0] = exit_objects[2];
     LOCATION_OUTSIDE->items[0] = ITEM_ENTRY_DOORS;
     LOCATION_OUTSIDE->characters[0] = PLAYER;
@@ -53,9 +53,9 @@ void populate_list_locations(void)
     LOCATION_MAIN_HALLWAY->id = ID_LOCATION_MAIN_HALLWAY;
     LOCATION_MAIN_HALLWAY->bool_is_indoors = 1;
     LOCATION_MAIN_HALLWAY->geo_aff = &(list_geo_aff[1]);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", LENGTH_TAG);
-    memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", LENGTH_TAG);
-    memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", LENGTH_DESCRIPTION);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", 12);
+    memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", 7);
+    memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", 41);
     LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[1];
     LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
     LOCATION_MAIN_HALLWAY->items[0] = ITEM_ENTRY_DOORS;
@@ -66,9 +66,9 @@ void populate_list_locations(void)
     LOCATION_OLD_LIBRARY->id = ID_LOCATION_OLD_LIBRARY;
     LOCATION_OLD_LIBRARY->bool_is_indoors = 1;
     LOCATION_OLD_LIBRARY->geo_aff = &(list_geo_aff[1]);
-    memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", LENGTH_TAG);
-    memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", LENGTH_TAG);
-    memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", LENGTH_DESCRIPTION);
+    memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", 11);
+    memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", 7);
+    memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", 114);
     LOCATION_OLD_LIBRARY->exits[0] = exit_objects[4];
     LOCATION_OLD_LIBRARY->exits[1] = exit_objects[5];
     LOCATION_OLD_LIBRARY->exits[2] = exit_objects[6];
@@ -83,18 +83,18 @@ void populate_list_locations(void)
     LOCATION_ROOM_1->id = ID_LOCATION_ROOM_1;
     LOCATION_ROOM_1->bool_is_indoors = 1;
     LOCATION_ROOM_1->geo_aff = &(list_geo_aff[1]);
-    memcpy(LOCATION_ROOM_1->tags[0], "first room", LENGTH_TAG);
-    memcpy(LOCATION_ROOM_1->tags[1], "room 1", LENGTH_TAG);
-    memcpy(LOCATION_ROOM_1->description, "The room seems empty.", LENGTH_DESCRIPTION);
+    memcpy(LOCATION_ROOM_1->tags[0], "first room", 10);
+    memcpy(LOCATION_ROOM_1->tags[1], "room 1", 6);
+    memcpy(LOCATION_ROOM_1->description, "The room seems empty.", 21);
     LOCATION_ROOM_1->exits[0] = exit_objects[8];
     LOCATION_ROOM_1->items[0] = ITEM_DOOR_ROOM_1;
 
     LOCATION_ROOM_2->id = ID_LOCATION_ROOM_2;
     LOCATION_ROOM_2->bool_is_indoors = 1;
     LOCATION_ROOM_2->geo_aff = &(list_geo_aff[1]);
-    memcpy(LOCATION_ROOM_2->tags[0], "second room", LENGTH_TAG);
-    memcpy(LOCATION_ROOM_2->tags[1], "room 2", LENGTH_TAG);
-    memcpy(LOCATION_ROOM_2->description, "The room seems empty.", LENGTH_DESCRIPTION);
+    memcpy(LOCATION_ROOM_2->tags[0], "second room", 11);
+    memcpy(LOCATION_ROOM_2->tags[1], "room 2", 6);
+    memcpy(LOCATION_ROOM_2->description, "The room seems empty.", 21);
     LOCATION_ROOM_2->exits[0] = exit_objects[9];
     LOCATION_ROOM_2->items[0] = ITEM_DOOR_ROOM_2;
     LOCATION_ROOM_2->items[1] = ITEM_ENTRY_DOORS_KEY;
@@ -102,9 +102,9 @@ void populate_list_locations(void)
     LOCATION_ROOM_3->id = ID_LOCATION_ROOM_3;
     LOCATION_ROOM_3->bool_is_indoors = 1;
     LOCATION_ROOM_3->geo_aff = &(list_geo_aff[1]);
-    memcpy(LOCATION_ROOM_3->tags[0], "third room", LENGTH_TAG);
-    memcpy(LOCATION_ROOM_3->tags[1], "room 3", LENGTH_TAG);
-    memcpy(LOCATION_ROOM_3->description, "The room seems empty.", LENGTH_DESCRIPTION);
+    memcpy(LOCATION_ROOM_3->tags[0], "third room", 10);
+    memcpy(LOCATION_ROOM_3->tags[1], "room 3", 6);
+    memcpy(LOCATION_ROOM_3->description, "The room seems empty.", 21);
     LOCATION_ROOM_3->exits[0] = exit_objects[10];
     LOCATION_ROOM_3->items[0] = ITEM_DOOR_ROOM_3;
     return;
