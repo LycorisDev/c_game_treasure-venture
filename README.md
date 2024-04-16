@@ -2,7 +2,7 @@
 
 *Treasure Venture* is a text adventure game, which means it's interacted with through written commands, and only displays written text. There is no graphical element.
 
-*Treasure Venture* understands several commands, can save the ongoing game, and has events. An example of event is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled "[Twenty Squares](https://github.com/TheLycorisRadiata/c_game_twentysquares)", that I leave you to discover as well as the game itself.  
+*Treasure Venture* understands several commands, can save the ongoing game, and has events. An example of event is to have the doors lock up behind the player when they cross the mansion's threshold for the first time. It also contains a mini-game entitled "[Twenty Squares](https://github.com/LycorisDev/c_game_twenty-squares)", that I leave you to discover as well as the game itself.  
 
 ---
 

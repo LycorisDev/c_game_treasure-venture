@@ -157,7 +157,7 @@ static void execute_submenu_save(void)
 
 static void execute_submenu_about(void)
 {
-    add_output("\t[Visit the Itch.io page:]\n\thttps://mofumofustudios.itch.io/treasure-venture\n\n");
+    add_output("\t[Visit the Itch.io page:]\n\thttps://lycorisdev.itch.io/treasure-venture\n\n");
 
     if (game_state == STATE_GAME)
         describe_location(PLAYER->current_location);
