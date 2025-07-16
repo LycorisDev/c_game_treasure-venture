@@ -1,0 +1,105 @@
+#include "main.h"
+#include "commands.h"
+#include "items.h"
+#include "characters.h"
+#include "locations.h"
+#include "events.h"
+
+static int	bool_no_item_at_current_location(void);
+/* static int	bool_no_character_at_current_location(void); */
+static int	bool_player_is_the_only_character_at_current_location(void);
+
+void	execute_look(void)
+{
+	t_item		**items_with_same_tag = 0;
+	t_character	**characters_with_same_tag = 0;
+	int			bool_item_match = 0;
+	int			bool_character_match = 0;
+	int			bool_several_item_matches = 0;
+	int			bool_several_character_matches = 0;
+
+	items_with_same_tag = 0;
+	characters_with_same_tag = 0;
+	bool_item_match = 0;
+	bool_character_match = 0;
+	bool_several_item_matches = 0;
+	bool_several_character_matches = 0;
+	if (!strcmp(g_cmd.object, "around"))
+	{
+		describe_location(PLAYER->current_location);
+		return;
+	}
+	if (bool_no_item_at_current_location() && bool_player_is_the_only_character_at_current_location())
+	{
+		add_output("\t[Try 'look around'.]\n\n");
+		return;
+	}
+
+	if (*g_cmd.object)
+	{
+		items_with_same_tag = retrieve_items(PLAYER->current_location->items, g_cmd.object);
+		characters_with_same_tag = retrieve_characters(PLAYER->current_location->characters, g_cmd.object);
+
+		bool_item_match = items_with_same_tag && items_with_same_tag[0];
+		bool_character_match = characters_with_same_tag && characters_with_same_tag[0];
+
+		bool_several_item_matches = bool_item_match && items_with_same_tag[1];
+		bool_several_character_matches = bool_character_match && characters_with_same_tag[1];
+
+		if (!bool_item_match && !bool_character_match)
+		{
+			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		}
+		else if (bool_several_item_matches && bool_several_character_matches)
+		{
+			add_output("There is more than one item and character in your vicinity for which this tag works.\n");
+			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		}
+		else if (bool_several_item_matches)
+		{
+			add_output("There is more than one item in your vicinity for which this tag works.\n");
+			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		}
+		else if (bool_several_character_matches)
+		{
+			add_output("There is more than one character in your vicinity for which this tag works.\n");
+			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		}
+		else if (bool_item_match)
+		{
+			add_output("%s\n\n", items_with_same_tag[0]->desc_look_item);
+			event_player_finds_entry_doors_key(items_with_same_tag[0]->id);
+		}
+		else
+		{
+			add_output("%s\n\n", characters_with_same_tag[0]->description);
+		}
+	}
+
+	if (!*g_cmd.object)
+	{
+		display_item_suggestions(PLAYER->current_location->items, "look");
+		display_character_suggestions(PLAYER->current_location->characters, "look");
+	}
+
+	free(items_with_same_tag);
+	free(characters_with_same_tag);
+	return;
+}
+
+static int	bool_no_item_at_current_location(void)
+{
+	return !PLAYER->current_location->items[0];
+}
+
+/*
+static int	bool_no_character_at_current_location(void)
+{
+	return !PLAYER->current_location->characters[0];
+}
+*/
+
+static int	bool_player_is_the_only_character_at_current_location(void)
+{
+	return PLAYER->current_location->characters[0] == PLAYER && !PLAYER->current_location->characters[1];
+}

@@ -1,13 +1,5 @@
-# Temporary files
 *~
 *.swp
-
-# Test builds
+.vscode
 [Bb]uilds/
-
-# Save files
 save.txt
-
-# Todo list
-todo
-
