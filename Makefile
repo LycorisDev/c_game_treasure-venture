@@ -4,7 +4,7 @@ TS_LIB = -lts
 DIR_BUILD = builds
 DIR_OBJ = $(DIR_BUILD)/unix/objects
 EXE = $(DIR_BUILD)/unix/treasure-venture
-SOURCE_FILES = $(wildcard src/*.c)
+SOURCE_FILES = $(shell find src -name '*.c')
 OBJ_FILES = $(patsubst src/%.c, $(DIR_OBJ)/%.o, $(SOURCE_FILES))
 
 all: $(EXE)

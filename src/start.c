@@ -12,7 +12,6 @@ static void	execute_submenu_save(void);
 static void	execute_submenu_about(void);
 static void	execute_submenu_quit(void);
 
-static t_game_state		g_state = STATE_MENU;
 static int				g_is_game_ongoing = 0;
 static const KeyFunc	g_command_list[] = 
 {
@@ -74,28 +73,23 @@ static void	execute_menu_command(const char *command)
 void	access_main_menu(void)
 {
 	g_state = STATE_MENU;
-	reset_output();
-	add_output("\t-[ TREASURE VENTURE ]-\n\n");
-	add_output("\t[During the game, type 'Menu' to go back to the main menu.]\n\n");
-	add_output("\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
+	clear_window();
+	printf("\t-[ TREASURE VENTURE ]-\n\n");
+	printf("\t[During the game, type 'Menu' to go back to the main "
+		"menu.]\n\n");
+	printf("\t 'New Game'    'Load Game'    'Save'    'About'    "
+		"'Quit'\n\n");
 	return;
 }
 
 static void	execute_submenu_new(void)
 {
-	int	fd_save;
-
-	fd_save = -1;
-	initialize_game(fd_save);
-	reset_output();
-	add_output("\t[A new game will start...]\n");
-	fd_save = open("save.txt", O_RDONLY);
-	if (fd_save != -1)
-	{
-		add_output("\t[The save file still exists.]\n");
-		close(fd_save);
-	}
-	add_output("\n");
+	initialize_game();
+	clear_window();
+	printf("\t[A new game will start...]\n");
+	if (access(SAVE_FILE, R_OK) != -1)
+		printf("\t[The save file still exists.]\n");
+	printf("\n");
 
 	g_state = STATE_GAME;
 	g_is_game_ongoing = 1;
@@ -106,26 +100,28 @@ static void	execute_submenu_new(void)
 static void	execute_submenu_load(void)
 {
 	int	fd_save;
+	int	load_success;
 
-	fd_save = -1;
-	reset_output();
-
-	fd_save = open("save.txt", O_RDONLY);
+	clear_window();
+	fd_save = open(SAVE_FILE, O_RDONLY);
 	if (fd_save != -1)
 	{
-		initialize_game(fd_save);
+		initialize_game();
+		load_success = load_saved_game(fd_save);
 		close(fd_save);
-		add_output("\t[Your saved game will resume...]\n\n");
+		if (!load_success)
+			return;
+		printf("\t[Your saved game will resume...]\n\n");
 	}
 	else
 	{
-		add_output("\t[No save could be found.]\n");
+		printf("\t[No save could be found.]\n");
 		if (g_is_game_ongoing)
-			add_output("\t[The current game will resume...]\n\n");
+			printf("\t[The current game will resume...]\n\n");
 		else
 		{
-			add_output("\t[A new game will start...]\n\n");
-			initialize_game(fd_save);
+			printf("\t[A new game will start...]\n\n");
+			initialize_game();
 		}
 	}
 
@@ -139,17 +135,15 @@ static void	execute_submenu_save(void)
 {
 	int	fd_save;
 
-	fd_save = -1;
 	if (!g_is_game_ongoing)
 	{
-		add_output("\t[A game needs to be started for it to be saved.]\n\n");
+		printf("\t[A game needs to be started for it to be saved.]\n\n");
 		return;
 	}
-
-	fd_save = open("save.txt", O_CREAT | O_RDWR, 0664);
+	fd_save = open(SAVE_FILE, O_CREAT | O_RDWR, 0664);
 	save_game(fd_save);
 	close(fd_save);
-	add_output("\t[Game saved!]\n\n");
+	printf("\t[Game saved!]\n\n");
 
 	if (g_state == STATE_GAME)
 		describe_location(PLAYER->current_location);
@@ -158,7 +152,8 @@ static void	execute_submenu_save(void)
 
 static void	execute_submenu_about(void)
 {
-	add_output("\t[Visit the Itch.io page:]\n\thttps://lycorisdev.itch.io/treasure-venture\n\n");
+	printf("\t[Visit the Itch.io page:]\n\t"
+		"https://lycorisdev.itch.io/treasure-venture\n\n");
 
 	if (g_state == STATE_GAME)
 		describe_location(PLAYER->current_location);
@@ -167,6 +162,6 @@ static void	execute_submenu_about(void)
 
 static void	execute_submenu_quit(void)
 {
-	close_window();
+	g_state = STATE_NONE;
 	return;
 }

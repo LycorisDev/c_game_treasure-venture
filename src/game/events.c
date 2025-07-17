@@ -2,8 +2,6 @@
 #include "characters.h"
 #include "items.h"
 
-int	g_list_events[NBR_EVENTS]; /* Declared as extern in events.h */
-
 void	populate_list_events(void)
 {
 	memset(g_list_events, FLAG_OFF, NBR_EVENTS * sizeof(int));
@@ -23,10 +21,13 @@ void	execute_event_first_time_player_enters_mansion(void)
 
 void	event_first_time_player_enters_mansion(void)
 {
-	if (g_list_events[0] == FLAG_ON && PLAYER->current_location == LOCATION_MAIN_HALLWAY)
+	if (g_list_events[0] == FLAG_ON
+		&& PLAYER->current_location == LOCATION_MAIN_HALLWAY)
 	{
 		execute_event_first_time_player_enters_mansion();
-		add_output("A distinct noise lets you know the entry doors have locked, seemingly all by themselves. You hope this is no haunting place.\n\n");
+		printf("A distinct noise lets you know the entry doors have "
+			"locked, seemingly all by themselves. You hope this is no haunting "
+			"place.\n\n");
 	}
 	return;
 }
@@ -35,9 +36,13 @@ void	event_first_time_player_enters_mansion(void)
 
 void	execute_event_player_finds_entry_doors_key(void)
 {
-	memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry doors.", 37);
-	memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "A key is left unattended on the ground.", 39);
-	memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_item, "The key shines in a golden color, and a small note attached to it with a string reads \"Entry\".", 94);
+	memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry "
+		"doors.", 37);
+	memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_around, "A key is left unattended "
+		"on the ground.", 39);
+	memcpy(ITEM_ENTRY_DOORS_KEY->desc_look_item, "The key shines in a golden "
+		"color, and a small note attached to it with a string reads \"Entry\".",
+		94);
 	memcpy(ITEM_ENTRY_DOORS_KEY->tags[0], "main entry doors key", 20);
 	memcpy(ITEM_ENTRY_DOORS_KEY->tags[1], "main double doors key", 21);
 	memcpy(ITEM_ENTRY_DOORS_KEY->tags[2], "main doors key", 14);

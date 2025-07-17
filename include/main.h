@@ -7,10 +7,8 @@
 # ifdef _WIN32
 #  include <windows.h>
 # endif
-# include <stdarg.h>
 
-void	add_output(const char *format, ...);
-void	reset_output(void);
+void	clear_window(void);
 void	close_window(void);
 
 #endif

@@ -10,9 +10,12 @@
 
 typedef enum e_game_state
 {
+	STATE_NONE,
 	STATE_MENU,
 	STATE_GAME
 }	t_game_state;
+
+extern t_game_state	g_state;
 
 void	interact(void);
 void	access_main_menu(void);

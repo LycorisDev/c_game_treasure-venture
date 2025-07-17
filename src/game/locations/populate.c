@@ -2,13 +2,6 @@
 #include "main.h"
 #include "items.h"
 
-static void	get_all_tags(char *p_str, const int word_length, t_location *object);
-static int	bool_location_matches_parser(const t_location *destination,
-				const char *parser);
-
-t_location	g_list_locations[NBR_LOCATIONS]; /* Declared as extern in locations.h */
-t_geo_aff	g_list_geo_aff[NBR_GEO_AFF]; /* Declared as extern in locations.h */
-
 void	populate_list_locations(void)
 {
 	t_exit	exit_objects[NBR_LOCATIONS];
@@ -56,7 +49,8 @@ void	populate_list_locations(void)
 	LOCATION_MAIN_HALLWAY->geo_aff = &(g_list_geo_aff[1]);
 	memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", 12);
 	memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", 7);
-	memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped with a sign.", 41);
+	memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped "
+		"with a sign.", 41);
 	LOCATION_MAIN_HALLWAY->exits[0] = exit_objects[1];
 	LOCATION_MAIN_HALLWAY->exits[1] = exit_objects[3];
 	LOCATION_MAIN_HALLWAY->items[0] = ITEM_ENTRY_DOORS;
@@ -69,7 +63,9 @@ void	populate_list_locations(void)
 	LOCATION_OLD_LIBRARY->geo_aff = &(g_list_geo_aff[1]);
 	memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", 11);
 	memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", 7);
-	memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, reading. In the back of the room, you can discern small doors. Three to be precise.", 114);
+	memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, "
+		"reading. In the back of the room, you can discern small doors. Three "
+		"to be precise.", 114);
 	LOCATION_OLD_LIBRARY->exits[0] = exit_objects[4];
 	LOCATION_OLD_LIBRARY->exits[1] = exit_objects[5];
 	LOCATION_OLD_LIBRARY->exits[2] = exit_objects[6];
@@ -109,163 +105,4 @@ void	populate_list_locations(void)
 	LOCATION_ROOM_3->exits[0] = exit_objects[10];
 	LOCATION_ROOM_3->items[0] = ITEM_DOOR_ROOM_3;
 	return;
-}
-
-void	describe_location(const t_location *location)
-{
-	int	i;
-
-	/* Display location name */
-	if (!PLAYER->current_location->bool_is_indoors)
-		add_output("You are outside. ");
-	else
-		add_output("You are in the %s. ", PLAYER->current_location->tags[0]);
-
-	/* TODO: Remove the need for this temporary fix. The geo_aff should be described without being hardcoded, a bit like an event. */
-	if (location->bool_is_indoors)
-		add_output("%s ", location->description);
-	else
-		add_output("The mansion in front of you gives you a bad feeling. Its main double doors don't look welcoming.");
-
-	for (i = 0; i < NBR_ITEMS; ++i)
-	{
-		if (!location->items[i])
-			break;
-
-		/* Only mention items which are not an access to an exit, such as a door */
-		if (!location->items[i]->access)
-			add_output("%s ", location->items[i]->desc_look_around);
-	}
-
-	add_output("\n\n");
-	return;
-}
-
-void	display_location_suggestions(t_location *origin)
-{
-	int		i;
-	char	*str_tags;
-	int		word_length;
-	int		bool_ins_out_already_printed;
-
-	str_tags = 0;
-	word_length = 0;
-	bool_ins_out_already_printed = 0;
-	if (!origin || !origin->exits[0].to)
-		return;
-
-	word_length = sizeof(origin->exits[0].to->tags[0]) + 3;
-	str_tags = calloc(NBR_TAGS, word_length);
-
-	add_output("\t[Try:]\n");
-	for (i = 0; i < NBR_LOCATIONS; ++i)
-	{
-		if (!origin->exits[i].to)
-			break;
-
-		if (origin->geo_aff->id == origin->exits[i].to->geo_aff->id)
-		{
-			get_all_tags(str_tags, word_length, origin->exits[i].to);
-			add_output("\t\t['Go %s'.]\n", str_tags);
-			continue;
-		}
-		else if (bool_ins_out_already_printed)
-			continue;
-
-		bool_ins_out_already_printed = 1;
-		if (origin->bool_is_indoors)
-			add_output("\t\t['Go outside'.]\n");
-		else
-			add_output("\t\t['Go inside'.]\n");
-	}
-	add_output("\n");
-
-	free(str_tags);
-	return;
-}
-
-t_exit	**retrieve_locations(t_location *origin, const char *parser)
-{
-	int		i;
-	int		j;
-	t_exit	**locations;
-
-	locations = calloc(NBR_LOCATIONS, sizeof(t_exit *));
-	if (!locations)
-		return 0;
-
-	for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
-	{
-		if (!origin->exits[i].to)
-			break;
-
-		/* "go [building]" */
-		if (origin->geo_aff->id != origin->exits[i].to->geo_aff->id) 
-		{
-			if (!strcmp(parser, origin->exits[i].to->geo_aff->name))
-				locations[j++] = &(origin->exits[i]);
-			continue;
-		}
-
-		/* "go [room]" */
-		if (bool_location_matches_parser(origin->exits[i].to, parser))
-			locations[j++] = &(origin->exits[i]);
-	}
-
-	return locations;
-}
-
-t_exit	**retrieve_locations_with_passage_item(t_location *origin,
-			const char *parser)
-{
-	int		i;
-	int		j;
-	t_exit	**exits;
-
-	exits = calloc(NBR_LOCATIONS, sizeof(t_exit *));
-	if (!exits)
-		return 0;
-
-	for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
-	{
-		if (!origin->exits[i].to || !origin->exits[i].passage->access)
-			break;
-
-		if (bool_item_matches_parser(origin->exits[i].passage, parser))
-			exits[j++] = &(origin->exits[i]);
-	}
-
-	return exits;
-}
-
-static void	get_all_tags(char *p_str, const int word_length, t_location *object)
-{
-	int	i;
-
-	strncpy(p_str, object->tags[0], word_length);
-
-	for (i = 1; i < NBR_TAGS; ++i)
-	{
-		if (!object->tags[i][0])
-			break;
-		strcat(p_str, " / ");
-		strncat(p_str, object->tags[i], word_length);
-	}
-	return;
-}
-
-static int	bool_location_matches_parser(const t_location *destination,
-				const char *parser)
-{
-	int	i;
-
-	for (i = 0; i < NBR_TAGS; ++i)
-	{
-		if (!destination->tags[i])
-			return 0;
-
-		if (!strcmp(parser, destination->tags[i]))
-			return 1;
-	}
-	return 0;
 }

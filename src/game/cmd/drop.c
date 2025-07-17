@@ -1,6 +1,4 @@
-#include "main.h"
 #include "commands.h"
-#include "items.h"
 #include "characters.h"
 
 static void	drop_item(t_item *item_to_drop);
@@ -12,12 +10,12 @@ void	execute_drop(void)
 	items_with_same_tag = 0;
 	if (PLAYER->current_location->items[NBR_ITEMS - 1])
 	{
-		add_output("This place cannot hold any more item.\n\n");
+		printf("This place cannot hold any more item.\n\n");
 		return;
 	}
 	else if (!PLAYER->inventory[0])
 	{
-		add_output("You have no item on you.\n\n");
+		printf("You have no item on you.\n\n");
 		return;
 	}
 	else if (*g_cmd.object)
@@ -30,12 +28,14 @@ void	execute_drop(void)
 		}
 		else if (items_with_same_tag[1])
 		{
-			add_output("There is more than one item in your inventory for which this tag works.\n\n");
+			printf("There is more than one item in your inventory for "
+				"which this tag works.\n\n");
 			display_item_suggestions(items_with_same_tag, "drop");
 		}
 		else if (PLAYER->current_location->items[NBR_ITEMS - 1])
 		{
-			add_output("The current location is full. No more items can be added.\n\n");
+			printf("The current location is full. No more items can be "
+				"added.\n\n");
 		}
 		else
 		{
@@ -91,9 +91,10 @@ static void	drop_item(t_item *item_to_drop)
 	if (i != index_of_last_inventory_item)
 	{
 		PLAYER->inventory[i] = PLAYER->inventory[index_of_last_inventory_item];
-		memset((PLAYER->inventory + index_of_last_inventory_item), 0, sizeof(t_item *));
+		memset((PLAYER->inventory + index_of_last_inventory_item), 0,
+			sizeof(t_item *));
 	}
 
-	add_output("'%s' dropped.\n\n", item_to_drop->tags[0]);
+	printf("'%s' dropped.\n\n", item_to_drop->tags[0]);
 	return;
 }

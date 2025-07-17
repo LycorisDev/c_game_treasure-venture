@@ -6,7 +6,6 @@ static void	set_command_element(void *element, const int element_size,
 				const int parser_start_index, const int parser_end_index);
 static void	execute_action(void);
 
-t_cmd					g_cmd; /* Declared as extern in commands.h */
 static const KeyFunc	g_command_list[] = 
 {
 	{"drop", &execute_drop},
@@ -39,7 +38,7 @@ void	execute_game_command(void)
 	{
 		if (!bool_word_is_in_lexicon(g_parser[i]))
 		{
-			add_output("\t['%s' was not recognized.]\n\n", g_parser[i]);
+			printf("\t['%s' was not recognized.]\n\n", g_parser[i]);
 			command_word_length = i;
 			break;
 		}
@@ -64,9 +63,12 @@ void	execute_game_command(void)
 	}
 
 	set_command_element(g_cmd.verb, sizeof(g_cmd.verb), verb_index, verb_index);
-	set_command_element(g_cmd.object, sizeof(g_cmd.object), verb_index + 1, object_end_index);
-	set_command_element(g_cmd.preposition, sizeof(g_cmd.preposition), preposition_index, preposition_index);
-	set_command_element(g_cmd.target, sizeof(g_cmd.target), target_start_index, command_word_length - 1);
+	set_command_element(g_cmd.object, sizeof(g_cmd.object), verb_index + 1,
+		object_end_index);
+	set_command_element(g_cmd.preposition, sizeof(g_cmd.preposition),
+		preposition_index, preposition_index);
+	set_command_element(g_cmd.target, sizeof(g_cmd.target), target_start_index,
+		command_word_length - 1);
 
 	execute_action();
 	return;
@@ -74,9 +76,9 @@ void	execute_game_command(void)
 
 void	display_game_commands(void)
 {
-	add_output("\t['Menu']    ['Inventory']    ['Look']    ['Take']\n");
-	add_output("\t['Play']       ['Use']        ['Go']     ['Drop']\n");
-	add_output("\n");
+	printf("\t['Menu']    ['Inventory']    ['Look']    ['Take']\n");
+	printf("\t['Play']       ['Use']        ['Go']     ['Drop']\n");
+	printf("\n");
 	return;
 }
 
@@ -93,7 +95,8 @@ static void	set_command_element(void *element, const int element_size,
 	const int	max_len = element_size - 1;
 
 	i = parser_start_index;
-	if (parser_start_index > parser_end_index || parser_start_index < 0 || parser_end_index < 0)
+	if (parser_start_index > parser_end_index || parser_start_index < 0
+		|| parser_end_index < 0)
 		return;
 
 	memcpy(element, g_parser[i++], max_len);
@@ -101,7 +104,8 @@ static void	set_command_element(void *element, const int element_size,
 	while (i <= parser_end_index)
 	{
 		strncat(element, " ", get_available_length_in_string(max_len, element));
-		strncat(element, g_parser[i++], get_available_length_in_string(max_len, element));
+		strncat(element, g_parser[i++], get_available_length_in_string(max_len,
+			element));
 	}
 	return;
 }

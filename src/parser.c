@@ -4,10 +4,6 @@ static void	reset_parser(void);
 static void	str_to_lowercase(char dest[], const char *src);
 static void	fill_parser(char input[]);
 
-char				g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
-int					g_nbr_words_in_parser;
-yes_no_callback_t	g_yes_no_callback = 0;
-
 void	parse_input(const char *raw_input)
 {
 	char	input[INPUT_MAX_LENGTH] = {0};

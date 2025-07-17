@@ -1,83 +1,45 @@
 #include "main.h"
 #include "parser.h"
 #include "start.h"
+#include "characters.h"
+#include "events.h"
+#include "items.h"
+#include "lexicon.h"
+#include "locations.h"
+#include "commands.h"
 
-static int	output_int(int num, char *p_text, int index);
+t_game_state		g_state = STATE_NONE;
+t_cmd				g_cmd;
+t_character			g_list_characters[NBR_CHARACTERS];
+int					g_list_events[NBR_EVENTS];
+t_item				g_list_items[NBR_ITEMS];
+char				g_list_lexicon[NBR_WORDS][LENGTH_WORD];
+
+t_location			g_list_locations[NBR_LOCATIONS];
+t_geo_aff			g_list_geo_aff[NBR_GEO_AFF];
+
+char				g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
+int					g_nbr_words_in_parser;
+yes_no_callback_t	g_yes_no_callback = 0;
+
+/* -------------------------------------------------------------------------- */
+
+static void	set_utf8_encoding(void);
 
 int	main(void)
 {
-	#ifdef _WIN32
-	/* Terminal UTF8 encoding */
-	SetConsoleOutputCP(CP_UTF8);
-	#endif
-
+	set_utf8_encoding();
 	access_main_menu();
-	while (1)
+	while (g_state != STATE_NONE)
 	{
 		get_and_parse_input();
 		interact();
 	}
-
+	clear_window();
 	return EXIT_SUCCESS;
 }
 
-void	add_output(const char *format, ...)
-{
-	int			i;
-	int			j;
-	int			max_len;
-	char		*text;
-	const char	*tmp;
-	va_list		args;
-
-	max_len = 509;
-	text = calloc(max_len + 1, sizeof(char));
-	tmp = 0;
-	if (!text)
-		return;
-
-	va_start(args, format);
-
-	for (i = 0, j = 0; i < max_len; ++i)
-	{
-		if (format[i] == '\0')
-			break;
-
-		/* Non-formatted */
-		if (format[i] != '%')
-		{
-			text[j++] = format[i];
-			continue;
-		}
-
-		++i;
-
-		/* Percentage sign */
-		if (format[i] == '%')
-		{
-			text[j++] = format[i];
-		}
-		/* String */
-		else if (format[i] == 's')
-		{
-			tmp = va_arg(args, const char *);
-			strncat(text, tmp, get_available_length_in_string(max_len, text));
-			j += strlen(tmp);
-		}
-		/* Integer */
-		else if (format[i] == 'd')
-		{
-			j = output_int(va_arg(args, int), text, j);
-		}
-	}
-
-	va_end(args);
-	write(STDOUT_FILENO, text, strlen(text));
-	free(text);
-	return;
-}
-
-void	reset_output(void)
+void	clear_window(void)
 {
 	#ifdef _WIN32
 	system("cls");
@@ -89,29 +51,10 @@ void	reset_output(void)
 	return;
 }
 
-void	close_window(void)
+static void	set_utf8_encoding(void)
 {
-	reset_output();
-	exit(EXIT_SUCCESS);
+	#ifdef _WIN32
+	SetConsoleOutputCP(CP_UTF8);
+	#endif
 	return;
-}
-
-static int	output_int(int num, char *p_text, int index)
-{
-	int	a;
-
-	if (num < 0)
-	{
-		p_text[index++] = '-';
-		num *= -1;
-	}
-
-	if (num > 9)
-	{
-		a = num / 10;
-		num -= 10 * a;
-		index = output_int(a, p_text, index);
-	}
-	p_text[index++] = '0' + num;
-	return index;
 }

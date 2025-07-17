@@ -5,7 +5,8 @@ void	save_game(int fd_save)
 {
 	int	i;
 
-	dprintf(fd_save, "previous_location:%d\n", !PLAYER->previous_location ? -1 : PLAYER->previous_location->id);
+	dprintf(fd_save, "previous_location:%d\n",
+		!PLAYER->previous_location ? -1 : PLAYER->previous_location->id);
 	dprintf(fd_save, "current_location:%d\n", PLAYER->current_location->id);
 
 	dprintf(fd_save, "events:");

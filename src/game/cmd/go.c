@@ -1,9 +1,5 @@
-#include "main.h"
-#include "misc.h"
-#include "events.h"
 #include "commands.h"
 #include "locations.h"
-#include "items.h"
 
 static void	go_inside(void);
 static void	go_outside(void);
@@ -23,7 +19,7 @@ void	execute_go(void)
 {
 	if (!PLAYER->current_location->exits[0].to)
 	{
-		add_output("There is nowhere to go.\n\n");
+		printf("There is nowhere to go.\n\n");
 		return;
 	}
 
@@ -50,7 +46,7 @@ static void	go_inside(void)
 {
 	if (PLAYER->current_location->bool_is_indoors)
 	{
-		add_output("You're already inside of a building.\n\n");
+		printf("You're already inside of a building.\n\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		return;
 	}
@@ -72,7 +68,7 @@ static void	go_outside(void)
 
 	if (!PLAYER->current_location->bool_is_indoors)
 	{
-		add_output("You're already outside.\n\n");
+		printf("You're already outside.\n\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		return;
 	}
@@ -92,22 +88,26 @@ static void	go_outside(void)
 
 	if (outside_indexes[0] < 0)
 	{
-		add_output("No immediate exit leads outside of the building.\n\n");
+		printf("No immediate exit leads outside of the building.\n\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		return;
 	}
 	else if (outside_indexes[1] < 0)
 	{
-		if (bool_access_locked(PLAYER->current_location->exits + outside_indexes[0]))
-			print_access_locked(PLAYER->current_location->exits + outside_indexes[0]);
-		else if (bool_location_is_full(PLAYER->current_location->exits[outside_indexes[0]].to))
+		if (bool_access_locked(PLAYER->current_location->exits
+			+ outside_indexes[0]))
+			print_access_locked(PLAYER->current_location->exits
+			+ outside_indexes[0]);
+		else if (bool_location_is_full(PLAYER->current_location->exits
+			[outside_indexes[0]].to))
 			print_location_is_full();
 		else
 			cross_passage(PLAYER->current_location->exits + outside_indexes[0]);
 	}
 	else
 	{
-		add_output("Different exits lead outside. Specify the one you want.\n\n");
+		printf("Different exits lead outside. Specify the one you "
+			"want.\n\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		return;
 	}
@@ -120,7 +120,7 @@ static void	go_back(void)
 
 	if (!PLAYER->previous_location)
 	{
-		add_output("You do not have a previous location.\n\n");
+		printf("You do not have a previous location.\n\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		return;
 	}
@@ -129,11 +129,12 @@ static void	go_back(void)
 	{
 		if (!PLAYER->current_location->exits[i].to)
 		{
-			add_output("Your previous location cannot be accessed.\n\n");
+			printf("Your previous location cannot be accessed.\n\n");
 			memset(g_cmd.object, 0, sizeof(g_cmd.object));
 			return;
 		}
-		else if (PLAYER->previous_location == PLAYER->current_location->exits[i].to)
+		else if (PLAYER->previous_location
+			== PLAYER->current_location->exits[i].to)
 			break;
 	}
 
@@ -160,7 +161,7 @@ static void	go_out(void)
 
 	if (!PLAYER->current_location->bool_is_indoors)
 	{
-		add_output("You are already outside.\n\n");
+		printf("You are already outside.\n\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		return;
 	}
@@ -171,15 +172,20 @@ static void	go_out(void)
 			break;
 		else if (!PLAYER->current_location->exits[i].to->bool_is_indoors)
 		{
-			if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
-				to_outside_and_accessible[j++] = &(PLAYER->current_location->exits[i]);
+			if (PLAYER->current_location->exits[i].passage->access
+				!= ACCESS_LOCKED)
+				to_outside_and_accessible[j++]
+					= &(PLAYER->current_location->exits[i]);
 			else
-				to_outside_but_locked[k++] = &(PLAYER->current_location->exits[i]);
+				to_outside_but_locked[k++]
+					= &(PLAYER->current_location->exits[i]);
 		}
 		else
 		{
-			if (PLAYER->current_location->exits[i].passage->access != ACCESS_LOCKED)
-				other_and_accessible[l++] = &(PLAYER->current_location->exits[i]);
+			if (PLAYER->current_location->exits[i].passage->access
+				!= ACCESS_LOCKED)
+				other_and_accessible[l++]
+					= &(PLAYER->current_location->exits[i]);
 			else
 				other_but_locked[m++] = &(PLAYER->current_location->exits[i]);
 		}
@@ -220,7 +226,7 @@ static void	go_out(void)
 		}
 	}
 
-	add_output("There is more than one exit. Which one do you want?\n\n");
+	printf("There is more than one exit. Which one do you want?\n\n");
 	memset(g_cmd.object, 0, sizeof(g_cmd.object));
 	return;
 }
@@ -235,7 +241,8 @@ static void	go_tag(void)
 	locations = retrieve_locations(PLAYER->current_location, g_cmd.object);
 	if (!locations || !locations[0])
 	{
-		locations = retrieve_locations_with_passage_item(PLAYER->current_location, g_cmd.object);
+		locations = retrieve_locations_with_passage_item
+			(PLAYER->current_location, g_cmd.object);
 		if (!locations || !locations[0])
 		{
 			memset(g_cmd.object, 0, sizeof(g_cmd.object));
@@ -257,12 +264,14 @@ static void	go_tag(void)
 	}
 	else if (bool_tag_is_passage_item)
 	{
-		add_output("There is more than one passage item in your vicinity for which this tag works.\n");
+		printf("There is more than one passage item in your vicinity for "
+			"which this tag works.\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 	}
 	else
 	{
-		add_output("There is more than one destination from your current location for which this tag works.\n");
+		printf("There is more than one destination from your current "
+			"location for which this tag works.\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 	}
 
@@ -277,7 +286,9 @@ static int	bool_access_locked(const t_exit *exit)
 
 static void	print_access_locked(const t_exit *exit)
 {
-	add_output("The %s %s locked.\n\n", exit->passage->bool_is_singular ? "door" : "doors", exit->passage->bool_is_singular ? "is" : "are");
+	printf("The %s %s locked.\n\n",
+		exit->passage->bool_is_singular ? "door"
+		: "doors", exit->passage->bool_is_singular ? "is" : "are");
 	return;
 }
 
@@ -288,7 +299,8 @@ static int	bool_location_is_full(const t_location *location)
 
 static void	print_location_is_full(void)
 {
-	add_output("The destination is full. No more characters can access this place.\n\n");
+	printf("The destination is full. No more characters can access this "
+		"place.\n\n");
 	return;
 }
 
@@ -316,8 +328,10 @@ static void	cross_passage(t_exit *exit)
 
 		if (PLAYER->previous_location->characters[i] == PLAYER)
 		{
-			PLAYER->previous_location->characters[i] = PLAYER->previous_location->characters[index_last_char];
-			memset((PLAYER->previous_location->characters + index_last_char), 0, sizeof(t_character*));
+			PLAYER->previous_location->characters[i]
+				= PLAYER->previous_location->characters[index_last_char];
+			memset((PLAYER->previous_location->characters + index_last_char), 0,
+				sizeof(t_character*));
 			break;
 		}
 	}
@@ -339,25 +353,28 @@ static void	output_text_for_passage_crossing(const t_exit* exit)
 {
 	if (exit->passage->access == ACCESS_CLOSED)
 	{
-		add_output("You open the door%s and ", exit->passage->bool_is_singular ? "" : "s");
+		printf("You open the door%s and ",
+			exit->passage->bool_is_singular ? "" : "s");
 	}
 	else
 	{
-		add_output("You ");
+		printf("You ");
 	}
 
 	if (PLAYER->current_location->geo_aff->id != exit->to->geo_aff->id)
 	{
 		if (PLAYER->current_location->bool_is_indoors)
-			add_output("leave the %s. ", PLAYER->current_location->geo_aff->name);
+			printf("leave the %s. ",
+				PLAYER->current_location->geo_aff->name);
 		else
-			add_output("cross the %s's threshold to find yourself in the %s. ", exit->to->geo_aff->name, exit->to->tags[0]);
+			printf("cross the %s's threshold to find yourself in the %s. ",
+				exit->to->geo_aff->name, exit->to->tags[0]);
 	}
 	else
 	{
-		add_output("enter the %s. ", exit->to->tags[0]);
+		printf("enter the %s. ", exit->to->tags[0]);
 	}
 
-	add_output("\n\n");
+	printf("\n\n");
 	return;
 }

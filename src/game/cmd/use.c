@@ -1,6 +1,4 @@
-#include "main.h"
 #include "commands.h"
-#include "items.h"
 #include "characters.h"
 
 static t_item	*find_item_to_use(void);
@@ -16,7 +14,7 @@ void	execute_use(void)
 	bool_issue_is_target = 0;
 	if (!PLAYER->inventory[0] && !PLAYER->current_location->items[0])
 	{
-		add_output("There is nothing for you to use.\n\n");
+		printf("There is nothing for you to use.\n\n");
 		return;
 	}
 
@@ -31,8 +29,10 @@ void	execute_use(void)
 			bool_issue_is_target = use_item_on_target(item_to_use);
 		else
 		{
-			add_output("%s ", item_to_use->description);
-			add_output("The %s %s seem to be of much use.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "doesn't" : "don't");
+			printf("%s ", item_to_use->description);
+			printf("The %s %s seem to be of much use.\n\n",
+				item_to_use->tags[1],
+				item_to_use->bool_is_singular ? "doesn't" : "don't");
 		}
 	}
 
@@ -59,19 +59,22 @@ static t_item	*find_item_to_use(void)
 
 	item_to_use = 0;
 	inventory_items = retrieve_items(PLAYER->inventory, g_cmd.object);
-	location_items = retrieve_items(PLAYER->current_location->items, g_cmd.object);
+	location_items = retrieve_items(PLAYER->current_location->items,
+		g_cmd.object);
 	bool_inventory_match = inventory_items && inventory_items[0];
 	bool_location_match = location_items && location_items[0];
 	if (bool_inventory_match && bool_location_match)
 	{
-		add_output("Your inventory and vicinity both included, there is more than one item for which this tag works.\n");
+		printf("Your inventory and vicinity both included, there is more "
+			"than one item for which this tag works.\n");
 		memset(g_cmd.object, 0, sizeof(g_cmd.object));
 	}
 	else if (bool_inventory_match)
 	{
 		if (inventory_items[1])
 		{
-			add_output("There is more than one item in your inventory for which this tag works.\n");
+			printf("There is more than one item in your inventory for "
+				"which this tag works.\n");
 			memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		}
 		else
@@ -83,7 +86,8 @@ static t_item	*find_item_to_use(void)
 	{
 		if (location_items[1])
 		{
-			add_output("There is more than one item in your vicinity for which this tag works.\n");
+			printf("There is more than one item in your vicinity for which "
+				"this tag works.\n");
 			memset(g_cmd.object, 0, sizeof(g_cmd.object));
 		}
 		else
@@ -106,16 +110,20 @@ static void	use_access_item(t_item *item_to_use)
 	if (item_to_use->access == ACCESS_OPEN)
 	{
 		item_to_use->access = ACCESS_CLOSED;
-		add_output("You close the %s.\n\n", item_to_use->bool_is_singular ? "door" : "doors");
+		printf("You close the %s.\n\n",
+			item_to_use->bool_is_singular ? "door" : "doors");
 	}
 	else if (item_to_use->access == ACCESS_CLOSED)
 	{
 		item_to_use->access = ACCESS_OPEN;
-		add_output("You open the %s.\n\n", item_to_use->bool_is_singular ? "door" : "doors");
+		printf("You open the %s.\n\n",
+			item_to_use->bool_is_singular ? "door" : "doors");
 	}
 	else
 	{
-		add_output("The %s %s locked.\n\n", item_to_use->bool_is_singular ? "door" : "doors", item_to_use->bool_is_singular ? "is" : "are");
+		printf("The %s %s locked.\n\n",
+			item_to_use->bool_is_singular ? "door" : "doors",
+			item_to_use->bool_is_singular ? "is" : "are");
 	}
 	return;
 }
@@ -135,32 +143,37 @@ static int	use_item_on_target(const t_item *item_to_use)
 	bool_item_match = 0;
 	bool_character_match = 0;
 	bool_target_is_character = 0;
-	if (!*g_cmd.target || !*g_cmd.preposition || strcmp(g_cmd.preposition, "on"))
+	if (!*g_cmd.target || !*g_cmd.preposition
+		|| strcmp(g_cmd.preposition, "on"))
 	{
-		add_output("Use the %s on who or what?\n\n", g_cmd.object);
+		printf("Use the %s on who or what?\n\n", g_cmd.object);
 		return 1;
 	}
 
 	items = retrieve_items(PLAYER->current_location->items, g_cmd.target);
-	characters = retrieve_characters(PLAYER->current_location->characters, g_cmd.target);
+	characters = retrieve_characters(PLAYER->current_location->characters,
+		g_cmd.target);
 	bool_item_match = items && items[0];
 	bool_character_match = characters && characters[0];
 
 	if (bool_item_match && bool_character_match)
 	{
-		add_output("There is more than one target in your vicinity for which this tag works.\n\n");
+		printf("There is more than one target in your vicinity for which "
+			"this tag works.\n\n");
 	}
 	else if (bool_item_match)
 	{
 		if (items[1])
-			add_output("There is more than one item in your vicinity for which this tag works.\n\n");
+			printf("There is more than one item in your vicinity for which "
+				"this tag works.\n\n");
 		else
 			target = items[0];
 	}
 	else if (bool_character_match)
 	{
 		if (characters[1])
-			add_output("There is more than one character in your vicinity for which this tag works.\n\n");
+			printf("There is more than one character in your vicinity for "
+				"which this tag works.\n\n");
 		else
 		{
 			target = characters[0];
@@ -169,7 +182,7 @@ static int	use_item_on_target(const t_item *item_to_use)
 	}
 	else
 	{
-		add_output("Use the %s on who or what?\n\n", g_cmd.object);
+		printf("Use the %s on who or what?\n\n", g_cmd.object);
 	}
 
 	if (!target)
@@ -182,28 +195,37 @@ static int	use_item_on_target(const t_item *item_to_use)
 	if (bool_target_is_character)
 	{
 		if (target == PLAYER)
-			add_output("The %s %s nothing to you.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "does" : "do");
+			printf("The %s %s nothing to you.\n\n", item_to_use->tags[1],
+				item_to_use->bool_is_singular ? "does" : "do");
 		else
-			add_output("The %s %s nothing to the %s.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "does" : "do", ((t_character *)target)->tags[1]);
+			printf("The %s %s nothing to the %s.\n\n", item_to_use->tags[1],
+				item_to_use->bool_is_singular ? "does" : "do",
+				((t_character *)target)->tags[1]);
 	}
-	else if (!((t_item *)target)->access || ((t_item *)target)->unlocked_with != item_to_use)
+	else if (!((t_item *)target)->access
+		|| ((t_item *)target)->unlocked_with != item_to_use)
 	{
-		add_output("The %s %s nothing to the %s.\n\n", item_to_use->tags[1], item_to_use->bool_is_singular ? "does" : "do", ((t_item *)target)->tags[1]);
+		printf("The %s %s nothing to the %s.\n\n", item_to_use->tags[1],
+			item_to_use->bool_is_singular ? "does" : "do",
+			((t_item *)target)->tags[1]);
 	}
 	else if (((t_item *)target)->access == ACCESS_OPEN)
 	{
 		((t_item *)target)->access = ACCESS_LOCKED;
-		add_output("You close and lock the %s.\n\n", ((t_item *)target)->bool_is_singular ? "door" : "doors");
+		printf("You close and lock the %s.\n\n",
+			((t_item *)target)->bool_is_singular ? "door" : "doors");
 	}
 	else if (((t_item *)target)->access == ACCESS_CLOSED)
 	{
 		((t_item *)target)->access = ACCESS_LOCKED;
-		add_output("You lock the %s.\n\n", ((t_item *)target)->bool_is_singular ? "door" : "doors");
+		printf("You lock the %s.\n\n",
+			((t_item *)target)->bool_is_singular ? "door" : "doors");
 	}
 	else
 	{
 		((t_item *)target)->access = ACCESS_CLOSED;
-		add_output("You unlock the %s.\n\n", ((t_item *)target)->bool_is_singular ? "door" : "doors");
+		printf("You unlock the %s.\n\n",
+			((t_item *)target)->bool_is_singular ? "door" : "doors");
 	}
 
 	free(items);
