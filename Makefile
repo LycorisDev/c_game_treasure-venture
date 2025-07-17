@@ -1,6 +1,5 @@
 CC = gcc
-CFLAGS = -fPIC -MMD -Iinclude -Wall -Wextra
-CFLAGS_C89 = -ansi -pedantic
+CFLAGS = -fPIC -MMD -Iinclude -Wall -Wextra -pedantic
 INTERFACE_FLAG = -DGUI
 GTK_FLAG_START = `pkg-config --cflags gtk4`
 GTK_FLAG_END = `pkg-config --libs gtk4`
@@ -30,7 +29,7 @@ $(DIR_OBJ)/main.o: src/main.c
 
 $(DIR_OBJ)/%.o: src/%.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) $(CFLAGS_C89) $(INTERFACE_FLAG) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INTERFACE_FLAG) -c $< -o $@
 -include $(DIR_OBJ)/%.d
 
 .PHONY: cli win64 win32 clean clean-unix clean-win64 clean-win32

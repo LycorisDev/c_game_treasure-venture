@@ -1,5 +1,4 @@
 #include "parser.h"
-#include "output.h"
 
 char				g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
 int					g_nbr_words_in_parser;
@@ -33,7 +32,7 @@ void	get_and_parse_cli_input(void)
 	reset_parser();
 
 	/* Get input from stdin */
-	f_write_line(stdout, "> ");
+	write(STDOUT_FILENO, "> ", 2);
 	if (fgets(input, INPUT_MAX_LENGTH, stdin))
 	{
 		if (input[0] == '\n')
@@ -41,7 +40,7 @@ void	get_and_parse_cli_input(void)
 		/* Parse here */
 		parse_input(input);
 	}
-	f_write_line(stdout, "\n");
+	write(STDOUT_FILENO, "\n", 1);
 
 	/* Flush stdin */
 	if (!fseek(stdin, 0, SEEK_END))

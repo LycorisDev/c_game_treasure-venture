@@ -2,6 +2,7 @@
 # define PARSER_H
 
 # include <stdio.h>
+# include <unistd.h>
 # include <string.h>
 # include <ctype.h>
 # include "lexicon.h" /* For the LENGTH_WORD macro */

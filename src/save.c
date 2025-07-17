@@ -1,36 +1,35 @@
 #include "save.h"
-#include "output.h"
 #include "characters.h"
 
-void	save_game(FILE *save_file)
+void	save_game(int fd_save)
 {
 	int	i;
 
-	f_write_line(save_file, "previous_location:%d\n", !PLAYER->previous_location ? -1 : PLAYER->previous_location->id);
-	f_write_line(save_file, "current_location:%d\n", PLAYER->current_location->id);
+	dprintf(fd_save, "previous_location:%d\n", !PLAYER->previous_location ? -1 : PLAYER->previous_location->id);
+	dprintf(fd_save, "current_location:%d\n", PLAYER->current_location->id);
 
-	f_write_line(save_file, "events:");
+	dprintf(fd_save, "events:");
 	for (i = 0; i < NBR_EVENTS; ++i)
 	{
 		if (!i)
-			f_write_line(save_file, "%d", g_list_events[i]);
+			dprintf(fd_save, "%d", g_list_events[i]);
 		else
-			f_write_line(save_file, ",%d", g_list_events[i]);
+			dprintf(fd_save, ",%d", g_list_events[i]);
 	}
-	f_write_line(save_file, "\n");
+	dprintf(fd_save, "\n");
 
-	f_write_line(save_file, "inventory:");
+	dprintf(fd_save, "inventory:");
 	for (i = 0; i < NBR_ITEMS; ++i)
 	{
 		if (!PLAYER->inventory[i])
 			break;
 
 		if (!i)
-			f_write_line(save_file, "%d", PLAYER->inventory[i]->id);
+			dprintf(fd_save, "%d", PLAYER->inventory[i]->id);
 		else
-			f_write_line(save_file, ",%d", PLAYER->inventory[i]->id);
+			dprintf(fd_save, ",%d", PLAYER->inventory[i]->id);
 	}
-	f_write_line(save_file, "\n");
+	dprintf(fd_save, "\n");
 
 	return;
 }

@@ -4,7 +4,6 @@
 #include "initialize.h"
 #include "save.h"
 #include "locations.h"
-#include "output.h"
 
 #define STATE_MENU 0
 #define STATE_GAME 1
@@ -87,16 +86,17 @@ void	access_main_menu(void)
 
 static void	execute_submenu_new(void)
 {
-	FILE	*save_file;
+	int	fd_save;
 
-	save_file = 0;
-	initialize_game(save_file);
+	fd_save = -1;
+	initialize_game(fd_save);
 	reset_output();
 	add_output("\t[A new game will start...]\n");
-	if ((save_file = fopen("save.txt", "r")))
+	fd_save = open("save.txt", O_RDONLY);
+	if (fd_save != -1)
 	{
 		add_output("\t[The save file still exists.]\n");
-		fclose(save_file);
+		close(fd_save);
 	}
 	add_output("\n");
 
@@ -108,15 +108,16 @@ static void	execute_submenu_new(void)
 
 static void	execute_submenu_load(void)
 {
-	FILE	*save_file;
+	int	fd_save;
 
-	save_file = 0;
+	fd_save = -1;
 	reset_output();
 
-	if ((save_file = fopen("save.txt", "r")))
+	fd_save = open("save.txt", O_RDONLY);
+	if (fd_save != -1)
 	{
-		initialize_game(save_file);
-		fclose(save_file);
+		initialize_game(fd_save);
+		close(fd_save);
 		add_output("\t[Your saved game will resume...]\n\n");
 	}
 	else
@@ -127,7 +128,7 @@ static void	execute_submenu_load(void)
 		else
 		{
 			add_output("\t[A new game will start...]\n\n");
-			initialize_game(save_file);
+			initialize_game(fd_save);
 		}
 	}
 
@@ -139,18 +140,18 @@ static void	execute_submenu_load(void)
 
 static void	execute_submenu_save(void)
 {
-	FILE	*save_file;
+	int	fd_save;
 
-	save_file = 0;
+	fd_save = -1;
 	if (!is_game_ongoing)
 	{
 		add_output("\t[A game needs to be started for it to be saved.]\n\n");
 		return;
 	}
 
-	save_file = fopen("save.txt", "w+");
-	save_game(save_file);
-	fclose(save_file);
+	fd_save = open("save.txt", O_CREAT | O_RDWR, 0664);
+	save_game(fd_save);
+	close(fd_save);
 	add_output("\t[Game saved!]\n\n");
 
 	if (game_state == STATE_GAME)

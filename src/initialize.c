@@ -18,9 +18,9 @@
 */
 #define NBR_CHARACTERS_IN_LINE 56
 
-static void	exit_file_corrupted(FILE *save_file);
+static void	exit_file_corrupted(int fd_save);
 
-void	initialize_game(FILE *save_file)
+void	initialize_game(int fd_save)
 {
 	int		i;
 	int		j;
@@ -35,7 +35,7 @@ void	initialize_game(FILE *save_file)
 	populate_list_characters();
 	populate_list_events();
 
-	if (!save_file)
+	if (fd_save == -1)
 		return;
 
 	for (i = 0; i < NBR_LINES; ++i)
@@ -43,7 +43,7 @@ void	initialize_game(FILE *save_file)
 		/* NBR_CHARACTERS_IN_LINE - 1 because of the 0 ending character */
 		for (j = 0; j < (NBR_CHARACTERS_IN_LINE - 1); ++j)
 		{
-			save_buffer[i][j] = fgetc(save_file);
+			read(fd_save, save_buffer[i] + j, 1);
 
 			/* end of the current line (name:value,other_value\n) */
 			if (save_buffer[i][j] == ':' || save_buffer[i][j] == ',' || save_buffer[i][j] == '\n')
@@ -62,7 +62,7 @@ void	initialize_game(FILE *save_file)
 
 	if (!save_buffer[0] || strcmp(save_buffer[0], "previous_location"))
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
@@ -74,7 +74,7 @@ void	initialize_game(FILE *save_file)
 	*/
 	if (save_buffer[1] == end_ptr || *end_ptr != '\0' || (id < 0 || id > (NBR_LOCATIONS - 1)))
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
@@ -82,21 +82,21 @@ void	initialize_game(FILE *save_file)
 
 	if (!save_buffer[2] || strcmp(save_buffer[2], "current_location"))
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
 	id = strtol(save_buffer[3], &end_ptr, 10) - 1;
 	if (save_buffer[3] == end_ptr || *end_ptr != '\0' || (id < 0 || id > (NBR_LOCATIONS - 1)))
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
 	/* The current location is full */
 	if (PLAYER->current_location->characters[NBR_CHARACTERS - 1])
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
@@ -152,7 +152,7 @@ void	initialize_game(FILE *save_file)
 
 	if (!save_buffer[4] || strcmp(save_buffer[4], "events"))
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
@@ -161,7 +161,7 @@ void	initialize_game(FILE *save_file)
 		id = strtol(save_buffer[5 + i], &end_ptr, 10);
 		if (id != FLAG_ON && id != FLAG_OFF)
 		{
-			exit_file_corrupted(save_file);
+			exit_file_corrupted(fd_save);
 			return;
 		}
 		/* TODO: Handle events better instead of looping */
@@ -181,7 +181,7 @@ void	initialize_game(FILE *save_file)
 
 	if (!save_buffer[5 + NBR_EVENTS] || strcmp(save_buffer[5 + NBR_EVENTS], "inventory"))
 	{
-		exit_file_corrupted(save_file);
+		exit_file_corrupted(fd_save);
 		return;
 	}
 
@@ -196,12 +196,12 @@ void	initialize_game(FILE *save_file)
 	return;
 }
 
-static void	exit_file_corrupted(FILE *save_file)
+static void	exit_file_corrupted(int fd_save)
 {
 	add_output("\t[Error: The save file has been corrupted.]\n");
 	add_output("\t[It will be deleted and the game will close.]\n\n");
-	fclose(save_file);
-	remove("save.txt");
+	close(fd_save);
+	unlink("save.txt");
 	close_window();
 	return;
 }

@@ -1,7 +1,5 @@
 #ifdef GUI
 #include <gtk/gtk.h>
-#else
-#include "output.h"
 #endif
 #include "main.h"
 #include "parser.h"
@@ -115,7 +113,7 @@ void	add_output(const char *format, ...)
 	gtk_text_buffer_insert_at_cursor(output_buffer, text, -1);
 	scroll_to_bottom();
 	#else
-	f_write_line(stdout, text);
+	write(STDOUT_FILENO, text, strlen(text));
 	#endif
 
 	free(text);
