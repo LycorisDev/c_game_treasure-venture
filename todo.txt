@@ -1,0 +1,3 @@
+- Remove unused libc headers.
+- Consider keeping history of commands and allowing the use of arrow keys to 
+navigate.

@@ -8,6 +8,12 @@
 # include <fcntl.h>
 # include "misc.h"
 
+typedef enum e_game_state
+{
+	STATE_MENU,
+	STATE_GAME
+}	t_game_state;
+
 void	interact(void);
 void	access_main_menu(void);
 

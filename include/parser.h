@@ -15,15 +15,11 @@ extern char					g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
 extern int					g_nbr_words_in_parser;
 
 typedef void				(*yes_no_callback_t)(const int);
-extern yes_no_callback_t	yes_no_callback;
+extern yes_no_callback_t	g_yes_no_callback;
 
 void	parse_input(const char *raw_input);
-# ifndef GUI
-
-void	get_and_parse_cli_input(void);
-# endif
-
 void	parse_yes_no(void);
 int		get_available_length_in_string(const int max_length, const char *str);
+void	get_and_parse_input(void);
 
 #endif

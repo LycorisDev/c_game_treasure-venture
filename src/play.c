@@ -26,7 +26,7 @@ void	execute_play(void)
 	}
 
 	add_output("\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n", PLAYER->current_location->characters[i]->tags[1]);
-	yes_no_callback = &static_mini_game;
+	g_yes_no_callback = &static_mini_game;
 	return;
 }
 

@@ -1,12 +1,12 @@
 #include "parser.h"
 
-char				g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
-int					g_nbr_words_in_parser;
-yes_no_callback_t	yes_no_callback = 0;
-
 static void	reset_parser(void);
 static void	str_to_lowercase(char dest[], const char *src);
 static void	fill_parser(char input[]);
+
+char				g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
+int					g_nbr_words_in_parser;
+yes_no_callback_t	g_yes_no_callback = 0;
 
 void	parse_input(const char *raw_input)
 {
@@ -22,49 +22,19 @@ void	parse_input(const char *raw_input)
 	return;
 }
 
-#ifdef CLI
-void	get_and_parse_cli_input(void)
-{
-	char	input[INPUT_MAX_LENGTH] = {0};
-	char	c;
-
-	c = 'A';
-	reset_parser();
-
-	/* Get input from stdin */
-	write(STDOUT_FILENO, "> ", 2);
-	if (fgets(input, INPUT_MAX_LENGTH, stdin))
-	{
-		if (input[0] == '\n')
-			return;
-		/* Parse here */
-		parse_input(input);
-	}
-	write(STDOUT_FILENO, "\n", 1);
-
-	/* Flush stdin */
-	if (!fseek(stdin, 0, SEEK_END))
-	{
-		while (c != '\n' && c != EOF)
-			c = getchar();
-	}
-	return;
-}
-#endif
-
 void	parse_yes_no(void)
 {
 	if (g_parser[0])
 	{
 		if (!strcmp(g_parser[0], "yes"))
 		{
-			yes_no_callback(1);
-			yes_no_callback = 0;
+			g_yes_no_callback(1);
+			g_yes_no_callback = 0;
 		}
 		else if (!strcmp(g_parser[0], "no"))
 		{
-			yes_no_callback(0);
-			yes_no_callback = 0;
+			g_yes_no_callback(0);
+			g_yes_no_callback = 0;
 		}
 	}
 	return;
@@ -76,6 +46,22 @@ int	get_available_length_in_string(const int max_length, const char *str)
 
 	len_cat = max_length - strlen(str);
 	return len_cat < 0 ? 0 : len_cat;
+}
+
+void	get_and_parse_input(void)
+{
+	char	input[INPUT_MAX_LENGTH] = {0};
+
+	reset_parser();
+	write(STDOUT_FILENO, "> ", 2);
+	if (read(STDIN_FILENO, input, INPUT_MAX_LENGTH) != -1)
+	{
+		if (input[0] == '\n')
+			return;
+		parse_input(input);
+	}
+	write(STDOUT_FILENO, "\n", 1);
+	return;
 }
 
 static void	reset_parser(void)

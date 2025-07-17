@@ -1,12 +1,11 @@
 #include "characters.h"
 #include "main.h"
 
-/* Declared as extern in characters.h */
-t_character	g_list_characters[NBR_CHARACTERS];
-
 static void	get_all_tags(char *p_str, const int word_length, t_character *object);
 static int	bool_character_matches_parser(const t_character *character,
 				const char *parser);
+
+t_character	g_list_characters[NBR_CHARACTERS]; /* Declared as extern in characters.h */
 
 void	populate_list_characters(void)
 {

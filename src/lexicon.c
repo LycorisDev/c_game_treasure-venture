@@ -1,7 +1,6 @@
 #include "lexicon.h"
 
-/* Declared as extern in lexicon.h */
-char	g_list_lexicon[NBR_WORDS][LENGTH_WORD];
+char	g_list_lexicon[NBR_WORDS][LENGTH_WORD]; /* Declared as extern in lexicon.h */
 
 void	populate_list_lexicon(void)
 {

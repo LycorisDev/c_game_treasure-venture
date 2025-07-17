@@ -1,10 +1,9 @@
 #include "items.h"
 #include "main.h"
 
-/* Declared as extern in items.h */
-t_item	g_list_items[NBR_ITEMS];
-
 static void	get_all_tags(char *p_str, const int word_length, t_item *object);
+
+t_item	g_list_items[NBR_ITEMS]; /* Declared as extern in items.h */
 
 void	populate_list_items(void)
 {

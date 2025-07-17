@@ -2,13 +2,12 @@
 #include "main.h"
 #include "items.h"
 
-/* Declared as extern in locations.h */
-t_location	g_list_locations[NBR_LOCATIONS];
-t_geo_aff	g_list_geo_aff[NBR_GEO_AFF];
-
 static void	get_all_tags(char *p_str, const int word_length, t_location *object);
 static int	bool_location_matches_parser(const t_location *destination,
 				const char *parser);
+
+t_location	g_list_locations[NBR_LOCATIONS]; /* Declared as extern in locations.h */
+t_geo_aff	g_list_geo_aff[NBR_GEO_AFF]; /* Declared as extern in locations.h */
 
 void	populate_list_locations(void)
 {

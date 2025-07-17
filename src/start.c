@@ -5,11 +5,6 @@
 #include "save.h"
 #include "locations.h"
 
-#define STATE_MENU 0
-#define STATE_GAME 1
-static int	game_state = STATE_MENU;
-static int	is_game_ongoing = 0;
-
 static void	execute_menu_command(const char *command);
 static void	execute_submenu_new(void);
 static void	execute_submenu_load(void);
@@ -17,7 +12,9 @@ static void	execute_submenu_save(void);
 static void	execute_submenu_about(void);
 static void	execute_submenu_quit(void);
 
-static const KeyFunc	command_list[] = 
+static t_game_state		g_state = STATE_MENU;
+static int				g_is_game_ongoing = 0;
+static const KeyFunc	g_command_list[] = 
 {
 	{"about", &execute_submenu_about},
 	{"load", &execute_submenu_load},
@@ -29,11 +26,11 @@ static const KeyFunc	command_list[] =
 
 void	interact(void)
 {
-	if (yes_no_callback)
+	if (g_yes_no_callback)
 	{
 		parse_yes_no();
 	}
-	else if (game_state == STATE_MENU)
+	else if (g_state == STATE_MENU)
 	{
 		execute_menu_command(g_parser[0]);
 	}
@@ -60,23 +57,23 @@ static void	execute_menu_command(const char *command)
 		return;
 	}
 
-	while (command_list[i].key)
+	while (g_command_list[i].key)
 	{
-		if (!strcmp(command, command_list[i].key))
+		if (!strcmp(command, g_command_list[i].key))
 		{
-			command_list[i].func();
+			g_command_list[i].func();
 			return;
 		}
 		++i;
 	}
 
-	command_list[i].func();
+	g_command_list[i].func();
 	return;
 }
 
 void	access_main_menu(void)
 {
-	game_state = STATE_MENU;
+	g_state = STATE_MENU;
 	reset_output();
 	add_output("\t-[ TREASURE VENTURE ]-\n\n");
 	add_output("\t[During the game, type 'Menu' to go back to the main menu.]\n\n");
@@ -100,8 +97,8 @@ static void	execute_submenu_new(void)
 	}
 	add_output("\n");
 
-	game_state = STATE_GAME;
-	is_game_ongoing = 1;
+	g_state = STATE_GAME;
+	g_is_game_ongoing = 1;
 	describe_location(PLAYER->current_location);
 	return;
 }
@@ -123,7 +120,7 @@ static void	execute_submenu_load(void)
 	else
 	{
 		add_output("\t[No save could be found.]\n");
-		if (is_game_ongoing)
+		if (g_is_game_ongoing)
 			add_output("\t[The current game will resume...]\n\n");
 		else
 		{
@@ -132,8 +129,8 @@ static void	execute_submenu_load(void)
 		}
 	}
 
-	game_state = STATE_GAME;
-	is_game_ongoing = 1;
+	g_state = STATE_GAME;
+	g_is_game_ongoing = 1;
 	describe_location(PLAYER->current_location);
 	return;
 }
@@ -143,7 +140,7 @@ static void	execute_submenu_save(void)
 	int	fd_save;
 
 	fd_save = -1;
-	if (!is_game_ongoing)
+	if (!g_is_game_ongoing)
 	{
 		add_output("\t[A game needs to be started for it to be saved.]\n\n");
 		return;
@@ -154,7 +151,7 @@ static void	execute_submenu_save(void)
 	close(fd_save);
 	add_output("\t[Game saved!]\n\n");
 
-	if (game_state == STATE_GAME)
+	if (g_state == STATE_GAME)
 		describe_location(PLAYER->current_location);
 	return;
 }
@@ -163,7 +160,7 @@ static void	execute_submenu_about(void)
 {
 	add_output("\t[Visit the Itch.io page:]\n\thttps://lycorisdev.itch.io/treasure-venture\n\n");
 
-	if (game_state == STATE_GAME)
+	if (g_state == STATE_GAME)
 		describe_location(PLAYER->current_location);
 	return;
 }

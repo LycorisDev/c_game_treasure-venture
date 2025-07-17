@@ -2,8 +2,7 @@
 #include "characters.h"
 #include "items.h"
 
-/* Declared as extern in events.h */
-int	g_list_events[NBR_EVENTS];
+int	g_list_events[NBR_EVENTS]; /* Declared as extern in events.h */
 
 void	populate_list_events(void)
 {
@@ -13,7 +12,7 @@ void	populate_list_events(void)
 	return;
 }
 
-/* --- */
+/* -------------------------------------------------------------------------- */
 
 void	execute_event_first_time_player_enters_mansion(void)
 {
@@ -32,7 +31,7 @@ void	event_first_time_player_enters_mansion(void)
 	return;
 }
 
-/* --- */
+/* -------------------------------------------------------------------------- */
 
 void	execute_event_player_finds_entry_doors_key(void)
 {
@@ -55,5 +54,3 @@ void	event_player_finds_entry_doors_key(const int id_item)
 		execute_event_player_finds_entry_doors_key();
 	return;
 }
-
-/* --- */

@@ -4,8 +4,8 @@
 #include "characters.h"
 
 static t_item	*find_item_to_use(void);
-static void	use_access_item(t_item *item_to_use);
-static int	use_item_on_target(const t_item *item_to_use);
+static void		use_access_item(t_item *item_to_use);
+static int		use_item_on_target(const t_item *item_to_use);
 
 void	execute_use(void)
 {

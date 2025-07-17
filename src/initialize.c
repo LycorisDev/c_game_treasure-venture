@@ -6,6 +6,8 @@
 #include "characters.h"
 #include "events.h"
 
+static void	exit_file_corrupted(int fd_save);
+
 #define NBR_LINES (6 + NBR_EVENTS + NBR_ITEMS)
 /*
 	Because:
@@ -17,8 +19,6 @@
 	6. "inventory"
 */
 #define NBR_CHARACTERS_IN_LINE 56
-
-static void	exit_file_corrupted(int fd_save);
 
 void	initialize_game(int fd_save)
 {

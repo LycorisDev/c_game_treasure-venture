@@ -1,10 +1,13 @@
 #include "commands.h"
 #include "parser.h"
 
-/* Declared as extern in commands.h */
-t_cmd	g_cmd;
+static void	reset_command_elements(void);
+static void	set_command_element(void *element, const int element_size,
+				const int parser_start_index, const int parser_end_index);
+static void	execute_action(void);
 
-static const KeyFunc	command_list[] = 
+t_cmd					g_cmd; /* Declared as extern in commands.h */
+static const KeyFunc	g_command_list[] = 
 {
 	{"drop", &execute_drop},
 	{"go", &execute_go},
@@ -15,11 +18,6 @@ static const KeyFunc	command_list[] =
 	{"use", &execute_use},
 	{0, &display_game_commands}
 };
-
-static void	reset_command_elements(void);
-static void	set_command_element(void *element, const int element_size,
-				const int parser_start_index, const int parser_end_index);
-static void	execute_action(void);
 
 void	execute_game_command(void)
 {
@@ -113,16 +111,16 @@ static void	execute_action(void)
 	int	i;
 
 	i = 0;
-	while (command_list[i].key)
+	while (g_command_list[i].key)
 	{
-		if (!strcmp(g_cmd.verb, command_list[i].key))
+		if (!strcmp(g_cmd.verb, g_command_list[i].key))
 		{
-			command_list[i].func();
+			g_command_list[i].func();
 			return;
 		}
 		++i;
 	}
 
-	command_list[i].func();
+	g_command_list[i].func();
 	return;
 }
