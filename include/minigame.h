@@ -35,7 +35,6 @@
 #  define LIB_PATH_20SQ "plugins/twenty-squares/libts.so"
 # endif
 */
-# include "misc.h"
 
 int	start_twenty_squares(void);
 

@@ -1,11 +1,10 @@
-#include "commands.h"
-#include "locations.h"
+#include "treasure_venture.h"
 
 static int	bool_no_item_at_current_location(void);
 /* static int	bool_no_character_at_current_location(void); */
 static int	bool_player_is_the_only_character_at_current_location(void);
 
-void	execute_look(void)
+void	run_look(void)
 {
 	t_item		**items_with_same_tag = 0;
 	t_character	**characters_with_same_tag = 0;
@@ -20,7 +19,7 @@ void	execute_look(void)
 	bool_character_match = 0;
 	bool_several_item_matches = 0;
 	bool_several_character_matches = 0;
-	if (!strcmp(g_cmd.object, "around"))
+	if (!strcmp(g_man.cmd.object, "around"))
 	{
 		describe_location(PLAYER->current_location);
 		return;
@@ -32,12 +31,12 @@ void	execute_look(void)
 		return;
 	}
 
-	if (*g_cmd.object)
+	if (*g_man.cmd.object)
 	{
 		items_with_same_tag = retrieve_items(PLAYER->current_location->items,
-			g_cmd.object);
+			g_man.cmd.object);
 		characters_with_same_tag = retrieve_characters
-			(PLAYER->current_location->characters, g_cmd.object);
+			(PLAYER->current_location->characters, g_man.cmd.object);
 
 		bool_item_match = items_with_same_tag && items_with_same_tag[0];
 		bool_character_match = characters_with_same_tag
@@ -49,25 +48,25 @@ void	execute_look(void)
 
 		if (!bool_item_match && !bool_character_match)
 		{
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else if (bool_several_item_matches && bool_several_character_matches)
 		{
 			printf("There is more than one item and character in your "
 				"vicinity for which this tag works.\n");
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else if (bool_several_item_matches)
 		{
 			printf("There is more than one item in your vicinity for which "
 				"this tag works.\n");
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else if (bool_several_character_matches)
 		{
 			printf("There is more than one character in your vicinity for "
 				"which this tag works.\n");
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else if (bool_item_match)
 		{
@@ -80,7 +79,7 @@ void	execute_look(void)
 		}
 	}
 
-	if (!*g_cmd.object)
+	if (!*g_man.cmd.object)
 	{
 		display_item_suggestions(PLAYER->current_location->items, "look");
 		display_character_suggestions(PLAYER->current_location->characters,

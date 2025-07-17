@@ -1,9 +1,8 @@
-#include "commands.h"
-#include "characters.h"
+#include "treasure_venture.h"
 
 static void	display_inventory(t_item **inventory);
 
-void	execute_inventory(void)
+void	run_inventory(void)
 {
 	t_item	**items;
 
@@ -12,13 +11,13 @@ void	execute_inventory(void)
 	{
 		printf("You have no item on you.\n\n");
 	}
-	else if (!*g_cmd.object)
+	else if (!*g_man.cmd.object)
 	{
 		display_inventory(PLAYER->inventory);
 	}
 	else
 	{
-		items = retrieve_items(PLAYER->inventory, g_cmd.object);
+		items = retrieve_items(PLAYER->inventory, g_man.cmd.object);
 
 		if (!items || !items[0])
 			printf("You have no such item on you. Type 'inventory' to see "

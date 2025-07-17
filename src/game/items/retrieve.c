@@ -1,5 +1,4 @@
-#include "items.h"
-#include "main.h"
+#include "treasure_venture.h"
 
 t_item	**retrieve_items(t_item **item_collection, const char *parser)
 {

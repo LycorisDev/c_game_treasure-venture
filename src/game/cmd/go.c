@@ -1,5 +1,4 @@
-#include "commands.h"
-#include "locations.h"
+#include "treasure_venture.h"
 
 static void	go_inside(void);
 static void	go_outside(void);
@@ -15,7 +14,7 @@ static void	print_location_is_full(void);
 static void	cross_passage(t_exit *exit);
 static void	output_text_for_passage_crossing(const t_exit *exit);
 
-void	execute_go(void)
+void	run_go(void)
 {
 	if (!PLAYER->current_location->exits[0].to)
 	{
@@ -23,21 +22,21 @@ void	execute_go(void)
 		return;
 	}
 
-	if (*g_cmd.object)
+	if (*g_man.cmd.object)
 	{
-		if (!strcmp(g_cmd.object, "inside"))
+		if (!strcmp(g_man.cmd.object, "inside"))
 			go_inside();
-		else if (!strcmp(g_cmd.object, "outside"))
+		else if (!strcmp(g_man.cmd.object, "outside"))
 			go_outside();
-		else if (!strcmp(g_cmd.object, "back"))
+		else if (!strcmp(g_man.cmd.object, "back"))
 			go_back();
-		else if (!strcmp(g_cmd.object, "out"))
+		else if (!strcmp(g_man.cmd.object, "out"))
 			go_out();
 		else
 			go_tag();
 	}
 
-	if (!*g_cmd.object)
+	if (!*g_man.cmd.object)
 		display_location_suggestions(PLAYER->current_location);
 	return;
 }
@@ -47,7 +46,7 @@ static void	go_inside(void)
 	if (PLAYER->current_location->bool_is_indoors)
 	{
 		printf("You're already inside of a building.\n\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		return;
 	}
 
@@ -69,7 +68,7 @@ static void	go_outside(void)
 	if (!PLAYER->current_location->bool_is_indoors)
 	{
 		printf("You're already outside.\n\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		return;
 	}
 
@@ -78,7 +77,7 @@ static void	go_outside(void)
 	{
 		if (!PLAYER->current_location->exits[i].to)
 		{
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 			break;
 		}
 
@@ -89,7 +88,7 @@ static void	go_outside(void)
 	if (outside_indexes[0] < 0)
 	{
 		printf("No immediate exit leads outside of the building.\n\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		return;
 	}
 	else if (outside_indexes[1] < 0)
@@ -108,7 +107,7 @@ static void	go_outside(void)
 	{
 		printf("Different exits lead outside. Specify the one you "
 			"want.\n\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		return;
 	}
 	return;
@@ -121,7 +120,7 @@ static void	go_back(void)
 	if (!PLAYER->previous_location)
 	{
 		printf("You do not have a previous location.\n\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		return;
 	}
 
@@ -130,7 +129,7 @@ static void	go_back(void)
 		if (!PLAYER->current_location->exits[i].to)
 		{
 			printf("Your previous location cannot be accessed.\n\n");
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 			return;
 		}
 		else if (PLAYER->previous_location
@@ -162,7 +161,7 @@ static void	go_out(void)
 	if (!PLAYER->current_location->bool_is_indoors)
 	{
 		printf("You are already outside.\n\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		return;
 	}
 
@@ -204,7 +203,7 @@ static void	go_out(void)
 		if (k == 1)
 		{
 			print_access_locked(to_outside_but_locked[0]);
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 			return;
 		}
 	}
@@ -221,13 +220,13 @@ static void	go_out(void)
 		if (m == 1)
 		{
 			print_access_locked(other_but_locked[0]);
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 			return;
 		}
 	}
 
 	printf("There is more than one exit. Which one do you want?\n\n");
-	memset(g_cmd.object, 0, sizeof(g_cmd.object));
+	memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 	return;
 }
 
@@ -238,14 +237,14 @@ static void	go_tag(void)
 
 	bool_tag_is_passage_item = 0;
 	locations = 0;
-	locations = retrieve_locations(PLAYER->current_location, g_cmd.object);
+	locations = retrieve_locations(PLAYER->current_location, g_man.cmd.object);
 	if (!locations || !locations[0])
 	{
 		locations = retrieve_locations_with_passage_item
-			(PLAYER->current_location, g_cmd.object);
+			(PLAYER->current_location, g_man.cmd.object);
 		if (!locations || !locations[0])
 		{
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 			free(locations);
 			return;
 		}
@@ -266,13 +265,13 @@ static void	go_tag(void)
 	{
 		printf("There is more than one passage item in your vicinity for "
 			"which this tag works.\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 	}
 	else
 	{
 		printf("There is more than one destination from your current "
 			"location for which this tag works.\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 	}
 
 	free(locations);

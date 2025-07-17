@@ -1,11 +1,10 @@
-#include "commands.h"
-#include "characters.h"
+#include "treasure_venture.h"
 
 static t_item	*find_item_to_use(void);
 static void		use_access_item(t_item *item_to_use);
 static int		use_item_on_target(const t_item *item_to_use);
 
-void	execute_use(void)
+void	run_use(void)
 {
 	t_item	*item_to_use;
 	int		bool_issue_is_target;
@@ -18,7 +17,7 @@ void	execute_use(void)
 		return;
 	}
 
-	if (*g_cmd.object)
+	if (*g_man.cmd.object)
 		item_to_use = find_item_to_use();
 
 	if (item_to_use)
@@ -40,7 +39,7 @@ void	execute_use(void)
 	{
 
 	}
-	else if (!*g_cmd.object)
+	else if (!*g_man.cmd.object)
 	{
 		display_item_suggestions(PLAYER->inventory, "use");
 		display_item_suggestions(PLAYER->current_location->items, "use");
@@ -58,16 +57,16 @@ static t_item	*find_item_to_use(void)
 	int		bool_location_match;
 
 	item_to_use = 0;
-	inventory_items = retrieve_items(PLAYER->inventory, g_cmd.object);
+	inventory_items = retrieve_items(PLAYER->inventory, g_man.cmd.object);
 	location_items = retrieve_items(PLAYER->current_location->items,
-		g_cmd.object);
+		g_man.cmd.object);
 	bool_inventory_match = inventory_items && inventory_items[0];
 	bool_location_match = location_items && location_items[0];
 	if (bool_inventory_match && bool_location_match)
 	{
 		printf("Your inventory and vicinity both included, there is more "
 			"than one item for which this tag works.\n");
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 	}
 	else if (bool_inventory_match)
 	{
@@ -75,7 +74,7 @@ static t_item	*find_item_to_use(void)
 		{
 			printf("There is more than one item in your inventory for "
 				"which this tag works.\n");
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else
 		{
@@ -88,7 +87,7 @@ static t_item	*find_item_to_use(void)
 		{
 			printf("There is more than one item in your vicinity for which "
 				"this tag works.\n");
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else
 		{
@@ -97,7 +96,7 @@ static t_item	*find_item_to_use(void)
 	}
 	else
 	{
-		memset(g_cmd.object, 0, sizeof(g_cmd.object));
+		memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 	}
 
 	free(inventory_items);
@@ -143,16 +142,16 @@ static int	use_item_on_target(const t_item *item_to_use)
 	bool_item_match = 0;
 	bool_character_match = 0;
 	bool_target_is_character = 0;
-	if (!*g_cmd.target || !*g_cmd.preposition
-		|| strcmp(g_cmd.preposition, "on"))
+	if (!*g_man.cmd.target || !*g_man.cmd.preposition
+		|| strcmp(g_man.cmd.preposition, "on"))
 	{
-		printf("Use the %s on who or what?\n\n", g_cmd.object);
+		printf("Use the %s on who or what?\n\n", g_man.cmd.object);
 		return 1;
 	}
 
-	items = retrieve_items(PLAYER->current_location->items, g_cmd.target);
+	items = retrieve_items(PLAYER->current_location->items, g_man.cmd.target);
 	characters = retrieve_characters(PLAYER->current_location->characters,
-		g_cmd.target);
+		g_man.cmd.target);
 	bool_item_match = items && items[0];
 	bool_character_match = characters && characters[0];
 
@@ -182,7 +181,7 @@ static int	use_item_on_target(const t_item *item_to_use)
 	}
 	else
 	{
-		printf("Use the %s on who or what?\n\n", g_cmd.object);
+		printf("Use the %s on who or what?\n\n", g_man.cmd.object);
 	}
 
 	if (!target)

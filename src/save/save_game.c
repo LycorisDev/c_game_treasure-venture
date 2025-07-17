@@ -1,5 +1,4 @@
-#include "save.h"
-#include "characters.h"
+#include "treasure_venture.h"
 
 void	save_game(int fd_save)
 {
@@ -13,9 +12,9 @@ void	save_game(int fd_save)
 	for (i = 0; i < NBR_EVENTS; ++i)
 	{
 		if (!i)
-			dprintf(fd_save, "%d", g_list_events[i]);
+			dprintf(fd_save, "%d", g_man.events[i]);
 		else
-			dprintf(fd_save, ",%d", g_list_events[i]);
+			dprintf(fd_save, ",%d", g_man.events[i]);
 	}
 	dprintf(fd_save, "\n");
 

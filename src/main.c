@@ -1,42 +1,57 @@
-#include "main.h"
-#include "parser.h"
-#include "start.h"
-#include "characters.h"
-#include "events.h"
-#include "items.h"
-#include "lexicon.h"
-#include "locations.h"
-#include "commands.h"
-
-t_game_state		g_state = STATE_NONE;
-t_cmd				g_cmd;
-t_character			g_list_characters[NBR_CHARACTERS];
-int					g_list_events[NBR_EVENTS];
-t_item				g_list_items[NBR_ITEMS];
-char				g_list_lexicon[NBR_WORDS][LENGTH_WORD];
-
-t_location			g_list_locations[NBR_LOCATIONS];
-t_geo_aff			g_list_geo_aff[NBR_GEO_AFF];
-
-char				g_parser[PARSER_NBR_WORDS][LENGTH_WORD];
-int					g_nbr_words_in_parser;
-yes_no_callback_t	g_yes_no_callback = 0;
-
-/* -------------------------------------------------------------------------- */
+#include "treasure_venture.h"
 
 static void	set_utf8_encoding(void);
 
+t_man	g_man;
+
 int	main(void)
 {
+	bzero(&g_man, sizeof(g_man));
 	set_utf8_encoding();
-	access_main_menu();
-	while (g_state != STATE_NONE)
+	open_menu();
+	while (g_man.state)
 	{
 		get_and_parse_input();
-		interact();
+		if (g_man.yes_no_callback)
+		{
+			if (g_man.parser[0])
+			{
+				if (!strcmp(g_man.parser[0], "yes"))
+				{
+					g_man.yes_no_callback(1);
+					g_man.yes_no_callback = 0;
+				}
+				else if (!strcmp(g_man.parser[0], "no"))
+				{
+					g_man.yes_no_callback(0);
+					g_man.yes_no_callback = 0;
+				}
+			}
+		}
+		else if (g_man.state == STATE_MENU)
+		{
+			run_menu_cmd(g_man.parser[0]);
+		}
+		else if (g_man.state == STATE_GAME)
+		{
+			if (!strcmp(g_man.parser[0], "menu")) /* e.g. "menu save" */
+				run_menu_cmd(g_man.parser[1]);
+			else
+				run_game_command();
+		}
 	}
 	clear_window();
 	return EXIT_SUCCESS;
+}
+
+void	open_menu(void)
+{
+	g_man.state = STATE_MENU;
+	clear_window();
+	printf("\t-[ TREASURE VENTURE ]-\n\n");
+	printf("\t[During the game, type 'Menu' to go back to the main menu.]\n\n");
+	printf("\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
+	return;
 }
 
 void	clear_window(void)
@@ -48,6 +63,16 @@ void	clear_window(void)
 	#else
 	write(STDOUT_FILENO, "\033c", 2);
 	#endif
+	return;
+}
+
+void	initialize_game(void)
+{
+	populate_list_lexicon();
+	populate_list_locations();
+	populate_list_items();
+	populate_list_characters();
+	populate_list_events();
 	return;
 }
 

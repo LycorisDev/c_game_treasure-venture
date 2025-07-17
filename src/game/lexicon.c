@@ -1,8 +1,8 @@
-#include "lexicon.h"
+#include "treasure_venture.h"
 
 void	populate_list_lexicon(void)
 {
-	memset(g_list_lexicon, 0, NBR_WORDS * LENGTH_WORD * sizeof(char));
+	memset(g_man.lexicon, 0, NBR_WORDS * LENGTH_WORD * sizeof(char));
 
 	memcpy(LEXICON_1, "1", 1);
 	memcpy(LEXICON_2, "2", 1);
@@ -56,10 +56,10 @@ int	bool_word_is_in_lexicon(const char *word)
 
 	for (i = 0; i < NBR_WORDS; ++i)
 	{
-		if (!g_list_lexicon[i][0])
+		if (!g_man.lexicon[i][0])
 			return 0;
 
-		if (!strcmp(word, g_list_lexicon[i]))
+		if (!strcmp(word, g_man.lexicon[i]))
 			return 1;
 	}
 	return 0;

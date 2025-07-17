@@ -1,8 +1,8 @@
-#include "characters.h"
+#include "treasure_venture.h"
 
 void	populate_list_characters(void)
 {
-	memset(g_list_characters, 0, NBR_CHARACTERS * sizeof(t_character));
+	memset(g_man.characters, 0, NBR_CHARACTERS * sizeof(t_character));
 
 	PLAYER->id = ID_CHARACTER_PLAYER;
 	memcpy(PLAYER->tags[0], "player", 6);

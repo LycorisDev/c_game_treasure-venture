@@ -1,5 +1,5 @@
 *~
 *.swp
 .vscode
-[Bb]uilds/
+build/
 save.txt

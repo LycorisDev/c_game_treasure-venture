@@ -1,9 +1,8 @@
-#include "commands.h"
-#include "characters.h"
+#include "treasure_venture.h"
 
 static void	drop_item(t_item *item_to_drop);
 
-void	execute_drop(void)
+void	run_drop(void)
 {
 	t_item	**items_with_same_tag;
 
@@ -18,13 +17,13 @@ void	execute_drop(void)
 		printf("You have no item on you.\n\n");
 		return;
 	}
-	else if (*g_cmd.object)
+	else if (*g_man.cmd.object)
 	{
-		items_with_same_tag = retrieve_items(PLAYER->inventory, g_cmd.object);
+		items_with_same_tag = retrieve_items(PLAYER->inventory, g_man.cmd.object);
 
 		if (!items_with_same_tag || !items_with_same_tag[0])
 		{
-			memset(g_cmd.object, 0, sizeof(g_cmd.object));
+			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
 		}
 		else if (items_with_same_tag[1])
 		{
@@ -43,7 +42,7 @@ void	execute_drop(void)
 		}
 	}
 
-	if (!*g_cmd.object)
+	if (!*g_man.cmd.object)
 		display_item_suggestions(PLAYER->inventory, "drop");
 
 	free(items_with_same_tag);

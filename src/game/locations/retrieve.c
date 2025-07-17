@@ -1,6 +1,4 @@
-#include "locations.h"
-#include "main.h"
-#include "items.h"
+#include "treasure_venture.h"
 
 static int	bool_location_matches_parser(const t_location *destination,
 				const char *parser);

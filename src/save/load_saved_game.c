@@ -1,11 +1,4 @@
-#include "start.h"
-#include "save.h"
-#include "main.h"
-#include "lexicon.h"
-#include "locations.h"
-#include "items.h"
-#include "characters.h"
-#include "events.h"
+#include "treasure_venture.h"
 
 static void	exit_file_corrupted(int fd_save);
 
@@ -81,7 +74,7 @@ int	load_saved_game(int fd_save)
 		return 0;
 	}
 
-	PLAYER->previous_location = g_list_locations + id;
+	PLAYER->previous_location = g_man.locations + id;
 
 	if (!save_buffer[2] || strcmp(save_buffer[2], "current_location"))
 	{
@@ -105,7 +98,7 @@ int	load_saved_game(int fd_save)
 	}
 
 	/* Update the player's current location */
-	PLAYER->current_location = g_list_locations + id;
+	PLAYER->current_location = g_man.locations + id;
 
 	/*
 		TODO: Instead of having to move the player, or even other characters as 
@@ -178,10 +171,10 @@ int	load_saved_game(int fd_save)
 			switch (i)
 			{
 				case 0:
-					execute_event_first_time_player_enters_mansion();
+					run_event_first_time_player_enters_mansion();
 					break;
 				case 1:
-					execute_event_player_finds_entry_doors_key();
+					run_event_player_finds_entry_doors_key();
 					break;
 			}
 		}
@@ -201,7 +194,7 @@ int	load_saved_game(int fd_save)
 			|| (id < 1 || id > (NBR_ITEMS - 1)))
 			break;
 		else
-			PLAYER->inventory[i] = (g_list_items + id);
+			PLAYER->inventory[i] = (g_man.items + id);
 	}
 	return 1;
 }

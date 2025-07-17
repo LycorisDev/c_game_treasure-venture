@@ -1,11 +1,10 @@
+#include "treasure_venture.h"
 #include "minigame.h"
-#include "parser.h"
-#include "locations.h"
 
 static void	static_mini_game(const int yes_no);
 /* static void	dynamic_mini_game(int yes_no); */
 
-void	execute_play(void)
+void	run_play(void)
 {
 	int	i;
 
@@ -16,16 +15,14 @@ void	execute_play(void)
 			printf("You see no one around you to play with.\n\n");
 			return;
 		}
-
 		if (PLAYER->current_location->characters[i] == PLAYER)
 			continue;
-
 		break;
 	}
-
 	printf("\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n",
 		PLAYER->current_location->characters[i]->tags[1]);
-	g_yes_no_callback = &static_mini_game;
+	g_man.yes_no_callback = &static_mini_game;
+	describe_location(PLAYER->current_location);
 	return;
 }
 
@@ -33,8 +30,6 @@ static void	static_mini_game(const int yes_no)
 {
 	if (yes_no)
 		start_twenty_squares();
-
-	describe_location(PLAYER->current_location);
 	return;
 }
 
@@ -75,8 +70,6 @@ static void	dynamic_mini_game(int yes_no)
 
 		UNLOAD_LIB(mini_game_obj);
 	}
-
-	describe_location(PLAYER->current_location);
 	return;
 }
 */

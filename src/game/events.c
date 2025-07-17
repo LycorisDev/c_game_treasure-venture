@@ -1,30 +1,28 @@
-#include "events.h"
-#include "characters.h"
-#include "items.h"
+#include "treasure_venture.h"
 
 void	populate_list_events(void)
 {
-	memset(g_list_events, FLAG_OFF, NBR_EVENTS * sizeof(int));
-	g_list_events[0] = FLAG_ON;
-	g_list_events[1] = FLAG_ON;
+	memset(g_man.events, FLAG_OFF, NBR_EVENTS * sizeof(int));
+	g_man.events[0] = FLAG_ON;
+	g_man.events[1] = FLAG_ON;
 	return;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void	execute_event_first_time_player_enters_mansion(void)
+void	run_event_first_time_player_enters_mansion(void)
 {
 	ITEM_ENTRY_DOORS->access = ACCESS_LOCKED;
-	g_list_events[0] = FLAG_OFF;
+	g_man.events[0] = FLAG_OFF;
 	return;
 }
 
 void	event_first_time_player_enters_mansion(void)
 {
-	if (g_list_events[0] == FLAG_ON
+	if (g_man.events[0] == FLAG_ON
 		&& PLAYER->current_location == LOCATION_MAIN_HALLWAY)
 	{
-		execute_event_first_time_player_enters_mansion();
+		run_event_first_time_player_enters_mansion();
 		printf("A distinct noise lets you know the entry doors have "
 			"locked, seemingly all by themselves. You hope this is no haunting "
 			"place.\n\n");
@@ -34,7 +32,7 @@ void	event_first_time_player_enters_mansion(void)
 
 /* -------------------------------------------------------------------------- */
 
-void	execute_event_player_finds_entry_doors_key(void)
+void	run_event_player_finds_entry_doors_key(void)
 {
 	memcpy(ITEM_ENTRY_DOORS_KEY->description, "The key to the mansion's entry "
 		"doors.", 37);
@@ -49,13 +47,13 @@ void	execute_event_player_finds_entry_doors_key(void)
 	memcpy(ITEM_ENTRY_DOORS_KEY->tags[3], "entry doors key", 15);
 	memcpy(ITEM_ENTRY_DOORS_KEY->tags[4], "double doors key", 16);
 	memcpy(ITEM_ENTRY_DOORS_KEY->tags[5], "key", 3);
-	g_list_events[1] = FLAG_OFF;
+	g_man.events[1] = FLAG_OFF;
 	return;
 }
 
 void	event_player_finds_entry_doors_key(const int id_item)
 {
-	if (g_list_events[1] == FLAG_ON && id_item == ID_ITEM_ENTRY_DOORS_KEY)
-		execute_event_player_finds_entry_doors_key();
+	if (g_man.events[1] == FLAG_ON && id_item == ID_ITEM_ENTRY_DOORS_KEY)
+		run_event_player_finds_entry_doors_key();
 	return;
 }

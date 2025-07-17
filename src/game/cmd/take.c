@@ -1,10 +1,9 @@
-#include "commands.h"
-#include "characters.h"
+#include "treasure_venture.h"
 
 static void	take_item(t_item *item_to_take);
 static void	clean(t_item **p1, t_item **p2);
 
-void	execute_take(void)
+void	run_take(void)
 {
 	t_item	**takeable_items;
 	t_item	**takeable_items_with_same_tag;
@@ -26,7 +25,7 @@ void	execute_take(void)
 		return;
 	}
 
-	if (!*g_cmd.object)
+	if (!*g_man.cmd.object)
 	{
 		display_item_suggestions(takeable_items, "take");
 		clean(takeable_items, takeable_items_with_same_tag);
@@ -34,7 +33,7 @@ void	execute_take(void)
 	}
 
 	takeable_items_with_same_tag = retrieve_takeable_items(takeable_items,
-		g_cmd.object);
+		g_man.cmd.object);
 	if (!takeable_items_with_same_tag || !takeable_items_with_same_tag[0])
 	{
 		display_item_suggestions(takeable_items, "take");

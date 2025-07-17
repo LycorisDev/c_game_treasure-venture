@@ -1,6 +1,4 @@
-#include "locations.h"
-#include "main.h"
-#include "items.h"
+#include "treasure_venture.h"
 
 void	describe_location(const t_location *location)
 {

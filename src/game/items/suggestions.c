@@ -1,5 +1,4 @@
-#include "items.h"
-#include "main.h"
+#include "treasure_venture.h"
 
 static void	get_all_tags(char *p_str, const int word_length, t_item *object);
 

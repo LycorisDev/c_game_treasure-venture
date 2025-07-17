@@ -1,24 +1,13 @@
-#include "commands.h"
-#include "parser.h"
+#include "treasure_venture.h"
 
 static void	reset_command_elements(void);
 static void	set_command_element(void *element, const int element_size,
 				const int parser_start_index, const int parser_end_index);
-static void	execute_action(void);
+static int	get_available_length_in_string(const int max_length,
+				const char *str);
+static void	run_action(const char *cmd);
 
-static const KeyFunc	g_command_list[] = 
-{
-	{"drop", &execute_drop},
-	{"go", &execute_go},
-	{"inventory", &execute_inventory},
-	{"look", &execute_look},
-	{"play", &execute_play},
-	{"take", &execute_take},
-	{"use", &execute_use},
-	{0, &display_game_commands}
-};
-
-void	execute_game_command(void)
+void	run_game_command(void)
 {
 	int	i;
 	int	command_word_length;
@@ -27,18 +16,18 @@ void	execute_game_command(void)
 	int	preposition_index;
 	int	target_start_index;
 
-	command_word_length = g_nbr_words_in_parser;
+	command_word_length = g_man.nbr_words_in_parser;
 	verb_index = 0;
 	object_end_index = -1;
 	preposition_index = -1;
 	target_start_index = -1;
 	reset_command_elements();
 
-	for (i = 0; i < g_nbr_words_in_parser; ++i)
+	for (i = 0; i < g_man.nbr_words_in_parser; ++i)
 	{
-		if (!bool_word_is_in_lexicon(g_parser[i]))
+		if (!bool_word_is_in_lexicon(g_man.parser[i]))
 		{
-			printf("\t['%s' was not recognized.]\n\n", g_parser[i]);
+			printf("\t['%s' was not recognized.]\n\n", g_man.parser[i]);
 			command_word_length = i;
 			break;
 		}
@@ -48,7 +37,7 @@ void	execute_game_command(void)
 
 		object_end_index = i;
 
-		if (bool_word_is_preposition(g_parser[i]))
+		if (bool_word_is_preposition(g_man.parser[i]))
 		{
 			object_end_index = i - 1;
 			preposition_index = i;
@@ -62,15 +51,15 @@ void	execute_game_command(void)
 		return;
 	}
 
-	set_command_element(g_cmd.verb, sizeof(g_cmd.verb), verb_index, verb_index);
-	set_command_element(g_cmd.object, sizeof(g_cmd.object), verb_index + 1,
+	set_command_element(g_man.cmd.verb, sizeof(g_man.cmd.verb), verb_index, verb_index);
+	set_command_element(g_man.cmd.object, sizeof(g_man.cmd.object), verb_index + 1,
 		object_end_index);
-	set_command_element(g_cmd.preposition, sizeof(g_cmd.preposition),
+	set_command_element(g_man.cmd.preposition, sizeof(g_man.cmd.preposition),
 		preposition_index, preposition_index);
-	set_command_element(g_cmd.target, sizeof(g_cmd.target), target_start_index,
+	set_command_element(g_man.cmd.target, sizeof(g_man.cmd.target), target_start_index,
 		command_word_length - 1);
 
-	execute_action();
+	run_action(g_man.cmd.verb);
 	return;
 }
 
@@ -84,7 +73,7 @@ void	display_game_commands(void)
 
 static void	reset_command_elements(void)
 {
-	memset(&g_cmd, 0, sizeof(g_cmd));
+	memset(&g_man.cmd, 0, sizeof(g_man.cmd));
 	return;
 }
 
@@ -99,32 +88,56 @@ static void	set_command_element(void *element, const int element_size,
 		|| parser_end_index < 0)
 		return;
 
-	memcpy(element, g_parser[i++], max_len);
+	memcpy(element, g_man.parser[i++], max_len);
 
 	while (i <= parser_end_index)
 	{
 		strncat(element, " ", get_available_length_in_string(max_len, element));
-		strncat(element, g_parser[i++], get_available_length_in_string(max_len,
-			element));
+		strncat(element, g_man.parser[i++],
+			get_available_length_in_string(max_len, element));
 	}
 	return;
 }
 
-static void	execute_action(void)
+static int	get_available_length_in_string(const int max_length,
+				const char *str)
 {
+	int	len_cat;
+
+	len_cat = max_length - strlen(str);
+	return len_cat < 0 ? 0 : len_cat;
+}
+
+static void	run_action(const char *cmd)
+{
+	static const KeyFunc	cmd_list[] = 
+	{
+		{0, &display_game_commands},
+		{"drop", &run_drop},
+		{"go", &run_go},
+		{"inventory", &run_inventory},
+		{"look", &run_look},
+		{"play", &run_play},
+		{"take", &run_take},
+		{"use", &run_use}
+	};
 	int	i;
 
-	i = 0;
-	while (g_command_list[i].key)
+	if (!cmd || !*cmd)
 	{
-		if (!strcmp(g_cmd.verb, g_command_list[i].key))
+		cmd_list[0].func();
+		return;
+	}
+	i = 1;
+	while (cmd_list[i].key)
+	{
+		if (!strcmp(cmd, cmd_list[i].key))
 		{
-			g_command_list[i].func();
+			cmd_list[i].func();
 			return;
 		}
 		++i;
 	}
-
-	g_command_list[i].func();
+	cmd_list[0].func();
 	return;
 }

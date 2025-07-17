@@ -1,9 +1,8 @@
-#include "items.h"
-#include "main.h"
+#include "treasure_venture.h"
 
 void	populate_list_items(void)
 {
-	memset(g_list_items, 0, NBR_ITEMS * sizeof(t_item));
+	memset(g_man.items, 0, NBR_ITEMS * sizeof(t_item));
 
 	ITEM_ENTRY_DOORS->id = ID_ITEM_ENTRY_DOORS;
 	ITEM_ENTRY_DOORS->bool_is_singular = 0;

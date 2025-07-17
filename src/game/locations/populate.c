@@ -1,6 +1,4 @@
-#include "locations.h"
-#include "main.h"
-#include "items.h"
+#include "treasure_venture.h"
 
 void	populate_list_locations(void)
 {
@@ -27,17 +25,17 @@ void	populate_list_locations(void)
 	exit_objects[10].to = LOCATION_OLD_LIBRARY;
 	exit_objects[10].passage = ITEM_DOOR_ROOM_3;
 
-	memset(g_list_geo_aff, 0, NBR_GEO_AFF * sizeof(t_geo_aff));
-	memset(g_list_locations, 0, NBR_LOCATIONS * sizeof(t_location));
+	memset(g_man.geo_aff, 0, NBR_GEO_AFF * sizeof(t_geo_aff));
+	memset(g_man.locations, 0, NBR_LOCATIONS * sizeof(t_location));
 
-	g_list_geo_aff[0].id = 1;
-	memcpy(g_list_geo_aff[0].name, "world", 5);
-	g_list_geo_aff[1].id = 2;
-	memcpy(g_list_geo_aff[1].name, "mansion", 7);
+	g_man.geo_aff[0].id = 1;
+	memcpy(g_man.geo_aff[0].name, "world", 5);
+	g_man.geo_aff[1].id = 2;
+	memcpy(g_man.geo_aff[1].name, "mansion", 7);
 
 	LOCATION_OUTSIDE->id = ID_LOCATION_OUTSIDE;
 	LOCATION_OUTSIDE->bool_is_indoors = 0;
-	LOCATION_OUTSIDE->geo_aff = &(g_list_geo_aff[0]);
+	LOCATION_OUTSIDE->geo_aff = &(g_man.geo_aff[0]);
 	memcpy(LOCATION_OUTSIDE->tags[0], "world", 5);
 	memcpy(LOCATION_OUTSIDE->description, "", 1);
 	LOCATION_OUTSIDE->exits[0] = exit_objects[2];
@@ -46,7 +44,7 @@ void	populate_list_locations(void)
 
 	LOCATION_MAIN_HALLWAY->id = ID_LOCATION_MAIN_HALLWAY;
 	LOCATION_MAIN_HALLWAY->bool_is_indoors = 1;
-	LOCATION_MAIN_HALLWAY->geo_aff = &(g_list_geo_aff[1]);
+	LOCATION_MAIN_HALLWAY->geo_aff = &(g_man.geo_aff[1]);
 	memcpy(LOCATION_MAIN_HALLWAY->tags[0], "main hallway", 12);
 	memcpy(LOCATION_MAIN_HALLWAY->tags[1], "hallway", 7);
 	memcpy(LOCATION_MAIN_HALLWAY->description, "There is a heavy door topped "
@@ -60,7 +58,7 @@ void	populate_list_locations(void)
 
 	LOCATION_OLD_LIBRARY->id = ID_LOCATION_OLD_LIBRARY;
 	LOCATION_OLD_LIBRARY->bool_is_indoors = 1;
-	LOCATION_OLD_LIBRARY->geo_aff = &(g_list_geo_aff[1]);
+	LOCATION_OLD_LIBRARY->geo_aff = &(g_man.geo_aff[1]);
 	memcpy(LOCATION_OLD_LIBRARY->tags[0], "old library", 11);
 	memcpy(LOCATION_OLD_LIBRARY->tags[1], "library", 7);
 	memcpy(LOCATION_OLD_LIBRARY->description, "A librarian is standing there, "
@@ -79,7 +77,7 @@ void	populate_list_locations(void)
 
 	LOCATION_ROOM_1->id = ID_LOCATION_ROOM_1;
 	LOCATION_ROOM_1->bool_is_indoors = 1;
-	LOCATION_ROOM_1->geo_aff = &(g_list_geo_aff[1]);
+	LOCATION_ROOM_1->geo_aff = &(g_man.geo_aff[1]);
 	memcpy(LOCATION_ROOM_1->tags[0], "first room", 10);
 	memcpy(LOCATION_ROOM_1->tags[1], "room 1", 6);
 	memcpy(LOCATION_ROOM_1->description, "The room seems empty.", 21);
@@ -88,7 +86,7 @@ void	populate_list_locations(void)
 
 	LOCATION_ROOM_2->id = ID_LOCATION_ROOM_2;
 	LOCATION_ROOM_2->bool_is_indoors = 1;
-	LOCATION_ROOM_2->geo_aff = &(g_list_geo_aff[1]);
+	LOCATION_ROOM_2->geo_aff = &(g_man.geo_aff[1]);
 	memcpy(LOCATION_ROOM_2->tags[0], "second room", 11);
 	memcpy(LOCATION_ROOM_2->tags[1], "room 2", 6);
 	memcpy(LOCATION_ROOM_2->description, "The room seems empty.", 21);
@@ -98,7 +96,7 @@ void	populate_list_locations(void)
 
 	LOCATION_ROOM_3->id = ID_LOCATION_ROOM_3;
 	LOCATION_ROOM_3->bool_is_indoors = 1;
-	LOCATION_ROOM_3->geo_aff = &(g_list_geo_aff[1]);
+	LOCATION_ROOM_3->geo_aff = &(g_man.geo_aff[1]);
 	memcpy(LOCATION_ROOM_3->tags[0], "third room", 10);
 	memcpy(LOCATION_ROOM_3->tags[1], "room 3", 6);
 	memcpy(LOCATION_ROOM_3->description, "The room seems empty.", 21);
