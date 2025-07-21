@@ -4,25 +4,25 @@
 static void	static_mini_game(const int yes_no);
 /* static void	dynamic_mini_game(int yes_no); */
 
-void	run_play(void)
+void	run_play(t_man *man)
 {
 	int	i;
 
 	for (i = 0; i < NBR_CHARACTERS; ++i)
 	{
-		if (!PLAYER->current_location->characters[i])
+		if (!man->characters[CHAR_PLAYER - 1].current_location->characters[i])
 		{
 			printf("You see no one around you to play with.\n\n");
 			return;
 		}
-		if (PLAYER->current_location->characters[i] == PLAYER)
+		if (man->characters[CHAR_PLAYER - 1].current_location->characters[i] == &man->characters[CHAR_PLAYER - 1])
 			continue;
 		break;
 	}
 	printf("\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n",
-		PLAYER->current_location->characters[i]->tags[1]);
-	g_man.yes_no_callback = &static_mini_game;
-	describe_location(PLAYER->current_location);
+		man->characters[CHAR_PLAYER - 1].current_location->characters[i]->tags[1]);
+	man->yes_no_callback = &static_mini_game;
+	describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
 	return;
 }
 

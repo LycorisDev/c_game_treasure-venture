@@ -2,51 +2,47 @@
 
 static void	set_utf8_encoding(void);
 
-t_man	g_man;
-
 int	main(void)
 {
-	bzero(&g_man, sizeof(g_man));
+	t_man	man;
+
+	memset(&man, 0, sizeof(man));
 	set_utf8_encoding();
-	open_menu();
-	while (g_man.state)
+	open_menu(&man);
+	while (man.state)
 	{
-		get_and_parse_input();
-		if (g_man.yes_no_callback)
+		man.tokens = get_input();
+		//
+		if (man.yes_no_callback)
 		{
-			if (g_man.parser[0])
+			if (man.tokens)
 			{
-				if (!strcmp(g_man.parser[0], "yes"))
+				if (!strcmp(man.tokens[0], "yes"))
 				{
-					g_man.yes_no_callback(1);
-					g_man.yes_no_callback = 0;
+					man.yes_no_callback(1);
+					man.yes_no_callback = 0;
 				}
-				else if (!strcmp(g_man.parser[0], "no"))
+				else if (!strcmp(man.tokens[0], "no"))
 				{
-					g_man.yes_no_callback(0);
-					g_man.yes_no_callback = 0;
+					man.yes_no_callback(0);
+					man.yes_no_callback = 0;
 				}
 			}
 		}
-		else if (g_man.state == STATE_MENU)
-		{
-			run_menu_cmd(g_man.parser[0]);
-		}
-		else if (g_man.state == STATE_GAME)
-		{
-			if (!strcmp(g_man.parser[0], "menu")) /* e.g. "menu save" */
-				run_menu_cmd(g_man.parser[1]);
-			else
-				run_game_command();
-		}
+		//
+		else if (man.state == STATE_MENU)
+			run_menu_cmd(&man, man.tokens);
+		else if (man.state == STATE_GAME)
+			run_game_cmd(&man, man.tokens);
+		free_array((void **)man.tokens, free);
 	}
 	clear_window();
 	return EXIT_SUCCESS;
 }
 
-void	open_menu(void)
+void	open_menu(t_man *man)
 {
-	g_man.state = STATE_MENU;
+	man->state = STATE_MENU;
 	clear_window();
 	printf("\t-[ TREASURE VENTURE ]-\n\n");
 	printf("\t[During the game, type 'Menu' to go back to the main menu.]\n\n");
@@ -66,13 +62,13 @@ void	clear_window(void)
 	return;
 }
 
-void	initialize_game(void)
+void	initialize_game(t_man *man)
 {
-	populate_list_lexicon();
-	populate_list_locations();
-	populate_list_items();
-	populate_list_characters();
-	populate_list_events();
+	populate_list_lexicon(man);
+	populate_list_locations(man);
+	populate_list_items(man);
+	populate_list_characters(man);
+	populate_list_events(man);
 	return;
 }
 

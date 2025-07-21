@@ -1,14 +1,14 @@
 #include "treasure_venture.h"
 
-void	describe_location(const t_location *location)
+void	describe_location(t_man *man, const t_location *location)
 {
 	int	i;
 
 	/* Display location name */
-	if (!PLAYER->current_location->bool_is_indoors)
+	if (!man->characters[CHAR_PLAYER - 1].current_location->bool_is_indoors)
 		printf("You are outside. ");
 	else
-		printf("You are in the %s. ", PLAYER->current_location->tags[0]);
+		printf("You are in the %s. ", man->characters[CHAR_PLAYER - 1].current_location->tags[0]);
 
 	/*
 		TODO: Remove the need for this temporary fix. The geo_aff should be 

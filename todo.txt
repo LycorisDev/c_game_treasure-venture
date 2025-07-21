@@ -1,11 +1,9 @@
-- Cleaner parsing.
 - Isolate the yes/no parsing into its own function which can be called from 
 anywhere in the codebase without having to go back to the main loop. We stay 
 there until we get an answer or a EOF (which means "no").
 
 --------------------------------------------------------------------------------
 
-- Remove the global var.
 - Remove a maximum of macros, including these:
 	* src/save/load_saved_game.c -> private macros (NBR_LINES and 
 		NBR_CHARACTERS_IN_LINE)

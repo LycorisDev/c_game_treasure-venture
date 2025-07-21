@@ -1,69 +1,68 @@
 #include "treasure_venture.h"
 
-static void	parse_input(const char *raw_input);
-static void	reset_parser(void);
-static void	str_to_lowercase(char dest[], const char *src);
-static void	fill_parser(char input[]);
+#define FS '\x1C'
 
-void	get_and_parse_input(void)
+static void	set_str_to_lowercase(char *s);
+
+const char	**get_input(void)
 {
-	char	input[INPUT_MAX_LENGTH] = {0};
+	size_t		i;
+	char		*line;
+	const char	**tokens;
 
-	reset_parser();
 	write(STDOUT_FILENO, "> ", 2);
-	if (read(STDIN_FILENO, input, INPUT_MAX_LENGTH) != -1)
-	{
-		if (input[0] == '\n')
-			return;
-		parse_input(input);
-	}
+	line = gnl(STDIN_FILENO);
 	write(STDOUT_FILENO, "\n", 1);
-	return;
-}
-
-static void	parse_input(const char *raw_input)
-{
-	char	input[INPUT_MAX_LENGTH] = {0};
-
-	reset_parser();
-
-	if (!strlen(raw_input))
-		return;
-
-	str_to_lowercase(input, raw_input);
-	fill_parser(input);
-	return;
-}
-
-static void	reset_parser(void)
-{
-	memset(g_man.parser, 0, sizeof(g_man.parser));
-	g_man.nbr_words_in_parser = 0;
-	return;
-}
-
-static void	str_to_lowercase(char dest[], const char* src)
-{
-	int	i;
-
-	for (i = 0; i < INPUT_MAX_LENGTH; ++i)
+	if (!line)
+		return 0;
+	set_str_to_lowercase(line);
+	i = 0;
+	while (line[i])
 	{
-		if (src[i] == '\0')
-			break;
-		dest[i] = tolower(src[i]);
+		if (isspace(line[i]))
+			line[i] = FS;
+		++i;
 	}
+	tokens = (const char **)split(line, FS);
+	free(line);
+	if (tokens && !tokens[0])
+	{
+		free(tokens);
+		tokens = 0;
+	}
+	return tokens;
+}
+
+void	free_array(void **arr, void (*free_fct)(void *))
+{
+	size_t	i;
+
+	if (!arr)
+		return;
+	if (free_fct)
+	{
+		i = 0;
+		while (arr[i])
+		{
+			free_fct(arr[i]);
+			++i;
+		}
+	}
+	free(arr);
 	return;
 }
 
-static void	fill_parser(char input[])
+static void	set_str_to_lowercase(char *s)
 {
-	char	*token;
+	size_t	i;
 
-	token = strtok(input, INPUT_TOKEN_DELIMETERS);
-	while (token)
+	if (!s)
+		return;
+	i = 0;
+	while (s[i])
 	{
-		strcpy(g_man.parser[g_man.nbr_words_in_parser++], token);
-		token = strtok(0, INPUT_TOKEN_DELIMETERS);
+		s[i] = tolower(s[i]);
+		++i;
 	}
 	return;
 }

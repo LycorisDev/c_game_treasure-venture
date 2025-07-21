@@ -14,7 +14,7 @@ static void	exit_file_corrupted(int fd_save);
 */
 #define NBR_CHARACTERS_IN_LINE 56
 
-int	load_saved_game(int fd_save)
+int	load_saved_game(t_man *man, int fd_save)
 {
 	int		i;
 	int		j;
@@ -74,7 +74,7 @@ int	load_saved_game(int fd_save)
 		return 0;
 	}
 
-	PLAYER->previous_location = g_man.locations + id;
+	man->characters[CHAR_PLAYER - 1].previous_location = man->locations + id;
 
 	if (!save_buffer[2] || strcmp(save_buffer[2], "current_location"))
 	{
@@ -91,14 +91,14 @@ int	load_saved_game(int fd_save)
 	}
 
 	/* The current location is full */
-	if (PLAYER->current_location->characters[NBR_CHARACTERS - 1])
+	if (man->characters[CHAR_PLAYER - 1].current_location->characters[NBR_CHARACTERS - 1])
 	{
 		exit_file_corrupted(fd_save);
 		return 0;
 	}
 
 	/* Update the player's current location */
-	PLAYER->current_location = g_man.locations + id;
+	man->characters[CHAR_PLAYER - 1].current_location = man->locations + id;
 
 	/*
 		TODO: Instead of having to move the player, or even other characters as 
@@ -114,23 +114,23 @@ int	load_saved_game(int fd_save)
 		The current solution is only fine because this is the beginning of the 
 		game, when a lot of movements occur, it's hell.
 	*/
-	if (PLAYER->current_location != LOCATION_OUTSIDE)
+	if (man->characters[CHAR_PLAYER - 1].current_location->id != LOC_OUTSIDE)
 	{
 		/* Remove player from player's starter location (LOCATION_OUTSIDE) */
 		for (i = 0; i < NBR_CHARACTERS; ++i)
 		{
-			if (!LOCATION_OUTSIDE->characters[i])
+			if (!man->locations[LOC_OUTSIDE - 1].characters[i])
 				break;
 
-			if (LOCATION_OUTSIDE->characters[i] == PLAYER)
+			if (man->locations[LOC_OUTSIDE - 1].characters[i] == &man->characters[CHAR_PLAYER - 1])
 			{
 				for (j = NBR_CHARACTERS - 1; j >= 0; --j)
 				{
-					if (LOCATION_OUTSIDE->characters[j])
+					if (man->locations[LOC_OUTSIDE - 1].characters[j])
 					{
-						LOCATION_OUTSIDE->characters[i]
-							= LOCATION_OUTSIDE->characters[j];
-						memset((LOCATION_OUTSIDE->characters + j), 0,
+						man->locations[LOC_OUTSIDE - 1].characters[i]
+							= man->locations[LOC_OUTSIDE - 1].characters[j];
+						memset(man->locations[LOC_OUTSIDE - 1].characters + j, 0,
 							sizeof(t_character *));
 
 						i = NBR_CHARACTERS;
@@ -143,9 +143,9 @@ int	load_saved_game(int fd_save)
 		/* Add the player to the current location */
 		for (i = 0; i < NBR_CHARACTERS; ++i)
 		{
-			if (!PLAYER->current_location->characters[i])
+			if (!man->characters[CHAR_PLAYER - 1].current_location->characters[i])
 			{
-				PLAYER->current_location->characters[i] = PLAYER;
+				man->characters[CHAR_PLAYER - 1].current_location->characters[i] = &man->characters[CHAR_PLAYER - 1];
 				break;
 			}
 		}
@@ -171,10 +171,10 @@ int	load_saved_game(int fd_save)
 			switch (i)
 			{
 				case 0:
-					run_event_first_time_player_enters_mansion();
+					run_event_first_time_player_enters_mansion(man);
 					break;
 				case 1:
-					run_event_player_finds_entry_doors_key();
+					run_event_player_finds_entry_doors_key(man);
 					break;
 			}
 		}
@@ -194,7 +194,7 @@ int	load_saved_game(int fd_save)
 			|| (id < 1 || id > (NBR_ITEMS - 1)))
 			break;
 		else
-			PLAYER->inventory[i] = (g_man.items + id);
+			man->characters[CHAR_PLAYER - 1].inventory[i] = (man->items + id);
 	}
 	return 1;
 }

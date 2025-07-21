@@ -2,22 +2,22 @@
 
 static void	display_inventory(t_item **inventory);
 
-void	run_inventory(void)
+void	run_inventory(t_man *man)
 {
 	t_item	**items;
 
 	items = 0;
-	if (!PLAYER->inventory[0])
+	if (!man->characters[CHAR_PLAYER - 1].inventory[0])
 	{
 		printf("You have no item on you.\n\n");
 	}
-	else if (!*g_man.cmd.object)
+	else if (!*man->cmd.object)
 	{
-		display_inventory(PLAYER->inventory);
+		display_inventory(man->characters[CHAR_PLAYER - 1].inventory);
 	}
 	else
 	{
-		items = retrieve_items(PLAYER->inventory, g_man.cmd.object);
+		items = retrieve_items(man->characters[CHAR_PLAYER - 1].inventory, man->cmd.object);
 
 		if (!items || !items[0])
 			printf("You have no such item on you. Type 'inventory' to see "

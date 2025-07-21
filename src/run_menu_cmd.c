@@ -1,58 +1,45 @@
 #include "treasure_venture.h"
 
-static void	run_submenu_new(void);
-static void	run_submenu_load(void);
-static void	run_submenu_save(void);
-static void	run_submenu_about(void);
-static void	run_submenu_quit(void);
+static void	run_submenu_new(t_man *man);
+static void	run_submenu_load(t_man *man);
+static void	run_submenu_save(t_man *man);
+static void	run_submenu_about(t_man *man);
+static void	run_submenu_quit(t_man *man);
 
-void	run_menu_cmd(const char *cmd)
+void	run_menu_cmd(t_man *man, const char **tokens)
 {
-	static const KeyFunc	cmd_list[] = 
-	{
-		{0, &open_menu},
-		{"about", &run_submenu_about},
-		{"load", &run_submenu_load},
-		{"new", &run_submenu_new},
-		{"quit", &run_submenu_quit},
-		{"save", &run_submenu_save}
-	};
-	int	i;
-
-	if (!cmd || !*cmd)
-	{
-		cmd_list[0].func();
-		return;
-	}
-	i = 1;
-	while (cmd_list[i].key)
-	{
-		if (!strcmp(cmd, cmd_list[i].key))
-		{
-			cmd_list[i].func();
-			return;
-		}
-		++i;
-	}
-	cmd_list[0].func();
+	if (!tokens || !tokens[0])
+		open_menu(man);
+	else if (!strcmp(tokens[0], "new"))
+		run_submenu_new(man);
+	else if (!strcmp(tokens[0], "load"))
+		run_submenu_load(man);
+	else if (!strcmp(tokens[0], "save"))
+		run_submenu_save(man);
+	else if (!strcmp(tokens[0], "about"))
+		run_submenu_about(man);
+	else if (!strcmp(tokens[0], "quit"))
+		run_submenu_quit(man);
+	else
+		open_menu(man);
 	return;
 }
 
-static void	run_submenu_new(void)
+static void	run_submenu_new(t_man *man)
 {
-	initialize_game();
+	initialize_game(man);
 	clear_window();
 	printf("\t[A new game will start...]\n");
 	if (access(SAVE_FILE, R_OK) != -1)
 		printf("\t[The save file still exists.]\n");
 	printf("\n");
-	g_man.state = STATE_GAME;
-	g_man.is_game_ongoing = 1;
-	describe_location(PLAYER->current_location);
+	man->state = STATE_GAME;
+	man->is_game_ongoing = 1;
+	describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
 	return;
 }
 
-static void	run_submenu_load(void)
+static void	run_submenu_load(t_man *man)
 {
 	int	fd_save;
 	int	load_success;
@@ -61,8 +48,8 @@ static void	run_submenu_load(void)
 	fd_save = open(SAVE_FILE, O_RDONLY);
 	if (fd_save != -1)
 	{
-		initialize_game();
-		load_success = load_saved_game(fd_save);
+		initialize_game(man);
+		load_success = load_saved_game(man, fd_save);
 		close(fd_save);
 		if (!load_success)
 			return;
@@ -71,49 +58,49 @@ static void	run_submenu_load(void)
 	else
 	{
 		printf("\t[No save could be found.]\n");
-		if (g_man.is_game_ongoing)
+		if (man->is_game_ongoing)
 			printf("\t[The current game will resume...]\n\n");
 		else
 		{
 			printf("\t[A new game will start...]\n\n");
-			initialize_game();
+			initialize_game(man);
 		}
 	}
-	g_man.state = STATE_GAME;
-	g_man.is_game_ongoing = 1;
-	describe_location(PLAYER->current_location);
+	man->state = STATE_GAME;
+	man->is_game_ongoing = 1;
+	describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
 	return;
 }
 
-static void	run_submenu_save(void)
+static void	run_submenu_save(t_man *man)
 {
 	int	fd_save;
 
-	if (!g_man.is_game_ongoing)
+	if (!man->is_game_ongoing)
 	{
 		printf("\t[A game needs to be started for it to be saved.]\n\n");
 		return;
 	}
 	fd_save = open(SAVE_FILE, O_CREAT | O_RDWR, 0664);
-	save_game(fd_save);
+	save_game(man, fd_save);
 	close(fd_save);
 	printf("\t[Game saved!]\n\n");
-	if (g_man.state == STATE_GAME)
-		describe_location(PLAYER->current_location);
+	if (man->state == STATE_GAME)
+		describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
 	return;
 }
 
-static void	run_submenu_about(void)
+static void	run_submenu_about(t_man *man)
 {
 	printf("\t[Visit the Itch.io page:]\n\t"
 		"https://lycorisdev.itch.io/treasure-venture\n\n");
-	if (g_man.state == STATE_GAME)
-		describe_location(PLAYER->current_location);
+	if (man->state == STATE_GAME)
+		describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
 	return;
 }
 
-static void	run_submenu_quit(void)
+static void	run_submenu_quit(t_man *man)
 {
-	g_man.state = STATE_NONE;
+	man->state = STATE_NONE;
 	return;
 }

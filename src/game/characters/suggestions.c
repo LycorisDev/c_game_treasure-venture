@@ -3,7 +3,7 @@
 static void	get_all_tags(char *p_str, const int word_length,
 				t_character *object);
 
-void	display_character_suggestions(t_character **character_collection,
+void	display_character_suggestions(t_man *man, t_character **character_collection,
 			const char* command)
 {
 	int		i;
@@ -13,7 +13,7 @@ void	display_character_suggestions(t_character **character_collection,
 	str_tags = 0;
 	word_length = 0;
 	if (!character_collection[0] 
-			|| (!character_collection[1] && character_collection[0] == PLAYER))
+			|| (!character_collection[1] && character_collection[0] == &man->characters[CHAR_PLAYER - 1]))
 		return;
 
 	word_length = sizeof(character_collection[0]->tags[0]) + 3;
@@ -24,7 +24,7 @@ void	display_character_suggestions(t_character **character_collection,
 	{
 		if (!character_collection[i])
 			break;
-		if (character_collection[i] == PLAYER)
+		if (character_collection[i] == &man->characters[CHAR_PLAYER - 1])
 			continue;
 
 		get_all_tags(str_tags, word_length, character_collection[i]);

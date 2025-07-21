@@ -1,29 +1,29 @@
 #include "treasure_venture.h"
 
-static void	drop_item(t_item *item_to_drop);
+static void	drop_item(t_man *man, t_item *item_to_drop);
 
-void	run_drop(void)
+void	run_drop(t_man *man)
 {
 	t_item	**items_with_same_tag;
 
 	items_with_same_tag = 0;
-	if (PLAYER->current_location->items[NBR_ITEMS - 1])
+	if (man->characters[CHAR_PLAYER - 1].current_location->items[NBR_ITEMS - 1])
 	{
 		printf("This place cannot hold any more item.\n\n");
 		return;
 	}
-	else if (!PLAYER->inventory[0])
+	else if (!man->characters[CHAR_PLAYER - 1].inventory[0])
 	{
 		printf("You have no item on you.\n\n");
 		return;
 	}
-	else if (*g_man.cmd.object)
+	else if (*man->cmd.object)
 	{
-		items_with_same_tag = retrieve_items(PLAYER->inventory, g_man.cmd.object);
+		items_with_same_tag = retrieve_items(man->characters[CHAR_PLAYER - 1].inventory, man->cmd.object);
 
 		if (!items_with_same_tag || !items_with_same_tag[0])
 		{
-			memset(g_man.cmd.object, 0, sizeof(g_man.cmd.object));
+			memset(man->cmd.object, 0, sizeof(man->cmd.object));
 		}
 		else if (items_with_same_tag[1])
 		{
@@ -31,25 +31,25 @@ void	run_drop(void)
 				"which this tag works.\n\n");
 			display_item_suggestions(items_with_same_tag, "drop");
 		}
-		else if (PLAYER->current_location->items[NBR_ITEMS - 1])
+		else if (man->characters[CHAR_PLAYER - 1].current_location->items[NBR_ITEMS - 1])
 		{
 			printf("The current location is full. No more items can be "
 				"added.\n\n");
 		}
 		else
 		{
-			drop_item(items_with_same_tag[0]);
+			drop_item(man, items_with_same_tag[0]);
 		}
 	}
 
-	if (!*g_man.cmd.object)
-		display_item_suggestions(PLAYER->inventory, "drop");
+	if (!*man->cmd.object)
+		display_item_suggestions(man->characters[CHAR_PLAYER - 1].inventory, "drop");
 
 	free(items_with_same_tag);
 	return;
 }
 
-static void	drop_item(t_item *item_to_drop)
+static void	drop_item(t_man *man, t_item *item_to_drop)
 {
 	int	i;
 	int	index_of_last_inventory_item;
@@ -58,10 +58,10 @@ static void	drop_item(t_item *item_to_drop)
 	for (i = 0; i < NBR_ITEMS; ++i)
 	{
 		/* Look for an empty spot in the current location's item list */
-		if (!PLAYER->current_location->items[i])
+		if (!man->characters[CHAR_PLAYER - 1].current_location->items[i])
 		{
 			/* Put the dropped item there */
-			PLAYER->current_location->items[i] = item_to_drop;
+			man->characters[CHAR_PLAYER - 1].current_location->items[i] = item_to_drop;
 			break;
 		}
 	}
@@ -73,15 +73,15 @@ static void	drop_item(t_item *item_to_drop)
 			Therefore, look for the last item of the inventory as to later 
 			put it in the dropped item's place.
 		*/
-		if (!PLAYER->inventory[i])
+		if (!man->characters[CHAR_PLAYER - 1].inventory[i])
 			continue;
 		else
 			index_of_last_inventory_item = i;
 
 		/* Remove the dropped item from the inventory */
-		if (PLAYER->inventory[i] == item_to_drop)
+		if (man->characters[CHAR_PLAYER - 1].inventory[i] == item_to_drop)
 		{
-			memset((PLAYER->inventory + i), 0, sizeof(t_item *));
+			memset(man->characters[CHAR_PLAYER - 1].inventory + i, 0, sizeof(t_item *));
 			break;
 		}
 	}
@@ -89,8 +89,8 @@ static void	drop_item(t_item *item_to_drop)
 	/* Fill the gap */
 	if (i != index_of_last_inventory_item)
 	{
-		PLAYER->inventory[i] = PLAYER->inventory[index_of_last_inventory_item];
-		memset((PLAYER->inventory + index_of_last_inventory_item), 0,
+		man->characters[CHAR_PLAYER - 1].inventory[i] = man->characters[CHAR_PLAYER - 1].inventory[index_of_last_inventory_item];
+		memset(man->characters[CHAR_PLAYER - 1].inventory + index_of_last_inventory_item, 0,
 			sizeof(t_item *));
 	}
 

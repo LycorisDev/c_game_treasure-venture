@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -fPIC -MMD -Iinclude -Wall -Wextra -pedantic
+CFLAGS = -fPIC -MMD -Iinclude -Wall -Wextra -pedantic -g
 TS_LIB = -lts
 DIR_BUILD = build
 DIR_OBJ = $(DIR_BUILD)/unix/objects
