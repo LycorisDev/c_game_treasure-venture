@@ -12,25 +12,7 @@ int	main(void)
 	while (man.state)
 	{
 		man.tokens = get_input();
-		//
-		if (man.yes_no_callback)
-		{
-			if (man.tokens)
-			{
-				if (!strcmp(man.tokens[0], "yes"))
-				{
-					man.yes_no_callback(1);
-					man.yes_no_callback = 0;
-				}
-				else if (!strcmp(man.tokens[0], "no"))
-				{
-					man.yes_no_callback(0);
-					man.yes_no_callback = 0;
-				}
-			}
-		}
-		//
-		else if (man.state == STATE_MENU)
+		if (man.state == STATE_MENU)
 			run_menu_cmd(&man, man.tokens);
 		else if (man.state == STATE_GAME)
 			run_game_cmd(&man, man.tokens);

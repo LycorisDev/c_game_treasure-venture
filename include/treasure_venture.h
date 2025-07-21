@@ -37,8 +37,6 @@ typedef struct s_geo_aff	t_geo_aff; /* Geographical Affiliation */
 typedef struct s_exit		t_exit;
 typedef struct s_item		t_item;
 
-typedef void	(*yes_no_callback_t)(const int);
-
 typedef enum e_game_state
 {
 	STATE_NONE,
@@ -199,7 +197,6 @@ typedef struct s_man
 	t_geo_aff			geo_aff[NBR_GEO_AFF];
 
 	const char			**tokens;
-	yes_no_callback_t	yes_no_callback;
 }	t_man;
 
 /* Init --------------------------------------------------------------------- */
@@ -210,6 +207,7 @@ void		open_menu(t_man *man);
 void		run_menu_cmd(t_man *man, const char **tokens);
 void		initialize_game(t_man *man);
 const char	**get_input(void);
+int			ask_yes_no(void);
 char		*gnl(int fd);
 char		**split(const char *s, char c);
 void		free_array(void **arr, void (*free_fct)(void *));
