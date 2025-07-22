@@ -12,10 +12,7 @@
 # endif
 
 # define SAVE_FILE "save.txt"
-# define BIG_LENGTH_WORD (LENGTH_WORD * 3 + 2)
 # define NBR_EVENTS 10
-# define FLAG_ON    1
-# define FLAG_OFF   0
 # define NBR_WORDS   100
 # define LENGTH_WORD 20
 # define LENGTH_TAG         120
@@ -28,8 +25,6 @@
 # define ACCESS_LOCKED 1
 # define ACCESS_OPEN   2
 # define ACCESS_CLOSED 3
-# define INPUT_TOKEN_DELIMETERS "\n\t\"\\ .,/:?!^"
-# define PARSER_NBR_WORDS       24
 
 typedef struct s_character	t_character;
 typedef struct s_location	t_location;
@@ -126,9 +121,9 @@ typedef enum e_id_lex
 typedef struct s_cmd
 {
 	char	verb[LENGTH_WORD];
-	char	object[BIG_LENGTH_WORD];
+	char	object[100];
 	char	preposition[LENGTH_WORD];
-	char	target[BIG_LENGTH_WORD];
+	char	target[100];
 }	t_cmd;
 
 struct s_character
@@ -185,55 +180,53 @@ struct s_location
 
 typedef struct s_man
 {
-	int					is_game_ongoing;
-	t_game_state		state;
-	t_cmd				cmd;
-	t_character			characters[NBR_CHARACTERS];
-	int					events[NBR_EVENTS];
-	t_item				items[NBR_ITEMS];
-	char				lexicon[NBR_WORDS][LENGTH_WORD];
+	t_game_state	state;
+	const char		**tokens;
 
-	t_location			locations[NBR_LOCATIONS];
-	t_geo_aff			geo_aff[NBR_GEO_AFF];
-
-	const char			**tokens;
+	int				is_game_ongoing;
+	t_cmd			cmd;
+	t_character		characters[NBR_CHARACTERS];
+	int				events[NBR_EVENTS];
+	t_item			items[NBR_ITEMS];
+	char			lexicon[NBR_WORDS][LENGTH_WORD];
+	t_location		locations[NBR_LOCATIONS];
+	t_geo_aff		geo_aff[NBR_GEO_AFF];
 }	t_man;
 
-/* Init --------------------------------------------------------------------- */
+/* Parser ------------------------------------------------------------------- */
 
-void		clear_window(void);
-void		close_window(void);
-void		open_menu(t_man *man);
-void		run_menu_cmd(t_man *man, const char **tokens);
-void		initialize_game(t_man *man);
 const char	**get_input(void);
-int			ask_yes_no(void);
 char		*gnl(int fd);
 char		**split(const char *s, char c);
+int			ask_yes_no(void);
+size_t		count_array(void **arr);
 void		free_array(void **arr, void (*free_fct)(void *));
 
-/* Save --------------------------------------------------------------------- */
+/* Menu --------------------------------------------------------------------- */
 
+void		run_menu_cmd(t_man *man, const char **tokens);
+void		run_submenu_new(t_man *man);
+void		run_submenu_load(t_man *man);
+void		run_submenu_save(t_man *man);
+void		run_submenu_about(t_man *man);
+void		run_submenu_quit(t_man *man);
+
+/* Misc --------------------------------------------------------------------- */
+
+void		clear_window(void);
+void		open_menu(t_man *man);
+void		initialize_game(t_man *man);
 void		save_game(t_man *man, int fd_save);
 int			load_saved_game(t_man *man, int fd_save);
-
-/* Lexicon ------------------------------------------------------------------ */
-
 void		populate_list_lexicon(t_man *man);
 int			bool_word_is_in_lexicon(t_man *man, const char *word);
 int			bool_word_is_preposition(const char *word);
-
-/* Locations ---------------------------------------------------------------- */
-
 void		populate_list_locations(t_man *man);
 void		describe_location(t_man *man, const t_location *location);
 void		display_location_suggestions(t_location *origin);
 t_exit		**retrieve_locations(t_location *origin, const char *parser);
 t_exit		**retrieve_locations_with_passage_item(t_location *origin,
 				const char *parser);
-
-/* Items -------------------------------------------------------------------- */
-
 void		populate_list_items(t_man *man);
 void		display_item_suggestions(t_item **item_collection,
 				const char *command);
@@ -241,25 +234,17 @@ t_item		**retrieve_items(t_item **item_collection, const char *parser);
 t_item		**retrieve_takeable_items(t_item **item_collection,
 				const char *parser);
 int			bool_item_matches_parser(const t_item *item, const char *parser);
-
-/* Characters --------------------------------------------------------------- */
-
 void		populate_list_characters(t_man *man);
-void		display_character_suggestions(t_man *man, t_character **character_collection,
-				const char *command);
+void		display_character_suggestions(t_man *man,
+				t_character **character_collection, const char *command);
 t_character	**retrieve_characters(t_character **character_collection,
 				const char *parser);
-
-/* Events ------------------------------------------------------------------- */
-
 void		populate_list_events(t_man *man);
 void		run_event_first_time_player_enters_mansion(t_man *man);
 void		event_first_time_player_enters_mansion(t_man *man);
 void		run_event_player_finds_entry_doors_key(t_man *man);
-void		event_player_finds_entry_doors_key(t_man *man, const t_id_item id_item);
-
-/* Commands ----------------------------------------------------------------- */
-
+void		event_player_finds_entry_doors_key(t_man *man,
+				const t_id_item id_item);
 void		run_game_cmd(t_man *man, const char **tokens);
 void		display_game_commands(void);
 void		run_drop(t_man *man);

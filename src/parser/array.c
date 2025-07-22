@@ -1,11 +1,23 @@
 #include "treasure_venture.h"
 
+size_t	count_array(void **arr)
+{
+	size_t	i;
+
+	if (!arr)
+		return (0);
+	i = 0;
+	while (arr[i])
+		++i;
+	return (i);
+}
+
 void	free_array(void **arr, void (*free_fct)(void *))
 {
 	size_t	i;
 
 	if (!arr)
-		return;
+		return ;
 	if (free_fct)
 	{
 		i = 0;
@@ -16,5 +28,5 @@ void	free_array(void **arr, void (*free_fct)(void *))
 		}
 	}
 	free(arr);
-	return;
+	return ;
 }

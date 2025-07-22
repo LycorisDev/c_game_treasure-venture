@@ -2,9 +2,9 @@
 
 void	populate_list_events(t_man *man)
 {
-	memset(man->events, FLAG_OFF, NBR_EVENTS * sizeof(int));
-	man->events[0] = FLAG_ON;
-	man->events[1] = FLAG_ON;
+	memset(man->events, 0, NBR_EVENTS * sizeof(int));
+	man->events[0] = 1;
+	man->events[1] = 1;
 	return;
 }
 
@@ -13,13 +13,13 @@ void	populate_list_events(t_man *man)
 void	run_event_first_time_player_enters_mansion(t_man *man)
 {
 	man->items[ITEM_ENTRY_DOORS - 1].access = ACCESS_LOCKED;
-	man->events[0] = FLAG_OFF;
+	man->events[0] = 0;
 	return;
 }
 
 void	event_first_time_player_enters_mansion(t_man *man)
 {
-	if (man->events[0] == FLAG_ON
+	if (man->events[0] == 1
 		&& man->characters[CHAR_PLAYER - 1].current_location->id == LOC_MAIN_HALLWAY)
 	{
 		run_event_first_time_player_enters_mansion(man);
@@ -47,13 +47,13 @@ void	run_event_player_finds_entry_doors_key(t_man *man)
 	memcpy(man->items[ITEM_ENTRY_DOORS_KEY - 1].tags[3], "entry doors key", 15);
 	memcpy(man->items[ITEM_ENTRY_DOORS_KEY - 1].tags[4], "double doors key", 16);
 	memcpy(man->items[ITEM_ENTRY_DOORS_KEY - 1].tags[5], "key", 3);
-	man->events[1] = FLAG_OFF;
+	man->events[1] = 0;
 	return;
 }
 
 void	event_player_finds_entry_doors_key(t_man *man, const t_id_item id_item)
 {
-	if (man->events[1] == FLAG_ON && id_item == ITEM_ENTRY_DOORS_KEY)
+	if (man->events[1] == 1 && id_item == ITEM_ENTRY_DOORS_KEY)
 		run_event_player_finds_entry_doors_key(man);
 	return;
 }

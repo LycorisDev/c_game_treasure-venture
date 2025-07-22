@@ -19,39 +19,7 @@ int	main(void)
 		free_array((void **)man.tokens, free);
 	}
 	clear_window();
-	return EXIT_SUCCESS;
-}
-
-void	open_menu(t_man *man)
-{
-	man->state = STATE_MENU;
-	clear_window();
-	printf("\t-[ TREASURE VENTURE ]-\n\n");
-	printf("\t[During the game, type 'Menu' to go back to the main menu.]\n\n");
-	printf("\t 'New Game'    'Load Game'    'Save'    'About'    'Quit'\n\n");
-	return;
-}
-
-void	clear_window(void)
-{
-	#ifdef _WIN32
-	system("cls");
-	#elif defined(__ANDROID__)
-	system("clear");
-	#else
-	write(STDOUT_FILENO, "\033c", 2);
-	#endif
-	return;
-}
-
-void	initialize_game(t_man *man)
-{
-	populate_list_lexicon(man);
-	populate_list_locations(man);
-	populate_list_items(man);
-	populate_list_characters(man);
-	populate_list_events(man);
-	return;
+	return (0);
 }
 
 static void	set_utf8_encoding(void)
@@ -59,5 +27,5 @@ static void	set_utf8_encoding(void)
 	#ifdef _WIN32
 	SetConsoleOutputCP(CP_UTF8);
 	#endif
-	return;
+	return ;
 }

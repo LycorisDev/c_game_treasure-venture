@@ -20,5 +20,5 @@ int	ask_yes_no(void)
 		}
 		free_array((void **)tokens, free);
 	}
-	return res;
+	return (res);
 }

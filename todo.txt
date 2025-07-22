@@ -9,10 +9,13 @@ navigate.
 --------------------------------------------------------------------------------
 
 REFACTORING
-[ ] src/main.c
-[ ] src/run_menu_cmd.c
-[ ] src/game/*
-[ ] src/save/*
+[x] src/main.c
 [x] src/parser/*
+[x] src/menu/open_menu.c
+[x] src/menu/clear_window.c
+[x] src/menu/run_menu_cmd.c
+[ ] src/menu/submenu_*.c
+[ ] src/save/*
+[ ] src/game/*
 [ ] include/treasure_venture.h
 [x] include/minigame.h

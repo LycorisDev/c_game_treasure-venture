@@ -160,13 +160,13 @@ int	load_saved_game(t_man *man, int fd_save)
 	for (i = 0; i < NBR_EVENTS; ++i)
 	{
 		id = strtol(save_buffer[5 + i], &end_ptr, 10);
-		if (id != FLAG_ON && id != FLAG_OFF)
+		if (id != 1 && id != 0)
 		{
 			exit_file_corrupted(fd_save);
 			return 0;
 		}
 		/* TODO: Handle events better instead of looping */
-		else if (id == FLAG_OFF)
+		else if (id == 0)
 		{
 			switch (i)
 			{

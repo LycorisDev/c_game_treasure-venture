@@ -14,12 +14,12 @@ const char	**get_input(void)
 	line = gnl(STDIN_FILENO);
 	write(STDOUT_FILENO, "\n", 1);
 	if (!line)
-		return 0;
+		return (0);
 	set_to_lowercase(line);
 	set_whitespaces_to_fs(line);
 	tokens = (const char **)split(line, FS);
 	free(line);
-	return tokens;
+	return (tokens);
 }
 
 static void	set_to_lowercase(char *s)
@@ -27,14 +27,14 @@ static void	set_to_lowercase(char *s)
 	size_t	i;
 
 	if (!s)
-		return;
+		return ;
 	i = 0;
 	while (s[i])
 	{
 		s[i] = tolower(s[i]);
 		++i;
 	}
-	return;
+	return ;
 }
 
 static void	set_whitespaces_to_fs(char *s)
@@ -42,7 +42,7 @@ static void	set_whitespaces_to_fs(char *s)
 	size_t	i;
 
 	if (!s)
-		return;
+		return ;
 	i = 0;
 	while (s[i])
 	{
@@ -50,5 +50,5 @@ static void	set_whitespaces_to_fs(char *s)
 			s[i] = FS;
 		++i;
 	}
-	return;
+	return ;
 }
