@@ -17,6 +17,6 @@ REFACTORING
 [x] src/menu/open_menu.c
 [x] src/menu/clear_window.c
 [x] src/menu/run_menu_cmd.c
-[ ] src/menu/submenu_*.c
-[ ] src/save/*
+[ ] src/menu/submenu/*
+[ ] src/menu/save/*
 [ ] src/game/*

@@ -15,7 +15,7 @@ static void	(*select_submenu(const char **tokens))(t_man *man)
 {
 	size_t	count;
 
-	count = count_array((void **)tokens);
+	count = count_arr((void **)tokens);
 	if (!count)
 		return (open_menu);
 	else if (!strcmp(tokens[0], "new"))

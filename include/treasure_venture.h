@@ -196,28 +196,34 @@ typedef struct s_man
 /* Parser ------------------------------------------------------------------- */
 
 const char	**get_input(void);
-char		*gnl(int fd);
-char		**split(const char *s, char c);
 int			ask_yes_no(void);
-size_t		count_array(void **arr);
-void		free_array(void **arr, void (*free_fct)(void *));
 
 /* Menu --------------------------------------------------------------------- */
 
+void		clear_window(void);
+void		open_menu(t_man *man);
 void		run_menu_cmd(t_man *man, const char **tokens);
 void		run_submenu_new(t_man *man);
 void		run_submenu_load(t_man *man);
 void		run_submenu_save(t_man *man);
 void		run_submenu_about(t_man *man);
 void		run_submenu_quit(t_man *man);
+int			save_game(t_man *man, const char *filepath);
+int			load_saved_game(t_man *man, const char *filepath);
+
+/* Utils -------------------------------------------------------------------- */
+
+char		*gnl(int fd);
+char		**read_file(const char *filepath);
+char		**split(const char *s, char c);
+size_t		count_arr(void **arr);
+void		free_arr(void **arr, void (*free_fct)(void *));
+void		remove_arr_elems(void **arr, size_t from, size_t to,
+				void (*free_fct)(void *));
 
 /* Misc --------------------------------------------------------------------- */
 
-void		clear_window(void);
-void		open_menu(t_man *man);
 void		initialize_game(t_man *man);
-void		save_game(t_man *man, int fd_save);
-int			load_saved_game(t_man *man, int fd_save);
 void		populate_list_lexicon(t_man *man);
 int			bool_word_is_in_lexicon(t_man *man, const char *word);
 int			bool_word_is_preposition(const char *word);

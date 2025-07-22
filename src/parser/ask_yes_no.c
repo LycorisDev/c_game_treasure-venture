@@ -18,7 +18,7 @@ int	ask_yes_no(void)
 			else if (!strcmp(tokens[0], "no") || !strcmp(tokens[0], "n"))
 				res = 0;
 		}
-		free_array((void **)tokens, free);
+		free_arr((void **)tokens, free);
 	}
 	return (res);
 }

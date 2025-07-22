@@ -16,7 +16,7 @@ int	main(void)
 			run_menu_cmd(&man, man.tokens);
 		else if (man.state == STATE_GAME)
 			run_game_cmd(&man, man.tokens);
-		free_array((void **)man.tokens, free);
+		free_arr((void **)man.tokens, free);
 	}
 	clear_window();
 	return (0);

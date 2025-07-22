@@ -4,18 +4,15 @@ static void	no_save_file(t_man *man);
 
 void	run_submenu_load(t_man *man)
 {
-	int	fd_save;
 	int	load_success;
 
 	clear_window();
-	fd_save = open(SAVE_FILE, O_RDONLY);
-	if (fd_save < 0)
+	if (access(SAVE_FILE, R_OK) < 0)
 		no_save_file(man);
 	else
 	{
 		initialize_game(man);
-		load_success = load_saved_game(man, fd_save);
-		close(fd_save);
+		load_success = load_saved_game(man, SAVE_FILE);
 		if (!load_success)
 			return ;
 		printf("\t[Your saved game will resume...]\n\n");
