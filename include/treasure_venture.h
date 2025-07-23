@@ -11,20 +11,20 @@
 #  include <windows.h>
 # endif
 
+# define FS '\x1C'
+# define FS_STR "\x1C"
 # define SAVE_FILE "save.txt"
-# define NBR_EVENTS 10
-# define NBR_WORDS   100
-# define LENGTH_WORD 20
+
+# define NBR_EVENTS         10
+# define NBR_WORDS          100
+# define NBR_TAGS           7
+# define NBR_CHARACTERS     5
+# define NBR_LOCATIONS      16
+# define NBR_GEO_AFF        2
+# define NBR_ITEMS          100
+# define LENGTH_WORD        20
 # define LENGTH_TAG         120
 # define LENGTH_DESCRIPTION 512
-# define NBR_TAGS           7
-# define NBR_CHARACTERS 5
-# define NBR_LOCATIONS  16
-# define NBR_GEO_AFF    2
-# define NBR_ITEMS      100
-# define ACCESS_LOCKED 1
-# define ACCESS_OPEN   2
-# define ACCESS_CLOSED 3
 
 typedef struct s_character	t_character;
 typedef struct s_location	t_location;
@@ -59,6 +59,14 @@ typedef enum e_id_item
 	ITEM_DOOR_ROOM_3,
 	ITEM_ENTRY_DOORS_KEY,
 }	t_id_item;
+
+typedef enum e_access
+{
+	ACCESS_NONE,
+	ACCESS_LOCKED,
+	ACCESS_OPEN,
+	ACCESS_CLOSED
+}	t_access;
 
 typedef enum e_id_loc
 {

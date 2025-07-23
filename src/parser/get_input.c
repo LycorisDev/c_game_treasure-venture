@@ -15,7 +15,7 @@ const char	**get_input(void)
 		return (0);
 	set_to_lowercase(line);
 	set_whitespaces_to_fs(line);
-	tokens = (const char **)split(line, '\x1C');
+	tokens = (const char **)split(line, FS);
 	free(line);
 	return (tokens);
 }
@@ -45,7 +45,7 @@ static void	set_whitespaces_to_fs(char *s)
 	while (s[i])
 	{
 		if (isspace(s[i]))
-			s[i] = '\x1C';
+			s[i] = FS;
 		++i;
 	}
 	return ;

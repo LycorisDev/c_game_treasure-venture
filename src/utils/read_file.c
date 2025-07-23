@@ -25,7 +25,7 @@ char	**read_file(const char *filepath)
 	}
 	whole = get_whole_file(fd);
 	close(fd);
-	lines = split(whole, '\x1C');
+	lines = split(whole, FS);
 	free(whole);
 	remove_comments(lines);
 	return (lines);
@@ -89,7 +89,7 @@ static char	*add_separator(char *line)
 	}
 	if (!slash)
 	{
-		tmp = strjoin(line, "\x1C");
+		tmp = strjoin(line, FS_STR);
 		free(line);
 		return (tmp);
 	}

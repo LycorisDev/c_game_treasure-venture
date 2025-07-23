@@ -1,9 +1,5 @@
-- Remove a maximum of macros, including these:
-	* src/save/load_saved_game.c -> private macros (NBR_LINES and 
-		NBR_CHARACTERS_IN_LINE)
+- Remove a maximum of macros from the header.
 - Remove unused libc headers.
-- Consider keeping history of commands and allowing the use of arrow keys to 
-navigate.
 - Consider adding colors to text and maybe boldness and stuff like that.
 
 --------------------------------------------------------------------------------
@@ -12,10 +8,9 @@ REFACTORING
 [ ] include/treasure_venture.h
 [x] include/plugin.h
 [x] src/main.c
-[x] src/plugin.c
+[x] src/utils/*
 [x] src/parser/*
 [x] src/menu/open_menu.c
-[x] src/menu/clear_window.c
 [x] src/menu/run_menu_cmd.c
 [ ] src/menu/submenu/*
 [ ] src/menu/save/*

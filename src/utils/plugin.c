@@ -3,7 +3,7 @@
 void	run_plugin(const char *path, const char *name)
 {
 	LIB_HANDLE	lib_obj;
-	int			(*lib_func)();
+	int			(*lib_func)(int argc, char **argv);
 
 	lib_obj = LOAD_LIB(path);
 	if (!lib_obj)
@@ -12,9 +12,7 @@ void	run_plugin(const char *path, const char *name)
 			name, LIB_ERROR);
 		return ;
 	}
-	// TODO: Change "start_twenty_squares" into "start"
-	// TODO: Test the win64 version as well
-	*(void **)(&lib_func) = LIB_FUNC(lib_obj, "start_twenty_squares");
+	*(void **)(&lib_func) = LIB_FUNC(lib_obj, "start");
 	if (!lib_func)
 	{
 		fprintf(stderr, "\t[Error: The pointer to the %s lib start function "
@@ -22,7 +20,7 @@ void	run_plugin(const char *path, const char *name)
 		UNLOAD_LIB(lib_obj);
 		return ;
 	}
-	(*lib_func)();
+	(*lib_func)(0, NULL);
 	UNLOAD_LIB(lib_obj);
 	return ;
 }
