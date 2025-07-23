@@ -60,9 +60,9 @@ static int	set_id_loc_val(char *line, t_id_loc *id)
 	}
 	val = split(ptr_val, FS);
 	if (count_arr((void **)val) == 1)
-		*id = atoi(val[0]);
+		*id = atoi(val[0]) - 1;
 	free_arr((void **)val, free);
-	return (*id > 0);
+	return (*id >= 0);
 }
 
 static int	set_int_arr(char *line, int *arr, size_t max_len)
@@ -120,6 +120,7 @@ static int	set_id_item_arr(char *line, t_id_item *arr, size_t max_len)
 		arr[i] = atoi(val[i]);
 		if (arr[i] < 0 || (!arr[i] && strcmp(val[i], "0")))
 			return (free_arr((void **)val, free), 0);
+		--arr[i];
 		++i;
 	}
 	return (free_arr((void **)val, free), 1);
