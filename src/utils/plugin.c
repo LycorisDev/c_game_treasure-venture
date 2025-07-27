@@ -12,7 +12,11 @@ void	run_plugin(const char *path, const char *name)
 			name, LIB_ERROR);
 		return ;
 	}
-	*(void **)(&lib_func) = LIB_FUNC(lib_obj, "start");
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wpedantic"
+	#pragma GCC diagnostic ignored "-Wcast-function-type"
+	lib_func = (int (*)(int, char **))LIB_FUNC(lib_obj, "start");
+	#pragma GCC diagnostic pop
 	if (!lib_func)
 	{
 		fprintf(stderr, "\t[Error: The pointer to the %s lib start function "

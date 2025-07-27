@@ -1,66 +1,66 @@
 #include "treasure_venture.h"
 
-static void	save_location(t_man *man, int fd_save);
-static void	save_events(t_man *man, int fd_save);
-static void	save_inventory(t_man *man, int fd_save);
+static void	save_location(t_man *man, FILE *save_file);
+static void	save_events(t_man *man, FILE *save_file);
+static void	save_inventory(t_man *man, FILE *save_file);
 
 int	save_game(t_man *man, const char *filepath)
 {
-	int	fd_save;
+	FILE	*save_file;
 
-	fd_save = open(filepath, O_CREAT | O_RDWR, 0664);
-	if (fd_save < 0)
+	save_file = fopen(filepath, "w");
+	if (!save_file)
 		return (0);
-	save_location(man, fd_save);
-	save_events(man, fd_save);
-	save_inventory(man, fd_save);
-	close(fd_save);
+	save_location(man, save_file);
+	save_events(man, save_file);
+	save_inventory(man, save_file);
+	fclose(save_file);
 	return (1);
 }
 
-static void	save_location(t_man *man, int fd_save)
+static void	save_location(t_man *man, FILE *save_file)
 {
-	dprintf(fd_save, "previous_location:%d\n",
+	fprintf(save_file, "previous_location:%d\n",
 		man->characters[CHAR_PLAYER - 1].previous_location->id);
-	dprintf(fd_save, "current_location:%d\n",
+	fprintf(save_file, "current_location:%d\n",
 		man->characters[CHAR_PLAYER - 1].current_location->id);
 	return ;
 }
 
-static void	save_events(t_man *man, int fd_save)
+static void	save_events(t_man *man, FILE *save_file)
 {
 	int	i;
 
-	dprintf(fd_save, "events:");
+	fprintf(save_file, "events:");
 	i = -1;
 	while (++i < NBR_EVENTS)
 	{
 		if (!i)
-			dprintf(fd_save, "%d", man->events[i]);
+			fprintf(save_file, "%d", man->events[i]);
 		else
-			dprintf(fd_save, ",%d", man->events[i]);
+			fprintf(save_file, ",%d", man->events[i]);
 	}
-	dprintf(fd_save, "\n");
+	fprintf(save_file, "\n");
 	return ;
 }
 
-static void	save_inventory(t_man *man, int fd_save)
+static void	save_inventory(t_man *man, FILE *save_file)
 {
 	int	i;
 
-	dprintf(fd_save, "inventory:");
+	fprintf(save_file, "inventory:");
 	i = -1;
 	while (++i < NBR_ITEMS)
 	{
 		if (!man->characters[CHAR_PLAYER - 1].inventory[i])
 			break ;
 		if (!i)
-			dprintf(fd_save, "%d",
+			fprintf(save_file, "%d",
 				man->characters[CHAR_PLAYER - 1].inventory[i]->id);
 		else
-			dprintf(fd_save, ",%d",
+			fprintf(save_file, ",%d",
 				man->characters[CHAR_PLAYER - 1].inventory[i]->id);
 	}
-	dprintf(fd_save, "\n");
+	fprintf(save_file, "\n");
 	return ;
 }
