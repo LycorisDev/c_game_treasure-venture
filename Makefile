@@ -1,22 +1,20 @@
 CC = gcc
-CFLAGS = -Iinclude -Wall -Wextra -pedantic -g
-LDFLAGS = -O2
+CFLAGS = -O2 -Iinclude -Wall -Wextra -pedantic -g
 DIR_20SQ = plugin/20SQ
 DIR_BUILD = build
 DIR_OBJ = $(DIR_BUILD)/unix/objects
 BIN = $(DIR_BUILD)/unix/treasure_venture
-SRC_FILES = $(shell find src -name '*.c')
-OBJ_FILES = $(patsubst src/%.c, $(DIR_OBJ)/%.o, $(SRC_FILES))
+SRC = $(shell find src -name '*.c')
+OBJ = $(patsubst %.c, $(DIR_OBJ)/%.o, $(SRC))
 
 all: $(BIN)
 
-$(BIN): $(OBJ_FILES)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+$(BIN): $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(DIR_OBJ)/%.o: src/%.c
+$(DIR_OBJ)/%.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
--include $(DIR_OBJ)/%.d
 
 .PHONY: all 20SQ win64 win32 clean clean-unix clean-win64 clean-win32 fclean 
 .PHONY: fclean-unix fclean-win64 fclean-win32 re re-win64 re-win32

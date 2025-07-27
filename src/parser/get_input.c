@@ -8,9 +8,9 @@ const char	**get_input(void)
 	char		*line;
 	const char	**tokens;
 
-	write(STDOUT_FILENO, "> ", 2);
+	(void)!write(STDOUT_FILENO, "> ", 2);
 	line = gnl(STDIN_FILENO);
-	write(STDOUT_FILENO, "\n", 1);
+	(void)!write(STDOUT_FILENO, "\n", 1);
 	if (!line)
 		return (0);
 	set_to_lowercase(line);
