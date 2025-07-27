@@ -2,11 +2,11 @@
 #include "plugin.h"
 
 #if defined _WIN64
-# define LIB_PATH_20SQ "plugin/20SQ/libts64.dll"
+# define LIB_PATH_20SQ "plugin/20SQ/lib20SQ64.dll"
 #elif defined _WIN32
-# define LIB_PATH_20SQ "plugin/20SQ/libts32.dll"
+# define LIB_PATH_20SQ "plugin/20SQ/lib20SQ32.dll"
 #else
-# define LIB_PATH_20SQ "plugin/20SQ/libts.so"
+# define LIB_PATH_20SQ "plugin/20SQ/lib20SQ.so"
 #endif
 
 void	run_play(t_man *man)

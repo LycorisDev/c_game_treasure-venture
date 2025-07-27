@@ -8,7 +8,7 @@ void	run_plugin(const char *path, const char *name)
 	lib_obj = LOAD_LIB(path);
 	if (!lib_obj)
 	{
-		fprintf(stderr, "\t[Error: The %s lib can't be loaded -> %s]\n",
+		fprintf(stderr, "\t[Error: The %s lib can't be loaded -> %s]\n\n",
 			name, LIB_ERROR);
 		return ;
 	}
@@ -16,7 +16,7 @@ void	run_plugin(const char *path, const char *name)
 	if (!lib_func)
 	{
 		fprintf(stderr, "\t[Error: The pointer to the %s lib start function "
-			"can't be obtained -> %s]\n", name, LIB_ERROR);
+			"can't be obtained -> %s]\n\n", name, LIB_ERROR);
 		UNLOAD_LIB(lib_obj);
 		return ;
 	}

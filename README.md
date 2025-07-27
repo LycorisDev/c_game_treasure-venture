@@ -1,5 +1,7 @@
 # Treasure Venture
 
+[Link to the download page (Itch.io)](https://lycorisdev.itch.io/treasure-venture)  
+
 *Treasure Venture* is a text adventure game, which means it's interacted with 
 through written commands, and only displays written text. There is no graphical 
 element. *Treasure Venture* also contains a mini-game entitled 
