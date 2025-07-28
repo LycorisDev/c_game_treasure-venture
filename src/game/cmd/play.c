@@ -13,21 +13,21 @@ void	run_play(t_man *man)
 {
 	int	i;
 
-	for (i = 0; i < NBR_CHARACTERS; ++i)
+	for (i = 0; i < NBR_CHARAS; ++i)
 	{
-		if (!man->characters[CHAR_PLAYER - 1].current_location->characters[i])
+		if (!man->charas[0].current_loc->charas[i])
 		{
 			printf("You see no one around you to play with.\n\n");
 			return;
 		}
-		if (man->characters[CHAR_PLAYER - 1].current_location->characters[i] == &man->characters[CHAR_PLAYER - 1])
+		if (man->charas[0].current_loc->charas[i] == &man->charas[0])
 			continue;
 		break;
 	}
 	printf("\t[Do you want to play Twenty Squares with the %s? Yes/No]\n\n",
-		man->characters[CHAR_PLAYER - 1].current_location->characters[i]->tags[1]);
+		man->charas[0].current_loc->charas[i]->tags[1]);
 	if (ask_yes_no())
 		run_plugin(LIB_PATH_20SQ, "Twenty Squares");
-	describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
+	describe_loc(man, man->charas[0].current_loc);
 	return;
 }

@@ -7,17 +7,17 @@ void	run_inventory(t_man *man)
 	t_item	**items;
 
 	items = 0;
-	if (!man->characters[CHAR_PLAYER - 1].inventory[0])
+	if (!man->charas[0].inventory[0])
 	{
 		printf("You have no item on you.\n\n");
 	}
-	else if (!*man->cmd.object)
+	else if (!man->cmd.object)
 	{
-		display_inventory(man->characters[CHAR_PLAYER - 1].inventory);
+		display_inventory(man->charas[0].inventory);
 	}
 	else
 	{
-		items = retrieve_items(man->characters[CHAR_PLAYER - 1].inventory, man->cmd.object);
+		items = retrieve_items(man->charas[0].inventory, man->cmd.object);
 
 		if (!items || !items[0])
 			printf("You have no such item on you. Type 'inventory' to see "
@@ -46,7 +46,7 @@ static void	display_inventory(t_item **inventory)
 		if (!inventory[i])
 			break;
 		printf("- [%s]\n\t%s\n", inventory[i]->tags[0],
-			inventory[i]->description);
+			inventory[i]->desc);
 	}
 	printf("--------------------\n\n");
 	return;

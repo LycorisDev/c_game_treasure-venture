@@ -1,33 +1,29 @@
 #include "treasure_venture.h"
 
-static void	get_all_tags(char *p_str, const int word_length,
-				t_character *object);
+static void	get_all_tags(char *p_str, t_char *object);
 
-void	display_character_suggestions(t_man *man, t_character **character_collection,
+void	display_chara_suggestions(t_man *man, t_char **chara_collection,
 			const char* command)
 {
 	int		i;
 	char	*str_tags;
-	int		word_length;
 
 	str_tags = 0;
-	word_length = 0;
-	if (!character_collection[0] 
-			|| (!character_collection[1] && character_collection[0] == &man->characters[CHAR_PLAYER - 1]))
+	if (!chara_collection[0] 
+			|| (!chara_collection[1] && chara_collection[0] == &man->charas[0]))
 		return;
 
-	word_length = sizeof(character_collection[0]->tags[0]) + 3;
-	str_tags = calloc(NBR_TAGS, word_length);
+	str_tags = calloc(NBR_TAGS, LEN_TAG);
 
 	printf("\t[Try:]\n");
-	for (i = 0; i < NBR_CHARACTERS; ++i)
+	for (i = 0; i < NBR_CHARAS; ++i)
 	{
-		if (!character_collection[i])
+		if (!chara_collection[i])
 			break;
-		if (character_collection[i] == &man->characters[CHAR_PLAYER - 1])
+		if (chara_collection[i] == &man->charas[0])
 			continue;
 
-		get_all_tags(str_tags, word_length, character_collection[i]);
+		get_all_tags(str_tags, chara_collection[i]);
 		printf("\t\t['%s %s'.]\n", command, str_tags);
 	}
 	printf("\n");
@@ -36,19 +32,18 @@ void	display_character_suggestions(t_man *man, t_character **character_collectio
 	return;
 }
 
-static void	get_all_tags(char *p_str, const int word_length,
-				t_character *object)
+static void	get_all_tags(char *p_str, t_char *object)
 {
 	int	i;
 
-	strncpy(p_str, object->tags[0], word_length);
+	strncpy(p_str, object->tags[0], LEN_TAG);
 
 	for (i = 1; i < NBR_TAGS; ++i)
 	{
 		if (!object->tags[i][0])
 			break;
 		strcat(p_str, " / ");
-		strncat(p_str, object->tags[i], word_length);
+		strncat(p_str, object->tags[i], LEN_TAG);
 	}
 	return;
 }

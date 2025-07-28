@@ -1,19 +1,19 @@
 #include "treasure_venture.h"
 
-static int	bool_location_matches_parser(const t_location *destination,
+static int	bool_loc_matches_parser(const t_loc *destination,
 				const char *parser);
 
-t_exit	**retrieve_locations(t_location *origin, const char *parser)
+t_exit	**retrieve_locs(t_loc *origin, const char *parser)
 {
 	int		i;
 	int		j;
-	t_exit	**locations;
+	t_exit	**locs;
 
-	locations = calloc(NBR_LOCATIONS, sizeof(t_exit *));
-	if (!locations)
+	locs = calloc(NBR_LOCS, sizeof(t_exit *));
+	if (!locs)
 		return 0;
 
-	for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
+	for (i = 0, j = 0; i < NBR_LOCS; ++i)
 	{
 		if (!origin->exits[i].to)
 			break;
@@ -22,30 +22,30 @@ t_exit	**retrieve_locations(t_location *origin, const char *parser)
 		if (origin->geo_aff->id != origin->exits[i].to->geo_aff->id) 
 		{
 			if (!strcmp(parser, origin->exits[i].to->geo_aff->name))
-				locations[j++] = &(origin->exits[i]);
+				locs[j++] = &(origin->exits[i]);
 			continue;
 		}
 
 		/* "go [room]" */
-		if (bool_location_matches_parser(origin->exits[i].to, parser))
-			locations[j++] = &(origin->exits[i]);
+		if (bool_loc_matches_parser(origin->exits[i].to, parser))
+			locs[j++] = &(origin->exits[i]);
 	}
 
-	return locations;
+	return locs;
 }
 
-t_exit	**retrieve_locations_with_passage_item(t_location *origin,
+t_exit	**retrieve_locs_with_passage_item(t_loc *origin,
 			const char *parser)
 {
 	int		i;
 	int		j;
 	t_exit	**exits;
 
-	exits = calloc(NBR_LOCATIONS, sizeof(t_exit *));
+	exits = calloc(NBR_LOCS, sizeof(t_exit *));
 	if (!exits)
 		return 0;
 
-	for (i = 0, j = 0; i < NBR_LOCATIONS; ++i)
+	for (i = 0, j = 0; i < NBR_LOCS; ++i)
 	{
 		if (!origin->exits[i].to || !origin->exits[i].passage->access)
 			break;
@@ -57,7 +57,7 @@ t_exit	**retrieve_locations_with_passage_item(t_location *origin,
 	return exits;
 }
 
-static int	bool_location_matches_parser(const t_location *destination,
+static int	bool_loc_matches_parser(const t_loc *destination,
 				const char *parser)
 {
 	int	i;

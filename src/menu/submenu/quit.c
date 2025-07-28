@@ -2,6 +2,6 @@
 
 void	run_submenu_quit(t_man *man)
 {
-	man->state = STATE_NONE;
+	man->state = STATE_QUIT;
 	return ;
 }

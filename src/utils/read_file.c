@@ -1,6 +1,5 @@
 #include "treasure_venture.h"
 
-static char	*strjoin(char const *s1, char const *s2);
 static char	*get_whole_file(int fd);
 static char	*add_separator(char *line);
 static void	remove_comments(char **lines);
@@ -13,13 +12,13 @@ char	**read_file(const char *filepath)
 
 	if (!filepath)
 	{
-		fprintf(stderr, "Error: No file path specified for reading\n");
+		fprintf(stderr, "\t[Error: No file path specified for reading]\n\n");
 		return (0);
 	}
 	fd = open(filepath, O_RDONLY);
 	if (fd < 0)
 	{
-		fprintf(stderr, "Error: Couldn't open file \"%s\" for reading\n",
+		fprintf(stderr, "\t[Error: Couldn't open file \"%s\" for reading]\n\n",
 			filepath);
 		return (0);
 	}
@@ -29,24 +28,6 @@ char	**read_file(const char *filepath)
 	free(whole);
 	remove_comments(lines);
 	return (lines);
-}
-
-static char	*strjoin(char const *s1, char const *s2)
-{
-	int		len1;
-	int		len2;
-	char	*joined;
-
-	if (!s1 || !s2)
-		return (0);
-	len1 = strlen(s1);
-	len2 = strlen(s2);
-	joined = malloc((len1 + len2 + 1) * sizeof(char));
-	if (!joined)
-		return (0);
-	strcpy(joined, s1);
-	strcpy(joined + len1, s2);
-	return (joined);
 }
 
 static char	*get_whole_file(int fd)

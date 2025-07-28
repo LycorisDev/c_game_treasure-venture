@@ -1,21 +1,21 @@
 #include "treasure_venture.h"
 
-void	populate_list_characters(t_man *man)
+void	populate_list_charas(t_man *man)
 {
-	memset(man->characters, 0, NBR_CHARACTERS * sizeof(t_character));
+	memset(man->charas, 0, NBR_CHARAS * sizeof(t_char));
 
-	man->characters[CHAR_PLAYER - 1].id = CHAR_PLAYER;
-	memcpy(man->characters[CHAR_PLAYER - 1].tags[0], "player", 6);
-	memcpy(man->characters[CHAR_PLAYER - 1].tags[1], "self", 4);
-	memcpy(man->characters[CHAR_PLAYER - 1].tags[2], "me", 2);
-	memcpy(man->characters[CHAR_PLAYER - 1].tags[3], "myself", 6);
-	memcpy(man->characters[CHAR_PLAYER - 1].description, "You're a quite handsome fellow.", 31);
-	man->characters[CHAR_PLAYER - 1].current_location = &man->locations[LOC_OUTSIDE - 1];
+	man->charas[0].id = 0;
+	strncpy(man->charas[0].tags[0], "player", LEN_TAG);
+	strncpy(man->charas[0].tags[1], "self", LEN_TAG);
+	strncpy(man->charas[0].tags[2], "me", LEN_TAG);
+	strncpy(man->charas[0].tags[3], "myself", LEN_TAG);
+	strncpy(man->charas[0].desc, "You're a quite handsome fellow.", LEN_DESC);
+	man->charas[0].current_loc = &man->locs[LOC_OUTSIDE - 1];
 
-	man->characters[CHAR_LIBRARIAN - 1].id = CHAR_LIBRARIAN;
-	memcpy(man->characters[CHAR_LIBRARIAN - 1].tags[0], "mansion librarian", 17);
-	memcpy(man->characters[CHAR_LIBRARIAN - 1].tags[1], "librarian", 9);
-	memcpy(man->characters[CHAR_LIBRARIAN - 1].description, "The librarian seems friendly.", 29);
-	man->characters[CHAR_LIBRARIAN - 1].current_location = &man->locations[LOC_OLD_LIBRARY - 1];
+	man->charas[1].id = 1;
+	strncpy(man->charas[1].tags[0], "mansion librarian", LEN_TAG);
+	strncpy(man->charas[1].tags[1], "librarian", LEN_TAG);
+	strncpy(man->charas[1].desc, "The librarian seems friendly.", LEN_DESC);
+	man->charas[1].current_loc = &man->locs[LOC_OLD_LIBRARY - 1];
 	return;
 }

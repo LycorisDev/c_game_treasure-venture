@@ -1,33 +1,29 @@
 #include "treasure_venture.h"
 
-static void	get_all_tags(char *p_str, const int word_length,
-				t_location *object);
+static void	get_all_tags(char *p_str, t_loc *object);
 
-void	display_location_suggestions(t_location *origin)
+void	display_loc_suggestions(t_loc *origin)
 {
 	int		i;
 	char	*str_tags;
-	int		word_length;
 	int		bool_ins_out_already_printed;
 
 	str_tags = 0;
-	word_length = 0;
 	bool_ins_out_already_printed = 0;
 	if (!origin || !origin->exits[0].to)
 		return;
 
-	word_length = sizeof(origin->exits[0].to->tags[0]) + 3;
-	str_tags = calloc(NBR_TAGS, word_length);
+	str_tags = calloc(NBR_TAGS, LEN_TAG);
 
 	printf("\t[Try:]\n");
-	for (i = 0; i < NBR_LOCATIONS; ++i)
+	for (i = 0; i < NBR_LOCS; ++i)
 	{
 		if (!origin->exits[i].to)
 			break;
 
 		if (origin->geo_aff->id == origin->exits[i].to->geo_aff->id)
 		{
-			get_all_tags(str_tags, word_length, origin->exits[i].to);
+			get_all_tags(str_tags, origin->exits[i].to);
 			printf("\t\t['Go %s'.]\n", str_tags);
 			continue;
 		}
@@ -46,18 +42,18 @@ void	display_location_suggestions(t_location *origin)
 	return;
 }
 
-static void	get_all_tags(char *p_str, const int word_length, t_location *object)
+static void	get_all_tags(char *p_str, t_loc *object)
 {
 	int	i;
 
-	strncpy(p_str, object->tags[0], word_length);
+	strncpy(p_str, object->tags[0], LEN_TAG);
 
 	for (i = 1; i < NBR_TAGS; ++i)
 	{
 		if (!object->tags[i][0])
 			break;
 		strcat(p_str, " / ");
-		strncat(p_str, object->tags[i], word_length);
+		strncat(p_str, object->tags[i], LEN_TAG);
 	}
 	return;
 }

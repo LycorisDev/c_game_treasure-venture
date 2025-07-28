@@ -19,7 +19,7 @@ void	run_submenu_load(t_man *man)
 	}
 	man->state = STATE_GAME;
 	man->is_game_ongoing = 1;
-	describe_location(man, man->characters[CHAR_PLAYER - 1].current_location);
+	describe_loc(man, man->charas[0].current_loc);
 	return ;
 }
 

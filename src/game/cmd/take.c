@@ -8,7 +8,7 @@ void	run_take(t_man *man)
 	t_item	**takeable_items;
 	t_item	**takeable_items_with_same_tag;
 
-	takeable_items = retrieve_takeable_items(man->characters[CHAR_PLAYER - 1].current_location->items,
+	takeable_items = retrieve_takeable_items(man->charas[0].current_loc->items,
 		0);
 	takeable_items_with_same_tag = 0;
 	if (!takeable_items || !takeable_items[0])
@@ -18,14 +18,14 @@ void	run_take(t_man *man)
 		return;
 	}
 
-	if (man->characters[CHAR_PLAYER - 1].inventory[NBR_ITEMS - 1])
+	if (man->charas[0].inventory[NBR_ITEMS - 1])
 	{
 		printf("Your inventory is full.\n\n");
 		clean(takeable_items, takeable_items_with_same_tag);
 		return;
 	}
 
-	if (!*man->cmd.object)
+	if (!man->cmd.object)
 	{
 		display_item_suggestions(takeable_items, "take");
 		clean(takeable_items, takeable_items_with_same_tag);
@@ -58,40 +58,40 @@ void	run_take(t_man *man)
 static void	take_item(t_man *man, t_item *item_to_take)
 {
 	int	i;
-	int	index_of_last_location_item;
+	int	index_of_last_loc_item;
 
-	index_of_last_location_item = -1;
+	index_of_last_loc_item = -1;
 	/* Place the item in the inventory */
 	for (i = 0; i < NBR_ITEMS; ++i)
 	{
-		if (!man->characters[CHAR_PLAYER - 1].inventory[i])
+		if (!man->charas[0].inventory[i])
 		{
-			man->characters[CHAR_PLAYER - 1].inventory[i] = item_to_take;
+			man->charas[0].inventory[i] = item_to_take;
 			break;
 		}
 	}
 
-	/* Remove the item from the location */
+	/* Remove the item from the loc */
 	for (i = NBR_ITEMS - 1; i >= 0; --i)
 	{
-		if (!man->characters[CHAR_PLAYER - 1].current_location->items[i])
+		if (!man->charas[0].current_loc->items[i])
 			continue;
 		else
-			index_of_last_location_item = i;
+			index_of_last_loc_item = i;
 
-		if (man->characters[CHAR_PLAYER - 1].current_location->items[i] == item_to_take)
+		if (man->charas[0].current_loc->items[i] == item_to_take)
 		{
-			memset((man->characters[CHAR_PLAYER - 1].current_location->items + i), 0, sizeof(t_item *));
+			memset((man->charas[0].current_loc->items + i), 0, sizeof(t_item *));
 			break;
 		}
 	}
 
 	/* Fill the gap */
-	if (i != index_of_last_location_item)
+	if (i != index_of_last_loc_item)
 	{
-		man->characters[CHAR_PLAYER - 1].current_location->items[i]
-			= man->characters[CHAR_PLAYER - 1].current_location->items[index_of_last_location_item];
-		memset((man->characters[CHAR_PLAYER - 1].current_location->items + index_of_last_location_item),
+		man->charas[0].current_loc->items[i]
+			= man->charas[0].current_loc->items[index_of_last_loc_item];
+		memset((man->charas[0].current_loc->items + index_of_last_loc_item),
 			0, sizeof(t_item *));
 	}
 

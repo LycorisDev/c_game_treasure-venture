@@ -1,26 +1,14 @@
 #include "treasure_venture.h"
 
-static void	set_command_element(const char **tokens, void *element,
-				const int element_size, const int parser_start_index,
-				const int parser_end_index);
-static int	get_available_length_in_string(const int max_length,
-				const char *str);
+static void	display_game_commands(void);
 static void	run_action(t_man *man, const char *action);
+static void	free_cmd(t_cmd *cmd);
 
 void	run_game_cmd(t_man *man, const char **tokens)
 {
-	int	i;
-	int	command_word_length;
-	int	verb_index;
-	int	object_end_index;
-	int	preposition_index;
-	int	target_start_index;
-
-	verb_index = 0;
-	object_end_index = -1;
-	preposition_index = -1;
-	target_start_index = -1;
-	memset(&man->cmd, 0, sizeof(man->cmd));
+	int		i;
+	int		i_preposition;
+	char	*tmp;
 
 	if (!tokens || !tokens[0])
 	{
@@ -32,85 +20,56 @@ void	run_game_cmd(t_man *man, const char **tokens)
 		run_menu_cmd(man, tokens + 1);
 		return;
 	}
-
-	for (i = 0; tokens[i]; ++i)
+	man->cmd.verb = strdup(tokens[0]);
+	i = 0;
+	while (tokens[++i])
 	{
-		if (!bool_word_is_in_lexicon(man, tokens[i]))
+		if (!strcmp(tokens[i], "on"))
 		{
-			printf("\t['%s' was not recognized.]\n\n", tokens[i]);
-			break;
-		}
-
-		if (preposition_index >= 0)
-			continue;
-
-		object_end_index = i;
-
-		if (bool_word_is_preposition(tokens[i]))
-		{
-			object_end_index = i - 1;
-			preposition_index = i;
-			target_start_index = i + 1;
+			man->cmd.preposition = strdup(tokens[i]);
+			break ;
 		}
 	}
-
-	command_word_length = i;
-	if (!command_word_length)
+	i_preposition = i;
+	i = 0;
+	while (tokens[++i] && i < i_preposition)
 	{
-		display_game_commands();
-		return;
+		if (!man->cmd.object)
+			man->cmd.object = strdup(tokens[i]);
+		else
+		{
+			tmp = strjoin(man->cmd.object, " ");
+			free(man->cmd.object);
+			man->cmd.object = strjoin(tmp, tokens[i]);
+			free(tmp);
+		}
 	}
-
-	set_command_element(tokens, man->cmd.verb, sizeof(man->cmd.verb), verb_index, verb_index);
-	set_command_element(tokens, man->cmd.object, sizeof(man->cmd.object), verb_index + 1,
-		object_end_index);
-	set_command_element(tokens, man->cmd.preposition, sizeof(man->cmd.preposition),
-		preposition_index, preposition_index);
-	set_command_element(tokens, man->cmd.target, sizeof(man->cmd.target), target_start_index,
-		command_word_length - 1);
-
+	if (tokens[i])
+	{
+		while (tokens[++i])
+		{
+			if (!man->cmd.target)
+				man->cmd.target = strdup(tokens[i]);
+			else
+			{
+				tmp = strjoin(man->cmd.target, " ");
+				free(man->cmd.target);
+				man->cmd.target = strjoin(tmp, tokens[i]);
+				free(tmp);
+			}
+		}
+	}
 	run_action(man, man->cmd.verb);
+	free_cmd(&man->cmd);
 	return;
 }
 
-void	display_game_commands(void)
+static void	display_game_commands(void)
 {
 	printf("\t['Menu']    ['Inventory']    ['Look']    ['Take']\n");
 	printf("\t['Play']       ['Use']        ['Go']     ['Drop']\n");
 	printf("\n");
 	return;
-}
-
-static void	set_command_element(const char **tokens, void *element,
-				const int element_size, const int parser_start_index,
-				const int parser_end_index)
-{
-	int			i;
-	const int	max_len = element_size - 1;
-
-	i = parser_start_index;
-	if (parser_start_index > parser_end_index || parser_start_index < 0
-		|| parser_end_index < 0)
-		return;
-
-	memcpy(element, tokens[i++], max_len);
-
-	while (i <= parser_end_index)
-	{
-		strncat(element, " ", get_available_length_in_string(max_len, element));
-		strncat(element, tokens[i++],
-			get_available_length_in_string(max_len, element));
-	}
-	return;
-}
-
-static int	get_available_length_in_string(const int max_length,
-				const char *str)
-{
-	int	len_cat;
-
-	len_cat = max_length - strlen(str);
-	return len_cat < 0 ? 0 : len_cat;
 }
 
 static void	run_action(t_man *man, const char *action)
@@ -134,4 +93,14 @@ static void	run_action(t_man *man, const char *action)
 	else
 		display_game_commands();
 	return;
+}
+
+static void	free_cmd(t_cmd *cmd)
+{
+	free(cmd->verb);
+	free(cmd->object);
+	free(cmd->preposition);
+	free(cmd->target);
+	memset(cmd, 0, sizeof(t_cmd));
+	return ;
 }

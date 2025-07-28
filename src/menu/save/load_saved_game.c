@@ -3,7 +3,7 @@
 static int	set_id_loc_val(char *line, t_id_loc *id);
 static int	set_int_arr(char *line, int *arr, size_t max_len);
 static int	set_id_item_arr(char *line, t_id_item *arr, size_t max_len);
-static void	move_player_to_location(t_man *man, t_id_loc prev, t_id_loc curr);
+static void	move_player_to_loc(t_man *man, t_id_loc prev, t_id_loc curr);
 static void	apply_events(t_man *man, int events[NBR_EVENTS]);
 static void	populate_inventory(t_man *man, t_id_item inventory[NBR_ITEMS]);
 
@@ -35,7 +35,7 @@ int	load_saved_game(t_man *man, const char *filepath)
 		|| !set_id_item_arr(lines[3], inventory, NBR_ITEMS))
 		return (free_arr((void **)lines, free), 0);
 	free_arr((void **)lines, free);
-	move_player_to_location(man, id_loc_prev, id_loc_curr);
+	move_player_to_loc(man, id_loc_prev, id_loc_curr);
 	apply_events(man, events);
 	populate_inventory(man, inventory);
 	return (1);
@@ -126,47 +126,47 @@ static int	set_id_item_arr(char *line, t_id_item *arr, size_t max_len)
 	return (free_arr((void **)val, free), 1);
 }
 
-static void	move_player_to_location(t_man *man, t_id_loc prev, t_id_loc curr)
+static void	move_player_to_loc(t_man *man, t_id_loc prev, t_id_loc curr)
 {
 	int	i;
 	int	j;
 
-	man->characters[CHAR_PLAYER - 1].previous_location = man->locations + prev;
-	man->characters[CHAR_PLAYER - 1].current_location = man->locations + curr;
-	if (man->characters[CHAR_PLAYER - 1].current_location->id == LOC_OUTSIDE)
+	man->charas[0].previous_loc = man->locs + prev;
+	man->charas[0].current_loc = man->locs + curr;
+	if (man->charas[0].current_loc->id == LOC_OUTSIDE)
 		return ;
-	// Remove player from player's starter location (LOC_OUTSIDE)
+	// Remove player from player's starter loc (LOC_OUTSIDE)
 	i = -1;
-	while (++i < NBR_CHARACTERS)
+	while (++i < NBR_CHARAS)
 	{
-		if (!man->locations[LOC_OUTSIDE - 1].characters[i])
+		if (!man->locs[LOC_OUTSIDE - 1].charas[i])
 			break ;
-		if (man->locations[LOC_OUTSIDE - 1].characters[i]
-			== &man->characters[CHAR_PLAYER - 1])
+		if (man->locs[LOC_OUTSIDE - 1].charas[i]
+			== &man->charas[0])
 		{
-			j = NBR_CHARACTERS;
+			j = NBR_CHARAS;
 			while (--j >= 0)
 			{
-				if (man->locations[LOC_OUTSIDE - 1].characters[j])
+				if (man->locs[LOC_OUTSIDE - 1].charas[j])
 				{
-					man->locations[LOC_OUTSIDE - 1].characters[i]
-						= man->locations[LOC_OUTSIDE - 1].characters[j];
-					memset(man->locations[LOC_OUTSIDE - 1].characters + j, 0,
-						sizeof(t_character *));
-					i = NBR_CHARACTERS;
+					man->locs[LOC_OUTSIDE - 1].charas[i]
+						= man->locs[LOC_OUTSIDE - 1].charas[j];
+					memset(man->locs[LOC_OUTSIDE - 1].charas + j, 0,
+						sizeof(t_char *));
+					i = NBR_CHARAS;
 					break ;
 				}
 			}
 		}
 	}
-	// Add the player to the current location
+	// Add the player to the current loc
 	i = -1;
-	while (++i < NBR_CHARACTERS)
+	while (++i < NBR_CHARAS)
 	{
-		if (!man->characters[CHAR_PLAYER - 1].current_location->characters[i])
+		if (!man->charas[0].current_loc->charas[i])
 		{
-			man->characters[CHAR_PLAYER - 1].current_location->characters[i]
-				= &man->characters[CHAR_PLAYER - 1];
+			man->charas[0].current_loc->charas[i]
+				= &man->charas[0];
 			break ;
 		}
 	}
@@ -193,8 +193,8 @@ static void	populate_inventory(t_man *man, t_id_item inventory[NBR_ITEMS])
 	{
 		if (inventory[i] == ITEM_NONE || j == NBR_ITEMS)
 			break ;
-		man->characters[CHAR_PLAYER - 1].inventory[j++] = man->items + inventory[i];
-		// Search the item in all the locations, and remove it from the world:
+		man->charas[0].inventory[j++] = man->items + inventory[i];
+		// Search the item in all the locs, and remove it from the world:
 		// - This feature wasn't even present, duplicating the items.
 		// - I'll wait for the game's refactoring before touching this again.
 	}
