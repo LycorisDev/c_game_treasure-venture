@@ -124,7 +124,7 @@ static void	go_back(t_man *man)
 
 	if (!man->charas[0].previous_loc)
 	{
-		printf("You do not have a previous loc.\n\n");
+		printf("You do not have a previous location.\n\n");
 		free(man->cmd.object);
 		man->cmd.object = 0;
 		return;

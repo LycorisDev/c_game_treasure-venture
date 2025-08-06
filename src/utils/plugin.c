@@ -1,5 +1,16 @@
 #include "plugin.h"
 
+# ifdef _WIN32
+const char	*win_dlerror(void)
+{
+	static char buf[512];
+	DWORD err = GetLastError();
+	FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, err, 0, buf, sizeof(buf), NULL);
+	return buf;
+}
+#endif
+
 void	run_plugin(const char *path, const char *name)
 {
 	LIB_HANDLE	lib_obj;

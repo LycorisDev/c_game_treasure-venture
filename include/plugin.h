@@ -8,7 +8,7 @@
 #  define LOAD_LIB(file) LoadLibrary(file)
 #  define LIB_FUNC(handle, function) GetProcAddress(handle, function)
 #  define UNLOAD_LIB(handle) FreeLibrary(handle)
-#  define LIB_ERROR strerror(errno)
+#  define LIB_ERROR win_dlerror()
 # else
 #  include <dlfcn.h>
 #  define LIB_HANDLE void*
